@@ -1,0 +1,1 @@
+export { FaceDetectionComponent } from './FaceDetection';

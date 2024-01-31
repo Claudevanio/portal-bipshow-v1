@@ -1,0 +1,92 @@
+import { IPlace } from './IPlace';
+import { IValuePerTypePayment } from './IValuePerTypePayment';
+
+export interface ITicket {
+    qtdeGera?: number,
+    ehMeia?: boolean,
+    qtdeMinima?: number,
+    dias?: any[],
+    lotes?: any[],
+    tipo?: string,
+    cadeirasDoIngresso?: any[],
+    id?: number,
+    nome?: string,
+    qtde?: number,
+    valorUnitario?: number,
+    descricao?: any,
+    meia?: boolean,
+    quotaMeia?: number,
+    qtdeMeia?: number,
+    regrasMeia?: any,
+    pospago?: any,
+    imagem?: any,
+    genero?: string,
+    dataInicioVenda?: string,
+    dataLimiteVenda?: string,
+    dataUtilizacao?: any,
+    horarioInicioEntrada?: any,
+    horarioFimEntrada?: any,
+    entradaMultipla?: any,
+    totalDisponivel?: number,
+    importado?: boolean,
+    mensagem?: any,
+    observacoes?: any,
+    integrado?: any,
+    exibirTotal?: any,
+    limitePorUsuario?: any,
+    limitePorIngresso?: any,
+    numeroLeituras?: number,
+    logo?: any,
+    permiteImportar?: any,
+    exigeMatricula?: boolean,
+    exigeCheckinFechamento?: boolean,
+    exigeCpf?: boolean,
+    prepago?: boolean,
+    esconderValor?: boolean,
+    layout?: any,
+    layoutZebra?: any,
+    ordem?: number,
+    idNoEvento?: number,
+    taxaFixa?: any,
+    exibirTaxaSomada?: boolean,
+    precadastro?: any,
+    formaRetirada?: any,
+    setor?: {
+        nome?: string,
+        capacidade?: number,
+        cadeiras?: any[],
+        subsetores?: any[],
+        portao?: any,
+        id?: number
+    },
+    mesas?: IPlace[],
+    planos?: any[],
+    credenciais?: any[],
+    camposAdicionais?: any[],
+    ingressos?: any[],
+    subsetores?: any[],
+    categoriaVenda?: string,
+    label?: string,
+    horasAntesEncerrarVenda?: number,
+    diasAntesEncerrarVenda?: number,
+    agora?: string,
+    qtdeVendido?: number,
+    qtdeVendidoMeia?: number,
+    totalDisponivelMeia?: number,
+    esgotado?: boolean,
+    taxaConveniencia?: number,
+    taxaServico?: number,
+    valorVenda?: number,
+    dataUtilizacaoTexto?: string;
+    mapa?: {
+        coordenadas: string;
+        imagens: {
+            mesas: string;
+            reservadas: string;
+            selecionadas: string;
+        };
+        mapId: string;
+        padding: number;
+    };
+    valoresPorFormaPagamento?: IValuePerTypePayment;
+}

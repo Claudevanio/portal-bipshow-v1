@@ -1,0 +1,1 @@
+export { SEOEvent } from './SEOEvent';

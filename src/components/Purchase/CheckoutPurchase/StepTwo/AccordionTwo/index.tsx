@@ -1,0 +1,1 @@
+export { AccordionTwo } from './AccordionTwo';

@@ -1,0 +1,1 @@
+export { SelectedSector } from './SelectedSector';

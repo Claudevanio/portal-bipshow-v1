@@ -1,0 +1,1 @@
+export { LegacyAvatar } from './Avatar';

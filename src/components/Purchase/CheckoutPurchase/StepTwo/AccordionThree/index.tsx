@@ -1,0 +1,1 @@
+export { AccordionThree } from './AccordionThree';

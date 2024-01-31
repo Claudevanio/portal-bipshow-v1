@@ -1,0 +1,1 @@
+export { TicketMapMobile } from './TicketMapMobile';

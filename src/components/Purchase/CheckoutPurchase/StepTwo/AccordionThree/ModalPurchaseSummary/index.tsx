@@ -1,0 +1,1 @@
+export { ModalPurchaseSummary } from './ModalPurchaseSummary';

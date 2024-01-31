@@ -1,0 +1,1 @@
+export { OptionsPayment } from './OptionsPayment';

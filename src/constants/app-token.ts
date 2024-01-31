@@ -1,0 +1,1 @@
+export const appToken = process.env.APP_TOKEN

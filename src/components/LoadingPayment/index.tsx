@@ -1,0 +1,1 @@
+export { LoadingPayment } from './LoadingPayment';
