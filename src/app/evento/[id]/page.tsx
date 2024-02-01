@@ -100,7 +100,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
             <div
               className="w-full h-80 rounded-xl hidden md:block object-cover"
               style={{
-                backgroundImage: `url(${eventTicket?.capa?.link})`,
+                backgroundImage: `url(${eventTicket?.capa?.link && eventTicket?.capa?.link[0] === "/" ? baseUrlImages + eventTicket?.capa?.link : eventTicket?.capa?.link})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
@@ -108,7 +108,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
               }}
             ></div>
             <img 
-              src={eventTicket?.imagens?.mobiledestaque?.link}
+              src={eventTicket?.capa?.link && eventTicket?.capa?.link[0] === "/" ? baseUrlImages + eventTicket?.capa?.link : eventTicket?.capa?.link}
               alt="Evento"
               className="w-full rounded-xl h-80 object-fill md:hidden"
               />

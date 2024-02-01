@@ -332,11 +332,9 @@ export function Navbar() {
                       image={user?.imagem}
                       username={user?.nome}
                       variant='small-two'
-                      onClick={() => setProfileModalOpen(true)}
                     />
                       : <Avatar
                         className='cursor-pointer'
-                        onClick={() => setProfileModalOpen(true)}
                       />
                   }
                   </div>

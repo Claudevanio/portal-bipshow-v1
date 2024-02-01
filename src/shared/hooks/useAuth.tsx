@@ -448,6 +448,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               apiTokeUser.defaults.headers 
           ).Authorization = `Bearer ${data.access_token}`;
           const isUser = await handleGetUser(data.access_token);
+          setIsUser(isUser);
           if (!isUser.imagem) {
             setIsToken(data.access_token);
             Cache.set({
@@ -477,6 +478,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             }
           }
         }
+
 
         setIsLoading(false);
       } catch (err: any) {

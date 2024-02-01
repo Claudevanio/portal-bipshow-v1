@@ -194,11 +194,11 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem('shouldChangeText', 'true');
     Cache.remove({key: '@tokenUser'})
     router.push('/');
+    setIsUser(undefined);
+    apiTokeUser.defaults.headers.Authorization = '';
     setTimeout(() => {
-      setIsUser(undefined);
-      apiTokeUser.defaults.headers.Authorization = '';
-      // window.location.reload();
-    }, 100);
+      window.location.reload();
+    }, 1000);
   }, []);
 
   const handleUpdateUser = useCallback(

@@ -109,7 +109,7 @@ export default function Home() {
           cp={isCp}
         />
       </div>
-      <div
+      {categorias.length> 0 && <div
         className='overflow-x-scroll w-full'
       >
         <div className='w-full flex items-center justify-center h-80 min-w-[1300px] '>
@@ -198,6 +198,28 @@ export default function Home() {
           }
       </div>  
     </div>
+      }
+      {
+        categorias.length === 0 &&    <div className='w-full flex items-center justify-center px-16 pt-10 overflow-x-hidden'>
+        <div className='flex items-center justify-center h-72 max-w-[100%] px-10 py-6 overflow-x-auto categories-container md:w-full' 
+        >
+          <div className="w-[900px] md:w-full flex-shrink-0">
+            <Image
+              className='md:w-full md:h-48'
+              src='/Categories.svg'
+              alt='Imagem'
+              width={1000}
+              height={300}
+              style={{
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+          {/* Conteúdo dentro da imagem */}
+        </div>
+    </div>  
+
+      }
 
 
           {/* <div className='flex items-center justify-center h-72 max-w-[100%] px-10 py-6 overflow-x-auto categories-container md:w-full' 
