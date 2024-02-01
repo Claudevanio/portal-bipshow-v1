@@ -422,12 +422,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       onClickPurchase?: () => void,
     ) => {
       try {
+        debugger;
         setIsLoading(true);
         let isFormattedCPFOrEmail = '';
         if (type === 'cpf' && user.cpf) { isFormattedCPFOrEmail = user.cpf.replace(/[^\d]/g, ''); }
         if (type === 'email' && user.cpf) isFormattedCPFOrEmail = user.cpf;
-        const { data } = await axios(
-          `${baseUrl}${GENARATE_TOKEN}`,
+        const { data } = await api(
+          `${GENARATE_TOKEN}`,
           {
             method: 'POST',
             data: {
@@ -443,6 +444,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         );
 
         if (data.access_token) {
+          (
+              apiTokeUser.defaults.headers 
+          ).Authorization = `Bearer ${data.access_token}`;
           const isUser = await handleGetUser(data.access_token);
           if (!isUser.imagem) {
             setIsToken(data.access_token);
@@ -451,9 +455,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               value: data.access_token,
             });
             // cookies().set('@tokenUser', data.access_token);
-            (
-                apiTokeUser.defaults.headers 
-            ).Authorization = `Bearer ${data.access_token}`;
           } else {
             Cache.set({
               key: '@tokenUser',

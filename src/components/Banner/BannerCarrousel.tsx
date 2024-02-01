@@ -30,18 +30,18 @@ export const CarouselComponent = (
     const slick = document.querySelector('.slick-track'); 
   });
 
-  const [windowSize, setWindowSize] = useState(window.innerWidth);
-  const handleWindowResize = () => {
-    setWindowSize(window.innerWidth);
-  };
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
+  // const [windowSize, setWindowSize] = useState(window.innerWidth);
+  // const handleWindowResize = () => {
+  //   setWindowSize(window.innerWidth);
+  // };
+  // useEffect(() => {
+  //   window.addEventListener('resize', handleWindowResize);
+  //   return () => {
+  //     window.removeEventListener('resize', handleWindowResize);
+  //   };
+  // }, []);
 
-  window.addEventListener('resize', handleWindowResize);
+  // window.addEventListener('resize', handleWindowResize);
 
   const sliderRef = useRef<any>();
 
@@ -86,13 +86,13 @@ export const CarouselComponent = (
           />
           
           {cp?.eventos.map((item : any) => {
-              if (windowSize <= 700) {
-                return (
-                  <div className="item" key={item.nome}>
-                    <CardBanner image={item?.imagens?.mobiledestaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />
-                  </div>
-                );
-              }
+              // if (windowSize <= 700) {
+              //   return (
+              //     <div className="item" key={item.nome}>
+              //       <CardBanner image={item?.imagens?.mobiledestaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />
+              //     </div>
+              //   );
+              // }
               return (
                 <div className="item" key={item.nome}>
                   <CardBanner image={item?.imagens?.destaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />

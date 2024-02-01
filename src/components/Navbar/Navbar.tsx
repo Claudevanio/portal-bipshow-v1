@@ -4,17 +4,18 @@ import { Logo } from '../Logo/Logo'
 import { Avatar, Button } from '..'
 import { Input } from '../Input/Input'
 import { useEffect, useState } from 'react'
-import { ArrowDropDown, Close, Search } from '@mui/icons-material'
+import { ArrowDropDown, CancelOutlined, Close, Search } from '@mui/icons-material'
 import { Montserrat } from 'next/font/google'
 import { usePathname, useRouter } from 'next/navigation'
 import { useGeoLocation } from '@/hooks'
-import { Autocomplete, Menu, Modal } from '@mui/material'
+import { Autocomplete, Menu, Modal, Tab, Tabs } from '@mui/material'
 import { estadosArray, getCidadesByUF } from '@/utils'
 import { Cache } from '@/adapters'
 import { LoginAndRegister } from '../LoginAndRegister'
 import { useRegister } from '@/shared/hooks/useRegister'
 import { LegacyAvatar } from '../Avatar/legacy/Avatar/Avatar'
 import { useSearch } from '@/shared/hooks/useSearch'
+import { AvatarWithTabs } from '../AvatarWithTabs/AvatarWithTabs'
 
 const fontMontSerrat = Montserrat({ subsets: ['latin'] })
 
@@ -34,6 +35,8 @@ export function Navbar() {
   const {user, handleLoadUser, clearDefaultValues} = useRegister()
   
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
+
   const [authType, setAuthType] = useState<'login' | 'register'>('login')
 
   useEffect(() => {
@@ -42,6 +45,18 @@ export function Navbar() {
       // TODO Filter events by location
     }
   }, [locationValue])
+
+  async function fetchUser(){
+    debugger;
+    await handleLoadUser()
+  }
+
+  useEffect(() => {
+    debugger;
+    if(!user)
+      fetchUser()
+  }
+  , [])
 
   
   const pathName = usePathname()
@@ -52,6 +67,8 @@ export function Navbar() {
       handleClearSearchEvents()
     }
   }, [pathName])
+
+  const { handleLogoutUser } = useRegister()
   
   
   return (
@@ -94,8 +111,12 @@ export function Navbar() {
                 image={user?.imagem}
                 username={user?.nome}
                 variant='small-two'
+                onClick={() => setProfileModalOpen(true)}
               />
-                : <Avatar/>
+                : <Avatar
+                  className='cursor-pointer'
+                  onClick={() => setProfileModalOpen(true)}
+                />
             }
             </div>
         </div>
@@ -116,7 +137,7 @@ export function Navbar() {
                 >Eventos próximos à</p>
                 <div
                   className='text-textPrimary font-medium w-48 flex items-center gap-0'>
-                    <div className='text-textPrimary font-medium max-w-40 min-w-40 text-ellipsis flex items-center'>
+                    <div className='text-textPrimary font-medium relative max-w-40 min-w-40 text-ellipsis flex items-center'>
                       <p
                         className='max-w-32 overflow-hidden text-ellipsis whitespace-nowrap inline-block h-fit'
                       >
@@ -124,10 +145,21 @@ export function Navbar() {
                       </p>
                       , {locationValue.uf ? locationValue.uf : 'UF'}
                     </div>
-                    <ArrowDropDown
-                      className='text-primary mb-1 ml-[-8px] cursor-pointer'
-                      onClick={e => setAnchorEl(e.currentTarget)}
-                    />
+                      {
+                        locationValue.city && locationValue.uf && !anchorEl ? <CancelOutlined
+                        className='text-primary mb-1 ml-[-8px] cursor-pointer'
+                        onClick={() => {
+                          setLocationValue({city: '', uf: ''})
+                          setLocation({city: '', uf: ''})
+                          Cache.remove({key: 'location'})
+                        }}
+                      />
+                        :   <ArrowDropDown
+                        className='text-primary mb-1 ml-[-8px] cursor-pointer'
+                        onClick={e => setAnchorEl(e.currentTarget)}
+                      />
+                    }
+                  
                     <Menu
                       open={Boolean(anchorEl)}
                       anchorEl={anchorEl}
@@ -300,8 +332,12 @@ export function Navbar() {
                       image={user?.imagem}
                       username={user?.nome}
                       variant='small-two'
+                      onClick={() => setProfileModalOpen(true)}
                     />
-                      : <Avatar/>
+                      : <Avatar
+                        className='cursor-pointer'
+                        onClick={() => setProfileModalOpen(true)}
+                      />
                   }
                   </div>
                 </>
@@ -344,6 +380,187 @@ export function Navbar() {
             />
           </div>
           }
+        </div>
+      </Modal>
+      
+      <Modal
+        open={profileModalOpen}
+        onClose={() => {
+          setProfileModalOpen(false)
+        }}
+      >
+        
+        <div
+          className='flex items-center flex-col p-4 w-full h-full bg-background'
+        >
+          
+        <div
+          className='flex items-center justify-between w-full relative md:w-2/5'
+        >
+            <Image
+              className='absolute left-0 top-0 z-[-1] opacity-10 rotate-[-2deg] md:max-w-[26rem] sm:max-w-full overflow-hidden'
+              src={'/LogoBackground.svg'}
+              alt="Logo"
+              width={410}
+              height={55}
+              priority={true}
+              />
+            <div
+              className='flex items-center gap-4 relative'
+            >
+              <Logo
+                onClick={() => router.push('/')}
+              />
+              <div>
+                <p
+                  className={fontMontSerrat.className + 'text-sm text-textPrimary font-bold'}
+                >Comprou,</p>
+                <p
+                  className={fontMontSerrat.className + 'text-sm text-textPrimary font-bold'}>
+                    sorriu, curtiu.
+                  </p>
+              </div>
+            </div>
+            <Close
+              className='absolute top-2 right-4 md:top-[15%] md:right-[8%] cursor-pointer z-10 text-gray'
+              onClick={() => setProfileModalOpen(false)}
+            />
+        </div>
+
+        {
+          user ? <div
+            className='flex flex-col w-full items-start mt-8 gap-4 relative'
+          >
+            <div
+              className='flex items-center gap-4 relative'
+            >
+              <div
+                className='flex flex-col items-center gap-4 relative'
+              > 
+              {user?.imagem ? 
+                <LegacyAvatar
+                  image={user?.imagem}
+                  username={user?.nome}
+                  variant='medium'
+                  onClick={() => setProfileModalOpen(true)}
+                />
+                  : <Avatar
+                    className='cursor-pointer'
+                    onClick={() => setProfileModalOpen(true)}
+                  />
+              }
+              </div>
+              <div
+                className='flex flex-col gap-2'
+              >
+                <p
+                  className='text-textPrimary font-medium'
+                >Olá, {user?.nome?.split(" ")[0]}</p>
+              </div>
+            </div>
+         
+      <Tabs
+        orientation="vertical"
+        className="mt-2"
+        value={
+          pathName === '/meus-ingressos' ? 0 : 
+          pathName === '/profile' ? 1 : 0
+        }
+        onChange={(event, tab) => {
+          if(tab === 0){
+            router.push('/meus-ingressos')
+            setProfileModalOpen(false)
+          } else if(tab === 1){
+            router.push('/profile')
+            setProfileModalOpen(false)
+          }
+        }}
+      >
+        <Tab
+          value={0}
+          icon={
+            <Image
+              src={"/ticket-black.svg"}
+              alt="Ticket Icon"
+              width={24}
+              height={24}
+            />
+          }
+          iconPosition="start"
+          label="Meus Ingressos"
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            justifyContent: "start",
+          }}
+        />
+        <Tab
+          value={1}
+          icon={
+            <Image
+              src={"/profile.svg"}
+              alt="Ticket Icon"
+              width={24}
+              height={24}
+            />
+          }
+          iconPosition="start"
+          label="Meu Perfil"
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            justifyContent: "start",
+          }}
+        />
+        <Tab
+          value={2}
+          icon={
+            <Image
+              src={"/logout.svg"}
+              alt="Ticket Icon"
+              width={24}
+              height={24}
+            />
+          }
+          iconPosition="start"
+          onClick={handleLogoutUser}
+          label="Sair"
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            justifyContent: "start",
+          }}
+        />
+      </Tabs>
+          </div>
+          : <div
+            className='flex flex-col mt-8 items-center justify-center gap-4'
+          >
+            <Button
+              className='px-8 py-2 !border-gray text-textPrimary'
+              variant='secondary'
+              onClick={() => {
+                setIsAuthModalOpen(true)
+                setAuthType('login')
+                setProfileModalOpen(false)
+              }}
+              >Entrar</Button>
+            <Button
+              onClick={() => {
+                setIsAuthModalOpen(true)
+                setAuthType('register')
+                setProfileModalOpen(false)
+              }}
+            >Criar conta</Button>
+          </div>
+        }
+          
         </div>
       
       </Modal>

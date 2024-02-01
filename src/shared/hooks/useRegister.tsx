@@ -83,11 +83,8 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
     const tokenUser = Cache.get({key: '@tokenUser'}) as string;
 
     if (tokenUser) {
-      const { data } = await axios(`${baseUrl}${GET_USER}`, {
+      const { data } = await apiTokeUser(`${GET_USER}`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${tokenUser}`,
-        },
       });
       return data;
     }
@@ -96,19 +93,14 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const handleGetUser = useCallback(async (accessToken: string) => {
-    const { data } = await axios(`${baseUrl}${GET_USER}`, {
+    const { data } = await apiTokeUser(`${GET_USER}`, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
     });
     return data;
   }, []);
 
   const handleLoadUser = useCallback(async () => {
     try {
-      
-
       if (!isUser) {
         // setIsLoading(true);
         const tokenUser = Cache.get({key: '@tokenUser'}) as string;
@@ -117,8 +109,8 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
 
 
         if (isTokenUser) {
-          const { data } = await axios(
-            `${baseUrl}${GET_USER}`,
+          const { data } = await api(
+            `${GET_USER}`,
             {
               method: 'GET',
               headers: {

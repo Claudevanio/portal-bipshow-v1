@@ -3,7 +3,7 @@ import { ContainerAvatar } from './styles';
 import { IAvatar } from './interface';
 import Image from 'next/image';
 
-export const LegacyAvatar: React.FC<IAvatar> = ({ username, image, variant = 'small', className = '' }) => {
+export const LegacyAvatar: React.FC<IAvatar> = ({ username, image, variant = 'small', className = '', onClick }) => {
   const size = useMemo(() => {
     switch (variant) {
       case 'small':
@@ -25,7 +25,10 @@ export const LegacyAvatar: React.FC<IAvatar> = ({ username, image, variant = 'sm
   }, [variant]);
 
   return (
-    <ContainerAvatar variant={variant}>
+    <ContainerAvatar variant={variant}
+      onClick={onClick && onClick}
+      className={onClick ? 'cursor-pointer' : ''}
+    >
       {image ? <img src={image} alt={username} /> : (       
         <Image
         className={('w-12 h-12 rounded-full bg-background p-2 border-2 border-gray') + className }

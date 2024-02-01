@@ -98,7 +98,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
           
           <div className="flex flex-col w-full">
             <div
-              className="w-full h-80 rounded-xl object-cover"
+              className="w-full h-80 rounded-xl hidden md:block object-cover"
               style={{
                 backgroundImage: `url(${eventTicket?.capa?.link})`,
                 backgroundSize: "cover",
@@ -107,6 +107,11 @@ export default function EventoPage({ params }: { params: { id: string } }) {
                 backgroundClip: "border-box",
               }}
             ></div>
+            <img 
+              src={eventTicket?.imagens?.mobiledestaque?.link}
+              alt="Evento"
+              className="w-full rounded-xl h-80 object-fill md:hidden"
+              />
             {/* <Image
             className='w-full rounded-xl h-80 object-cover'
             src={''}
@@ -133,24 +138,6 @@ export default function EventoPage({ params }: { params: { id: string } }) {
           <div className="flex items-center w-full gap-8 border-b-2 border-gray pb-2 md:hidden">
             <h4
               className={`text-sm flex items-center gap-2 font-medium cursor-pointer ${
-                activeTab == "tickets" ? "text-primary" : "text-textPrimary"
-              }`}
-              onClick={() => setActiveTab("tickets")}
-            >
-              <Image
-                className={`${activeTab == "tickets" ? "" : "brightness-0"}`}
-                src={"/Ticket.svg"}
-                alt="Logo"
-                width={20}
-                height={20}
-              />
-              Ingressos
-            </h4>
-
-            <div className="border-l-2 border-gray h-6" />
-
-            <h4
-              className={`text-sm flex items-center gap-2 font-medium cursor-pointer ${
                 activeTab == "info" ? "text-primary" : "text-textPrimary"
               }`}
               onClick={() => setActiveTab("info")}
@@ -163,6 +150,24 @@ export default function EventoPage({ params }: { params: { id: string } }) {
                 height={20}
               />
               Informações
+            </h4>
+
+            <div className="border-l-2 border-gray h-6" />
+
+            <h4
+              className={`text-sm flex items-center gap-2 font-medium cursor-pointer ${
+                activeTab == "tickets" ? "text-primary" : "text-textPrimary"
+              }`}
+              onClick={() => setActiveTab("tickets")}
+            >
+              <Image
+                className={`${activeTab == "tickets" ? "" : "brightness-0"}`}
+                src={"/Ticket.svg"}
+                alt="Logo"
+                width={20}
+                height={20}
+              />
+              Ingressos
             </h4>
           </div>
 

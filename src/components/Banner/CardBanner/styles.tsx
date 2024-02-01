@@ -5,7 +5,7 @@ export const ContainerCardBanner = styled.button`
     /* height: 100%; */
     height: fit-content;
     /* border: 1px solid; */
-    border-radius: 16px;
+    /* border-radius: 16px; */
     /* @media(max-width: 1440px) {
         height: calc(380px);
     }
@@ -23,13 +23,13 @@ export const ContainerCardBanner = styled.button`
 export const Image = styled.img`
     width: 100%;
     /* height: 300px; */
-    border-radius: 16px;
+    /* border-radius: 16px; */
     /* object-fit: contain; */
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 16px;
+    /* border-radius: 16px; */
 `;
 
 export const ImageContainer = styled.div<{
@@ -37,7 +37,7 @@ export const ImageContainer = styled.div<{
 }>`
     width: 100%;
     height: 100%;
-    border-radius:16px;
+    /* border-radius:16px; */
     display: flex;
     overflow: hidden;
 `;
@@ -50,7 +50,7 @@ export const ImageCarroselBackground = styled.div<{
     display: none;
     width: 100%;
     height: 100%;
-    border-radius:16px;
+    /* border-radius:16px; */
     top: 0;
     left: 0;
     right: 0;
