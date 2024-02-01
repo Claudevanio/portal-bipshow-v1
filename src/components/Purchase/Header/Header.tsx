@@ -11,6 +11,7 @@ import { IHeader } from './interface';
 import { CancelOutlined, CancelRounded, Close } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import ptBr from 'dayjs/locale/pt-br';
+import { baseUrlImages } from '@/constants';
 
 dayjs.locale(ptBr);
 
@@ -30,7 +31,7 @@ export const Header: React.FC<IHeader> = ({ handleClose }) => {
             boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)'
           }}
         >
-          <Image image={`${eventTicket?.imagens?.minicapa?.link}`}
+          <Image image={`${eventTicket?.imagens?.minicapa?.link && eventTicket?.imagens?.minicapa?.link[0] === '/' ? baseUrlImages + eventTicket?.imagens?.minicapa?.link : eventTicket?.imagens?.minicapa?.link}`}
             className=' w-1/2 md:w-40 h-20 '
           />
           <div className="flex flex-col gap-1 w-1/2 font-medium ">
