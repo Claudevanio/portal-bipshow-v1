@@ -1,11 +1,22 @@
 'use client'
-import React, { Component, useRef } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import Image from 'next/image';
+import { useEffectOnce } from '@/hooks';
+import { useEvent } from '@/shared/hooks/useEvents';
+import { CardBanner } from './CardBanner';
+import { IAddress } from '@/types';
 
-export const CarouselComponent = () => {
+
+export const CarouselComponent = (
+  {
+    cp
+  } : {
+    cp: any
+  }
+) => {
   const settings = {
     dots: false,
     infinite: true,
@@ -15,6 +26,22 @@ export const CarouselComponent = () => {
     initialSlide: 0,
   };
 
+  useEffectOnce(() => {
+    const slick = document.querySelector('.slick-track'); 
+  });
+
+  const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const handleWindowResize = () => {
+    setWindowSize(window.innerWidth);
+  };
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  window.addEventListener('resize', handleWindowResize);
 
   const sliderRef = useRef<any>();
 
@@ -57,13 +84,21 @@ export const CarouselComponent = () => {
             width={1920}
             height={600}
           />
-          <Image
-            className='w-[100%] h-[100%]'
-            src={'/bannerPrincipal.svg'}
-            alt="Logo"
-            width={1920}
-            height={600}
-          />
+          
+          {cp?.eventos.map((item : any) => {
+              if (windowSize <= 700) {
+                return (
+                  <div className="item" key={item.nome}>
+                    <CardBanner image={item?.imagens?.mobiledestaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />
+                  </div>
+                );
+              }
+              return (
+                <div className="item" key={item.nome}>
+                  <CardBanner image={item?.imagens?.destaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />
+                </div>
+              );
+            })}
         </Slider>
       </div>
     );

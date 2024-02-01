@@ -71,7 +71,8 @@ export default function Home() {
 
       setEventos([...eventosRemapped])
 
-      setCategorias([...isCp.categorias])
+      if(isCp.categorias)
+        setCategorias([...isCp.categorias])
       
       
       // setEventos([...isCp.eventos])
@@ -104,7 +105,9 @@ export default function Home() {
       <div
         className='w-full h-fit overflow-x-hidden'
       >
-        <CarouselComponent/>
+        <CarouselComponent
+          cp={isCp}
+        />
       </div>
       <div
         className='overflow-x-scroll w-full'
