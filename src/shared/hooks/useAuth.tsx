@@ -106,6 +106,7 @@ export interface IAuth {
   checkEmailExistente: (email: string) => any;
   setIsNotUserPhoto: React.Dispatch<React.SetStateAction<IUser | undefined>>;
   onUpdatedUser: (data: IUser) => Promise<void>;
+  forgotPasswordDefaultValues: any;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -181,6 +182,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoadingSubmitUpdatedUser, setIsLoadingSubmitUpdatedUser] = useState<boolean>(false);
   const [isNotUserPhoto, setIsNotUserPhoto] = useState<IUser>();
   const [isToken, setIsToken] = useState<any>();
+
+  const [forgotPasswordDefaultValues, setForgotPasswordDefaultValues] = useState<any>();
 
   const handleToPhoto = (toPhoto: boolean) => setIsToPhoto(toPhoto);
 
@@ -1078,6 +1081,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           
           if(!exists)
             setDefaultValues(defaultValues);
+          else
+            setForgotPasswordDefaultValues(defaultValues);
           
             setIsLoading(false);
           if (exists) {
@@ -1292,6 +1297,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         createdUser,
         onUpdatedUser: handleUpdatedUser,
         handleUpdateEmail,
+        forgotPasswordDefaultValues,
       }}
     >
       {children}

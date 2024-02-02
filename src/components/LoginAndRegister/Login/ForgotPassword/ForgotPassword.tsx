@@ -29,6 +29,7 @@ export const ForgotPassowrd: React.FC = () => {
     handleSendEmailForgotPassword,
     handleUpdateEmail,
     checkEmailExistente,
+    forgotPasswordDefaultValues
   } = useAuth();
 
   const { watch, formState, setValue, getValues } = useFormContext();
@@ -42,7 +43,6 @@ export const ForgotPassowrd: React.FC = () => {
   const [insideStepper, setInsideStepper] = useState<number>(0);
   const [cpf, setCpf] = useState<String>("");
   const [nascimentoCpf, setNascimentoCpf] = useState<string>("");
-  const { defaultValues } = useRegister();
   const isDataNascimento = watch("dataNascimento")
   const { push } = useRouter();
 
@@ -92,11 +92,11 @@ export const ForgotPassowrd: React.FC = () => {
     setInsideStepper(2);
   }, []);
 
-  useEffect(() => {
-    if(isDataNascimento?.length < 10){
-      setDataInvalida(false)
-    }
-  }, [isDataNascimento]);
+  // useEffect(() => {
+  //   if(isDataNascimento?.length < 10){
+  //     setDataInvalida(false)
+  //   }
+  // }, [isDataNascimento]);
 
   const handleClick = React.useCallback(async () => {
     if (insideStepper == 0) {
@@ -159,12 +159,14 @@ export const ForgotPassowrd: React.FC = () => {
   }, [insideStepper, isCpf, dispositivoCheckado, setIsEmail, dataForgotPassword, setDispositivoCheckado]);
 
   const wrongDate = (value: string) => {
+    debugger;
     const isFormat = value.split("/");
     const isAfterDateNow = isAfter(
       Date.now(),
       new Date(isFormat.reverse().join("-"))
     );
-    let sameDate = value === defaultValues?.dataNascimentoCpf;
+    console.log(forgotPasswordDefaultValues)
+    let sameDate = value === forgotPasswordDefaultValues?.dataNascimentoCpf;
 
     if(!sameDate) {
       setDataInvalida(true)
@@ -176,7 +178,7 @@ export const ForgotPassowrd: React.FC = () => {
       sameDate = value === nascimentoCpf;
     }
 
-    if (!defaultValues?.dataNascimentoCpf && nascimentoCpf == "") {
+    if (!forgotPasswordDefaultValues?.dataNascimentoCpf && nascimentoCpf == "") {
       sameDate = true;
     }
 

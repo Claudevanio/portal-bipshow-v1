@@ -99,6 +99,10 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
     return data;
   }, []);
 
+  useEffect(() => {
+    console.log('defaultvalues', defaultValues)
+  }, [defaultValues])
+
   const handleLoadUser = useCallback(async () => {
     try {
       if (!isUser) {

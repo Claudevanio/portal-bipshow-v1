@@ -77,13 +77,6 @@ export const StepOne: React.FC = () => {
     
 
     const fetchData = async () => {
-      if (defaultValues?.CPF) {
-        setHaveCpf(true);
-        setValue("CPF", defaultValues?.CPF);
-        setValue("nome", defaultValues?.nome);
-        return;
-      }
-
       if (isCpf?.length === 14) {
         const { usuario } = await handleInfoCpf(isCpf);
         setShowNome(false);
@@ -101,14 +94,23 @@ export const StepOne: React.FC = () => {
   }, [isCpf]);
 
   useEffect(() => {
-    if(!haveCpf)
-      return
-    debugger;
-    setTimeout(() => {
-      dataNascimentoRef.current?.firstChild?.dispatchEvent(new Event('blur', { bubbles: true }));
-    }, 3000);
+    if (defaultValues?.CPF) {
+      setHaveCpf(true);
+      setValue("CPF", defaultValues?.CPF);
+      setValue("nome", defaultValues?.nome);
+      return;
+    }
+  }, []);
 
-  }, [haveCpf]);
+  // useEffect(() => {
+  //   if(!haveCpf)
+  //     return
+  //   debugger;
+  //   setTimeout(() => {
+  //     dataNascimentoRef.current?.firstChild?.dispatchEvent(new Event('blur', { bubbles: true }));
+  //   }, 3000);
+
+  // }, [haveCpf]);
 
 
   useEffect(() => {
