@@ -1,8 +1,15 @@
 'use client';
 
+import { useRegister } from '@/shared/hooks/useRegister';
 import Image from 'next/image';
+import Link from 'next/link';
 
-export const Footer = () => <footer className="bg-grayLight relative overflow-hidden">
+export const Footer = () => {
+
+  const {user} = useRegister();
+
+
+return <footer className="bg-grayLight relative overflow-hidden">
   <Image
     className='opacity-80 hidden lg:flex absolute w-[100%] left-[-50%] top-0 pointer-events-none'
     src='/FooterBackground-1.svg'
@@ -48,18 +55,18 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
   <div className="flex flex-col space-y-4">
     <h2 className="font-medium text-primary">Acesso rápido</h2>
     <div className="flex flex-col space-y-2 text-sm text-textPrimary font-normal pl-6">
-      <a rel="noopener noreferrer" className='list-item' href="#">Início</a>
-      <a rel="noopener noreferrer" className='list-item' href="#">Meus Ingressos</a>
-      <a rel="noopener noreferrer" className='list-item' href="#">Para produtores</a>
-      <a rel="noopener noreferrer" className='list-item' href="#">Central de dúvidas</a>
-      <a rel="noopener noreferrer" className='list-item' href="#">Institucional</a>
-      <a rel="noopener noreferrer" className='list-item' href="#">Lei de meia-entrada</a>
+      <a rel="noopener noreferrer" className='list-item' href="/">Início</a>
+      {user ? <Link href={'/meus-ingressos'} className='list-item' >Meus Ingressos</Link> : <a rel="noopener noreferrer" className='list-item' href={'#'}>Meus Ingressos</a>}
+      <a rel="noopener noreferrer" className='list-item' href="http://uzer.com.br/" target='_blank'>Para produtores</a>
+      <a rel="noopener noreferrer" className='list-item' href="http://uzer.com.br/" target='_blank'>Central de dúvidas</a>
+      <a rel="noopener noreferrer" className='list-item'  href="http://uzer.com.br/" target='_blank'>Institucional</a>
+      <a rel="noopener noreferrer" className='list-item'  href="https://www.planalto.gov.br/ccivil_03/_Ato2015-2018/2015/Decreto/D8537.htm#art28" target='_blank'>Lei de meia-entrada</a>
     </div>
   </div>
   <div className="flex flex-col space-y-4">
     <h2 className="font-medium text-primary">Redes sociais</h2>
     <div className="flex flex-col space-y-2 text-sm text-textPrimary font-normal">
-      <a rel="noopener noreferrer" href="https://instagram/usuario" target='_blank' className='flex gap-1 items-center'>
+      <a rel="noopener noreferrer" href="https://www.instagram.com/bipshow_/" target='_blank' className='flex gap-1 items-center'>
         <Image
           src={'/Instagram.svg'}
           alt="Logo"
@@ -68,7 +75,7 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
         />
         Instagram
       </a>
-      <a rel="noopener noreferrer" href="https://facebook/usuario" target='_blank' className='flex gap-1 items-center'>
+      <a rel="noopener noreferrer" href="https://www.facebook.com/uzertec/?locale2=ca_ES&paipv=0&eav=Afb4dTnBXIQFtWdPe7uIHfPL1d2xlkJyvLQ4sDZOoVMkJNhdKcSsa7O1LWICXpNNk_8&_rdr" target='_blank' className='flex gap-1 items-center'>
         <Image
           src={'/Facebook.svg'}
           alt="Logo"
@@ -77,7 +84,7 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
         />
         Facebook
       </a>
-      <a rel="noopener noreferrer" href="https://linkedin/usuario" target='_blank' className='flex gap-1 items-center'>
+      <a rel="noopener noreferrer" href="https://www.linkedin.com/company/uzertec/mycompany/" target='_blank' className='flex gap-1 items-center'>
         <Image
           src={'/Linkedin.svg'}
           alt="Logo"
@@ -99,7 +106,7 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
         />
         Twitter
       </a>
-      <a rel="noopener noreferrer" href="https://youtube/usuario" target='_blank' className='flex gap-1 items-center'>
+      <a rel="noopener noreferrer" href="https://www.youtube.com/@uzertecnologia1484" target='_blank' className='flex gap-1 items-center'>
         <Image
           src={'/Youtube.svg'}
           alt="Logo"
@@ -114,7 +121,7 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
     <h2 className="font-medium text-primary">Baixe o aplicativo</h2>
     <div className="flex flex-col space-y-4 text-sm dark:text-gray-400">
       <a
-        href="https://play.google.com/store/apps/details?id=com.bipshow"
+        href="https://play.google.com/store/apps/details?id=br.com.synpass"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -126,9 +133,9 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
         />
       </a>
       <a
-        href="https://apps.apple.com/br/app/bipshow/id1540471895"
         target="_blank"
         rel="noopener noreferrer"
+        href="https://apps.apple.com/br/app/bipshow-ingressos-para-eventos/id6448878208"
       >
         <Image
           src={'/AppStore.svg'}
@@ -144,3 +151,4 @@ export const Footer = () => <footer className="bg-grayLight relative overflow-hi
   <span className="text-background">Uzer Soluções e Tecnologia Ltda - CNPJ: 50.325.987/0001-92- Bipshow é um marca registrada com os direitos autorais.</span>
 </div>
 </footer>
+}

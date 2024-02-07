@@ -98,12 +98,15 @@ export const Register: React.FC<IRegister> = ({
       }
 
       if (isStepper === 4 && photo && !isInvalidPicture && createdUser) {
+        debugger;
         const ddd = getValues('DDD')
-        data.telefone = `${ddd}${data.telefone}`;
+        data.telefone = data.telefone?.startsWith(ddd) ? data.telefone : `${ddd}${data.telefone}`;
         handleNextStepRegister(data, onClickPurchase, true);
         return;
       }
       if (onClickPurchase || photo) {
+        const ddd = getValues('DDD')
+        data.telefone = data.telefone?.startsWith(ddd) ? data.telefone : `${ddd}${data.telefone}`;
         handleNextStepRegister(data, onClickPurchase);
       } else {
         handleNextStepRegister(data);

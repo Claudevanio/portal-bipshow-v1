@@ -687,14 +687,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setCreatedUser(true);
           await sleep(6000);
         }
+        
+        debugger;
+        // const url = `${baseUrl}${GENARATE_TOKEN}`;
 
-        const token = await axios(
-          `${baseUrl}${GENARATE_TOKEN}`,
+        const token = await api(
+          `${GENARATE_TOKEN}`,
           {
             method: 'POST',
             data: {
               grant_type: 'password',
-              username: data?.CPF?.replace(/[^\d]/g, ''),
+              username: data?.CPF ? data?.CPF?.replace(/[^\d]/g, '') : data?.email,
               password: data.senha,
             },
             headers: {

@@ -7,6 +7,7 @@ import { useTicketPurchase } from '@/shared/hooks/useTicketPurchase';
 import { Accordion, AccordionDetails, AccordionSummary
  } from '@mui/material'
 import { KeyboardArrowDown } from '@mui/icons-material';
+import { TermosDeUso } from './TermosDeUso';
 
 export const StepTwo: React.FC = () => {
   const [isAccordion, setIsAccordion] = useState<number>(0);
@@ -46,13 +47,15 @@ export const StepTwo: React.FC = () => {
         </AccordionSummary>
         <AccordionDetails>
             <div
-              dangerouslySetInnerHTML={{
-                __html: `Mauris vehicula pellentesque elit, nec malesuada felis egestas id. Vivamus auctor, eros et sollicitudin feugiat, sem augue rhoncus dolor, ut ornare libero velit vel mauris. Nullam mollis mauris nec aliquet porta. Aliquam ex elit, efficitur id nunc id, commodo fermentum metus. Suspendisse at ipsum eget massa posuere scelerisque ut nec lacus. Vestibulum finibus ipsum et laoreet vehicula. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam condimentum rhoncus orci vitae lobortis.`
-              }}
+            style={{
+              maxHeight: '300px',
+              overflow: 'auto',
+              marginBottom: '1rem'
+            }}
             >
-
+              {TermosDeUso}
             </div>
-            <p className="text-light">Ao avançar, declaro que li e estou ciente dos termos e condições acima</p>
+            <p className="text-[#00000099 text-sm pb-4">Ao avançar, declaro que li e estou ciente dos termos e condições acima</p>
             <Button className="button-accept" type="button" text="Aceitar e avançar" variant="medium" onClick={() => handleNextAccordion(1)} />
         </AccordionDetails>
       </Accordion>

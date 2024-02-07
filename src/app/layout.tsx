@@ -11,6 +11,7 @@ import { RegisterProvider } from '@/shared/hooks/useRegister'
 import Head from 'next/head'
 import Script from 'next/script'
 import { SearchProvider, useSearch } from '@/shared/hooks/useSearch'
+import { AuthProvider } from '@/shared/hooks/useAuth'
 // import { useRouter } from 'next/router';
 // import { useEffect } from 'react';
 // import { isPrivateRoute } from '@/adapters';
@@ -37,30 +38,32 @@ export default function RootLayout({
         <EventTicketProvider>
           <StyledThemeProvider>
           <RegisterProvider>
-            <SearchProvider>
-                  <html lang="PT-BR">
-                        <Script type="text/javascript" async src="https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js" />
-                        <Script src="https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js"></Script>
-                        <Script
-                        src="https://code.jquery.com/jquery-3.3.1.min.js"
-                        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
-                        crossOrigin="anonymous"
-                      />
-                      <body className={inter.className + ' bg-background overflow-x-hidden'}>
-                        <ToastProvider>
-                              <Navbar/>
-                              <div
-                                className='w-full h-full min-h-[70vh]'
-                                >
-                                  <PrivateRoute>
-                                    {children}
-                                  </PrivateRoute>
-                              </div>
-                              <Footer/>
-                          </ToastProvider>
-                    </body>
-                </html>
-            </SearchProvider>
+            <AuthProvider>
+              <SearchProvider>
+                    <html lang="PT-BR">
+                          <Script type="text/javascript" async src="https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js" />
+                          <Script src="https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js"></Script>
+                          <Script
+                          src="https://code.jquery.com/jquery-3.3.1.min.js"
+                          integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+                          crossOrigin="anonymous"
+                        />
+                        <body className={inter.className + ' bg-background overflow-x-hidden'}>
+                          <ToastProvider>
+                                <Navbar/>
+                                <div
+                                  className='w-full h-full min-h-[70vh]'
+                                  >
+                                    <PrivateRoute>
+                                      {children}
+                                    </PrivateRoute>
+                                </div>
+                                <Footer/>
+                            </ToastProvider>
+                      </body>
+                  </html>
+              </SearchProvider>
+            </AuthProvider>
           </RegisterProvider>
           </StyledThemeProvider>
         </EventTicketProvider>
