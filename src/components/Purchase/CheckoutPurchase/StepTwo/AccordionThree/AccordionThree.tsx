@@ -22,6 +22,7 @@ import { Coupon } from './Coupon';
 import { PIX } from './PIX';
 import { Modal } from '@mui/material';
 import { LoadingPayment } from '@/components/LoadingPayment';
+import { FormAddress } from '@/components/FormAddress';
 
 export const AccordionThree: React.FC = () => {
   const methods = useForm<IPurchase>();
@@ -132,6 +133,14 @@ export const AccordionThree: React.FC = () => {
                 />
               </div> */}
               <div className="input-card">
+                <h6 className="title">Endereço da Cobrança</h6>
+                <FormAddress
+                  loading={false}
+                  defaultValue={
+                    user?.endereco
+                  }
+                  variant='register'
+                />
                 <h6 className="title">Dados do cartão</h6>
                 <div className="form-data-card">
                   <div className="card-number">

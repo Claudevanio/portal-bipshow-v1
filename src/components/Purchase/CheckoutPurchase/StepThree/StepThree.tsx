@@ -111,7 +111,7 @@ export const StepThree: React.FC = () => {
           //   (<Button href="/" text="Fechar" variant="medium" />) :
         }
         <Button 
-        onClick={() => router.push('/profile')}
+        onClick={() => router.push('/profile?tab=meus-ingressos')}
         text="Ver meus pedidos" variant="outline-medium" />
       </div>
     </ContainerStepThree>

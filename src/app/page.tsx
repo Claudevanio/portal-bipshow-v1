@@ -278,7 +278,7 @@ export default function Home() {
         gap-6 p-4 md:px-32 mb-16'
       >
           {
-            filteredList && (filteredList.length === 0 ? <div className='w-full flex items-center justify-center'>
+            filteredList && categoryFilter && (filteredList.length === 0 ? <div className='w-full flex items-center justify-center'>
               <h1 className='text-textPrimary text-lg font-medium'>Nenhum evento encontrado</h1>
               </div> : filteredList.map((event, index) => {
               return (
@@ -289,7 +289,7 @@ export default function Home() {
               )}))
           }
           {
-            !filteredList && eventos && eventos.length > 0 && eventos.map((event, index) => {
+            !categoryFilter && eventos && eventos.length > 0 && eventos.map((event, index) => {
               return (
                 <EventCard
                   event={event}

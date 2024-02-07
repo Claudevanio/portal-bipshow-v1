@@ -555,7 +555,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
           if (tokenCard) {
             const isCartao = {
               ano: String(new Date(`${isFormattedDataCard.validade.split('/')[0]}/01/${isFormattedDataCard.validade.split('/')[1]}`).getFullYear()),
-              endereco: user?.endereco,
+              endereco: isDataPurchase?.endereco ?? user?.endereco,
               mes: isFormattedDataCard.validade.split('/')[0],
               nome: isFormattedDataCard.nome,
               numero: isFormattedDataCard.cartao,

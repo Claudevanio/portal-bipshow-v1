@@ -1,3 +1,5 @@
+import { AddressProps } from '.';
+
 export interface IPurchase {
     cartao: string;
     validade: string;
@@ -8,4 +10,5 @@ export interface IPurchase {
     token?: string;
     senderHash?: string;
     tipoDoCartao?: string;
+    endereco?: AddressProps;
 }

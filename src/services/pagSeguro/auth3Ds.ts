@@ -1,4 +1,5 @@
 import { AddressProps, CreateSessionPagSeguro, IUser, TypePaymentCardProps } from '@/types';
+import { states } from '@/shared/config/states';
 export type CartaoProps = {
   endereco?: AddressProps;
   numero: string;
@@ -16,10 +17,12 @@ export type PedidoProps = {
 export type Callback = (result?: { id: string }, err?: any) => void;
 
 export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento: TypePaymentCardProps, installments: number, sessionPayment: CreateSessionPagSeguro, callback: Callback) {
+  debugger;
   const customer = pedido.usuario;
   const { telefone } = customer;
   const isCartao = cartao;
   const enderecoCobranca = isCartao.endereco;
+  const isStates = states.find((i) => i.estado === enderecoCobranca?.estado);
   const telefoneFormatted = telefone?.replace('(', '').replace(')', '').replace(' ', '').replace('-', '');
 
   const request = {
@@ -56,7 +59,7 @@ export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento
         street: enderecoCobranca?.bairro,
         number: enderecoCobranca?.numero && enderecoCobranca?.numero !== 'S/N' ? Number(enderecoCobranca?.numero) : 0,
         complement: enderecoCobranca?.complemento,
-        regionCode: enderecoCobranca?.localidade ? enderecoCobranca?.localidade.split('/')[1] : enderecoCobranca?.localidade,
+        regionCode: enderecoCobranca?.localidade ? enderecoCobranca?.localidade.split('/')[1] : enderecoCobranca?.localidade ?? isStates?.uf,
         country: 'BRA',
         city: enderecoCobranca?.nomeCidade ?? enderecoCobranca?.cidade,
         postalCode: enderecoCobranca?.cep ? Number(enderecoCobranca?.cep?.replace('-', '')) : enderecoCobranca?.cep,
