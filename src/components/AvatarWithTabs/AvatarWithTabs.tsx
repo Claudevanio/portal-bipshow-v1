@@ -73,6 +73,26 @@ export const AvatarWithTabs = ({
           value={2}
           icon={
             <Image
+              src={"/ticket-black.svg"}
+              alt="Ticket Icon"
+              width={24}
+              height={24}
+            />
+          }
+          iconPosition="start"
+          label="Minhas compras"
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            justifyContent: "start",
+          }}
+        />
+        <Tab
+          value={3}
+          icon={
+            <Image
               src={"/logout.svg"}
               alt="Ticket Icon"
               width={24}

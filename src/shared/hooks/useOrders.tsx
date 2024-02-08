@@ -2,7 +2,7 @@
 import React, {
   createContext, useCallback, useContext, useEffect, useMemo, useState,
 } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   GET_PURCHASE_USER, GET_BILHETE_VENDA, CANCELED_PAYMENT, PRINT_OUT_TICKETS, apiTokeUser
 } from '@/services';
@@ -59,6 +59,7 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isShowAndCloseModalPayment, setIsShowAndCloseModalPayment] = useState<boolean>(false);
   const [isStepper, setIsStepper] = useState<number>(0);
   const router = useRouter();
+  const searchParams = useSearchParams()
   const [isLoadingDownloadTicket, setIsLoadingDownloadTicket] = useState<boolean>(false);
 
   const handleShow = () => setIsShowAndCloseModalPayment(true);
@@ -94,9 +95,7 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const handleClearInfoTicket = useCallback(() => {
-    setIsInfoTicket(undefined);
-    router.query.id = '';
-    router.push(router);
+    setIsInfoTicket(undefined); 
   }, [router]);
 
   const handleLoadTicketsSale = useCallback(async (id: number) => {
@@ -112,9 +111,10 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [showErrorDialog]);
 
   const handleSelectInfoTicket = useCallback(async (idOrder: number, idEvento: number) => {
-    if (data && data.pedidos) {
-      router.query.id = String(idEvento);
-      router.push(router);
+    if (data && data.pedidos) { 
+      debugger;
+      // router.push('/profile?tab=meus-ingressos&' + new URLSearchParams({ idOrder: idOrder.toString(), idEvento: idEvento.toString() }).toString()) 
+
       const findTicket = data.pedidos.find((i) => i.id === idOrder);
 
       if (findTicket) {
@@ -192,6 +192,14 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIsLoading(false);
     }
   }, [data, handleFormattedTicketsPerStatus, showErrorDialog, error]);
+
+  useEffect(()=> {
+    if(searchParams.get('idEvento'))
+      return
+
+    handleClearInfoTicket()
+  }, [searchParams, handleClearInfoTicket]
+  )
 
   return (
     <ContextOrders.Provider value={{

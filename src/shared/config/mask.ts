@@ -93,3 +93,7 @@ export const CVVMask = (v: string) => {
 
   return String(isValue).substring(0, 3);
 };
+
+export const CartaoNameMask = (v: string) => {
+  return v.toUpperCase();
+}

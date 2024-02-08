@@ -4,6 +4,7 @@ import { Input } from '@/components/Form/Input';
 import { Button } from '@/components/Form/Button';
 import { useTicketPurchase } from '@/shared/hooks/useTicketPurchase';
 import { ContainerCoupon } from './styles';
+import { CircularProgress } from '@mui/material';
 
 export const Coupon: React.FC = () => {
   const methods = useForm<{
@@ -64,6 +65,8 @@ export const Coupon: React.FC = () => {
                 }}
                 type="text"
                 onChange={(event) => {
+                  if(event.target.value.length > 12) 
+                    return;
                   setIsCoupon(event.target.value);
                   methods.setValue('coupon', event.target.value);
                 }}
@@ -75,9 +78,7 @@ export const Coupon: React.FC = () => {
                 <Button type="button" variant="outline-text" text="Aplicar" onClick={onSubmit} />
               )}
               {loadingCouponDiscount && (
-                <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
+                <CircularProgress/>
               )}
             </div>
           </FormProvider>

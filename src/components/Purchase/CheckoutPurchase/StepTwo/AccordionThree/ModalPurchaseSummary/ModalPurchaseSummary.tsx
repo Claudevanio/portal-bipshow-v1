@@ -35,11 +35,11 @@ export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurc
           <ul>
             {ticketsPurchase.map((item) => (
               <li key={item.index}>
-                <Avatar src={item.user?.imagem}
+                {/* <Avatar src={item.user?.imagem}
                 size='small' 
                 // username={item.user?.nome} 
                 // variant="small-two" 
-                />
+                /> */}
                 <div className="info-one">
                   <h6 className="title">{item.nome}</h6>
                   <p className="text-light">

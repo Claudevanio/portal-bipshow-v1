@@ -30,7 +30,7 @@ export const PIX: React.FC<PIXProps> = ({ handleIsOpenModalPurchaseSummary }) =>
       <div className="btn-submit">
         <Button type="button" text="Confirmar" variant="medium" onClick={handleIsOpenModalPurchaseSummary} />
         <div className="logo-pagseguro">
-          <img src="/assets/pagseguro.png" alt="Logo do Pagseguro" />
+            <img src="/pagseguro-logo.png" alt="Logo do Pagseguro" />
         </div>
       </div>
     </ContainerPIX>

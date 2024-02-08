@@ -86,7 +86,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const callErrorDialogComponent = (message: string, type?: string) => {
     showErrorDialog(message, type ?? TypeEnum.INFO);
   };
-  const [isStepper, setIsStepper] = useState<number>(pathName.includes('/payment/webview') ? 2 : 1);
+  const [isStepper, setIsStepper] = useState<number>(pathName.includes('/payment/') ? 2 : 1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPurchaseSuccess, setIsPurchaseSuccess] = useState<boolean>(false);
   const [isIdPurchase, setIsIdPurchase] = useState<number>();
@@ -100,14 +100,15 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const [isInstallments, setIsInstallments] = useState<IInstallment[]>();
   const [isLoadinginstallment, setIsLoadingInstallment] = useState<boolean>(false);
   const [installment, setInstallment] = useState<IInstallment>();
-  const [isCheckoutPurchase, setIsCheckoutPurchase] = useState<boolean>(pathName.includes('/payment/webview') ? true : false);
+  const [isCheckoutPurchase, setIsCheckoutPurchase] = useState<boolean>(pathName.includes('/payment/') ? true : false);
   const [isLoadingOrder, setIsLoadingOrder] = useState<boolean>(false);
   const [isLoadingSelectUser, setIsLoadingSelectUser] = useState<boolean>(false);
   // const [isSessionPayment, setIsSessionPayment] = useState<CreateSessionPagSeguro>();
   const [isSessionPayment, setIsSessionPayment] = useState<any>();
   const [isOptionCardPayment, setIsOptionCardPayment] = useState<TypePaymentCardProps>('CREDIT_CARD');
   const [isPaymentPerPix, setIsPaymentPerPix] = useState<PaymentPerPixProps>();
-  const [isWebView] = useState(pathName.includes('/payment/webview') ? true : false);
+  const [isWebView] = useState(pathName.includes('/payment/') ? true : false);
+  const [selectedBrand, setSelectedBrand] = useState<string>('');
 
   const amount = useMemo(() => {
     let isAmount = 0 as number;
@@ -340,6 +341,9 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
             }
             return item;
           }));
+
+          
+
         } else if (!data.sucesso) {
           callErrorDialogComponent(data.erro || 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
         }
@@ -414,7 +418,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               cpf: user.cpf,
               telefone: user.telefone,
               dataNascimento: user.dataNascimento,
-              bandeira: data.brand,
+              bandeira: selectedBrand === '' ? data.brand : selectedBrand,
               email: user.email,
               authenticationId,
               tipoDoCartao: isOptionCardPayment,
@@ -498,6 +502,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
   const handleSubmitReservation = useCallback(async (dataReservation: IReservation[], guide: string, idPurchase: number, dataPurchase?: IPurchase, authenticationId?: string) => {
     try {
+      debugger;
       const { data } = await apiTokeUser.post(`${CREATE_RESERVATION}/${guide}/reserve`, {
         lb: dataReservation,
       });
@@ -866,6 +871,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               totalAmount: installment.amount.value,
             });
           });
+          setSelectedBrand(data.brand);
 
           setIsInstallments(installments);
         } else {
@@ -886,7 +892,6 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
       if (data && data.pedido && data.pedido.pagamento && (data.pedido.pagamento.status === 'APROVADO' || data.pedido.pagamento.status === 'CONCLUIDO')) {
         if (!isWebView) {
-          router.push('/profile/tickets');
           callErrorDialogComponent('Pagamento efetuado com sucesso.', TypeEnum.SUCCESS);
         } else {
           postMessage({

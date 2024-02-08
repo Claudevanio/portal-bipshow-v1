@@ -8,6 +8,7 @@ import { IPurchase } from './interface';
 import { Header } from './Header';
 import { CheckoutPurchase } from './CheckoutPurchase';
 import { Cache } from '@/adapters';
+import { usePathname } from 'next/navigation';
 
 export const Purchase: React.FC<IPurchase> = ({ handleClose }) => {
   const { setIsCheckoutPurchase, isCheckoutPurchase, webView } = useTicketPurchase();
@@ -46,7 +47,8 @@ export const Purchase: React.FC<IPurchase> = ({ handleClose }) => {
         <LoginAndRegister type={isType} onClickPurchase={handleClickCheckoutPurchase} handleChangeType={handleChangeType} />
       )}
       {isCheckoutPurchase && (
-        <CheckoutPurchase handleClickCheckoutNotPurchase={handleClickCheckoutNotPurchase} />
+        <CheckoutPurchase handleClickCheckoutNotPurchase={handleClickCheckoutNotPurchase} 
+        />
       )}
     </ContainerPurchase>
   );

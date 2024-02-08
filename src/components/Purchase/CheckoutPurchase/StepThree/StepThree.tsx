@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Status } from '@/components/Status';
 import { Button } from '@/components/Form/Button';
 import { useTicketPurchase } from '@/shared/hooks/useTicketPurchase';
 import { Button as ButtonForm } from '@/components/Form/Button';
 import { ContainerStepThree } from './styles';
 import { TypeEnum, useError } from '@/shared/hooks/useDialog';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export const StepThree: React.FC = () => {
   const { idPurchase, paymentPerPix, amount } = useTicketPurchase();
@@ -16,6 +16,7 @@ export const StepThree: React.FC = () => {
   const channel = new MessageChannel();
   const port1 = channel.port1;
   const router = useRouter();
+  const pathName = usePathname();
   const handleCopyPix = useCallback(() => {
     const isContent = (document.getElementById('chave-pix') as HTMLTextAreaElement);
 
@@ -23,6 +24,15 @@ export const StepThree: React.FC = () => {
     document.execCommand('copy');
     callErrorDialogComponent("Código copiado.", TypeEnum.SUCCESS)
   }, [showErrorDialog]);
+
+  
+  // if pathName doesnt include '/payment' then redirect to payment/idPurchase
+  useEffect(() => {
+    if (!pathName.includes('/payment')) {
+      // router.push(`/payment/${idPurchase}`);
+    }
+  }, [pathName, idPurchase]);
+  
 
   return (
     <ContainerStepThree>
@@ -47,7 +57,7 @@ export const StepThree: React.FC = () => {
         {amount <= 0 &&(
           <Status text={ 'Ingresso adquirido'} type="success" />
         )}
-      </div>
+      </div> 
       {!paymentPerPix && amount > 0 && (
         <div className="text">
           <p className="text">
@@ -105,14 +115,10 @@ export const StepThree: React.FC = () => {
           </div>
         </div>
       )}
-      <div className="btn">
-        {
-          // asPath.includes('/payment/webview') ? 
-          //   (<Button href="/" text="Fechar" variant="medium" />) :
-        }
-        <Button 
-        onClick={() => router.push('/profile?tab=meus-ingressos')}
-        text="Ver meus pedidos" variant="outline-medium" />
+      <div className="btn"> 
+          <Button 
+          onClick={() => router.push('/profile?tab=orders')}
+          text="Ver meus pedidos" variant="outline-medium" /> 
       </div>
     </ContainerStepThree>
   );

@@ -9,10 +9,12 @@ import { userService } from "@/services";
 import { IUser } from "@/types";
 import { useRegister } from "@/shared/hooks/useRegister";
 import { useAuth } from "@/shared/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { FormAddress } from "@/components/FormAddress";
 import { states } from "@/shared/config/states";
+import { Orders } from './Orders';
+import { OrdersProvider } from '@/shared/hooks/useOrders';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,13 +30,25 @@ export default function Profile() {
   const [originalEmail, setOriginalEmail] = useState(user?.email);
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  const pathname = usePathname()
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    if (newValue == 2) {
+    if (newValue == 3) {
       handleLogoutUser();
       router.push("/");
     }
   };
+   
+  useEffect(() => {
+    function handleIsOrdersTab() {
+      if (searchParams.get('tab') === 'orders') {
+        setActiveTab(2);
+      }
+    }
+    handleIsOrdersTab();
+  }, [searchParams]);
 
   useEffect(() => {
     if (user && user.email) {
@@ -249,6 +263,13 @@ export default function Profile() {
               </div>
             )}
             {activeTab === 0 && <MeusIngressos />}
+            {
+              activeTab === 2 && (
+                <OrdersProvider>
+                  <Orders/>
+                </OrdersProvider>
+              )
+            }
           </div>
         </div>
       </FormProvider>

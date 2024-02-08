@@ -6,9 +6,13 @@ export const ContainerModalPurchaseSummary = styled.div`
     border-top: 6px solid ${({ theme }) => '#8779F8'};
     border-radius: 8px;
     width: fit-content;
+    min-width: 35%;
     background-color: white;
     @media(max-width: 767px) {
         border-radius: 0px;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
     }
     header {
         width: 100%;

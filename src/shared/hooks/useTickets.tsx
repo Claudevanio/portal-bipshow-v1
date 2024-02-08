@@ -73,7 +73,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       router.push(router);
       setIsTicketsUser((current) => current.filter((ticket) => ticket.id !== idTicket));
     } else {
-      router.replace('/profile/tickets');
+      // router.replace('/profile/tickets');
     }
   }, [router]);
 

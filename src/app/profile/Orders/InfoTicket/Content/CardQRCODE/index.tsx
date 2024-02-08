@@ -1,0 +1,1 @@
+export { CardQRCODE } from './CardQRCODE';

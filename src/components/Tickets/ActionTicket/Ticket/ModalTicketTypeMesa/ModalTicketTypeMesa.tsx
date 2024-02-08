@@ -109,7 +109,7 @@ export const ModalTicketTypeMesa: React.FC<IModalTicketTypeMesa> = ({
             return {
               ...i,
               active: true,
-              preFillColor: theme.colors.GRAY_300,
+              preFillColor: '#bcbcbc',
             };
           }
           return i;

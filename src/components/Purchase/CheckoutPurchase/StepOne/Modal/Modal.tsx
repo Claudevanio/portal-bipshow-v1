@@ -99,6 +99,7 @@ export const Modal: React.FC<IModal> = ({ onClose, index, idTipo, open = true })
             <div className="forms-inputs">
               <div className="is-name">
                 <Input
+                  disabledClean
                   type="text"
                   name="nome"
                   id="nome"
@@ -143,10 +144,12 @@ export const Modal: React.FC<IModal> = ({ onClose, index, idTipo, open = true })
                   disabled={false}
                   mask={CPFMask}
                   errorText={methods.formState.errors.cpf && methods.formState.errors.cpf.message as string}
+                  disabledClean
                 />
               </div>
               <div>
                 <Input
+                  disabledClean
                     type="tel"
                     name="telefone"
                     id="telefone"
@@ -216,6 +219,7 @@ export const Modal: React.FC<IModal> = ({ onClose, index, idTipo, open = true })
                 />
               </div> */}
               <Input
+                  disabledClean
                 type="email"
                 name="email"
                 id="email"

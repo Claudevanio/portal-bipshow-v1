@@ -52,7 +52,7 @@ export const Header: React.FC<IHeader> = ({ handleClose }) => {
               }
             </p>
             <p className="text-textPrimary text-xs">
-              {ticket && dayjs(ticket.tiposDeIngresso[0]?.dataUtilizacao).format('DD [de] MMMM [de] YYYY')}
+              {ticket && dayjs(eventTicket?.dataRealizacao).format('DD [de] MMMM [de] YYYY')}
             </p>
           </div>
           {!webView && !purchaseSuccess && (

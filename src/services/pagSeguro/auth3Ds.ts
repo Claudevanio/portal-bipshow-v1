@@ -72,7 +72,7 @@ export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento
   PagSeguro.setUp({
     session: sessionPayment.session,
     // @ts-ignore: Unreachable code error
-    env: sessionPayment.sandbox ? PagSeguro.env.SANDBOX : PagSeguro.env.PROD,
+    env: PagSeguro.env.PROD,
   });
   // @ts-ignore: Unreachable code error
   PagSeguro.authenticate3DS(request).then((result) => {

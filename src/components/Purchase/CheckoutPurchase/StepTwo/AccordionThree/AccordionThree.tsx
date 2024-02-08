@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from '@/components/Form/Input';
-import { CARDMask, CVVMask, VALIDATIONCARDMask } from '@/shared/config/mask';
+import { CARDMask, CVVMask, CartaoNameMask, VALIDATIONCARDMask } from '@/shared/config/mask';
 import { Button } from '@/components/Form/Button';
 import { IPurchase } from '@/types';
 import { Radio } from '@/components/Form/Radio';
@@ -20,7 +20,7 @@ import { ModalPurchaseSummary } from './ModalPurchaseSummary';
 import { OptionsPayment } from './OptionsPayment';
 import { Coupon } from './Coupon';
 import { PIX } from './PIX';
-import { Modal } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Modal } from '@mui/material';
 import { LoadingPayment } from '@/components/LoadingPayment';
 import { FormAddress } from '@/components/FormAddress';
 
@@ -53,7 +53,8 @@ export const AccordionThree: React.FC = () => {
 
     debugger;
     if(guide)
-      await handleLoadPurchase(guide.guide, guide.id, data)
+      handleIsOpenModalPurchaseSummary();
+      // await handleLoadPurchase(guide.guide, guide.id, data)
     
   };
 
@@ -98,13 +99,19 @@ export const AccordionThree: React.FC = () => {
      <Modal open={isOpenModalEditAddress} onClose={handleIsCloseModalEditAddress} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description"> 
         <ModalEditAddress onClose={handleIsCloseModalEditAddress} />
     </Modal>
-      <Modal open={isPurchaseSummary} onClose={handleIsClsoeModalPurchaseSummary} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Modal open={isPurchaseSummary} onClose={handleIsClsoeModalPurchaseSummary}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <ModalPurchaseSummary dataPurchase={isDataPurchase} onClose={handleIsClsoeModalPurchaseSummary} />
       </Modal>
       
       <LoadingPayment open={loading} />
       
-      {/* <OptionsPayment /> */}
+      <OptionsPayment />
       {selectedPayment && selectedPayment?.formaPagamento === 'Boleto' && (
         <div className="alert-container">
           <Alert variant={IAlert.INFO} text={isTypePayment} />
@@ -114,7 +121,7 @@ export const AccordionThree: React.FC = () => {
         {selectedPayment && selectedPayment.formaPagamento === 'CartaoCredito' && amount > 0 && (
           <div>
             <FormProvider {...methods}>
-              {/* <div className="options_cartao">
+              <div className="options_cartao">
                 <Radio
                   id="CREDIT_CARD"
                   checked={optionCardPayment === 'CREDIT_CARD'}
@@ -131,16 +138,24 @@ export const AccordionThree: React.FC = () => {
                   value="CREDIT_CARD"
                   onClick={() => onChangePaymentCardType('DEBIT_CARD')}
                 />
-              </div> */}
+              </div>
               <div className="input-card">
-                <h6 className="title">Endereço da Cobrança</h6>
-                <FormAddress
-                  loading={false}
-                  defaultValue={
-                    user?.endereco
-                  }
-                  variant='register'
-                />
+                <Accordion
+                  className='my-4'
+                >
+                  <AccordionSummary>
+                    <h6 className="title">Endereço da Cobrança</h6>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <FormAddress
+                      loading={false}
+                      defaultValue={
+                        user?.endereco
+                      }
+                      variant='register'
+                    />
+                  </AccordionDetails>
+                </Accordion>
                 <h6 className="title">Dados do cartão</h6>
                 <div className="form-data-card">
                   <div className="card-number">
@@ -267,6 +282,7 @@ export const AccordionThree: React.FC = () => {
                       pattern: /^[a-zA-Z]+(?:[\s.]+[a-zA-Z]+)*$/,
                     }}
                     disabled={loading}
+                    mask={CartaoNameMask}
                     errorText={methods.formState.errors.nome && 'Nome impresso no cartão inválido. Verifique' as string}
                   />
                 </div>
@@ -287,7 +303,7 @@ export const AccordionThree: React.FC = () => {
                   </div>
                 )} */}
               </div>
-              {/* <Coupon /> */}
+              <Coupon />
               {loadinginstallment && (
                 <div className="loading-installment">
                   <LoadingSmall />
@@ -345,7 +361,7 @@ export const AccordionThree: React.FC = () => {
               <div className="btn-submit">
                 <Button type="submit" text="Pagar" variant="medium" disabled={!installments} />
                 <div className="logo-pagseguro">
-                  {/* <img src="/assets/pagseguro.png" alt="Logo do Pagseguro" /> */}
+                  <img src="/pagseguro-logo.png" alt="Logo do Pagseguro" />
                 </div>
               </div>
             </FormProvider>
