@@ -5,6 +5,7 @@ import { Button } from '@/components/Form/Button';
 import { PIX as PIXIcon } from '@/components/icons/PIX';
 import { ContainerPIX } from './styles';
 import { PIXProps } from './interface';
+import { Coupon } from '../Coupon';
 
 export const PIX: React.FC<PIXProps> = ({ handleIsOpenModalPurchaseSummary }) => {
   const { amount } = useTicketPurchase();
@@ -18,6 +19,7 @@ export const PIX: React.FC<PIXProps> = ({ handleIsOpenModalPurchaseSummary }) =>
           Aprovação em minutos
         </p>
       </div>
+      <Coupon/>
       <p className="total">
         Total -
         {' '}

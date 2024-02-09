@@ -72,4 +72,40 @@ export const ContainerCoupon = styled.div`
             width: ${({ theme }) => theme.spacing(2)};
         }
     }
+    div.tickets {
+            padding: ${({ theme }) => theme.spacing(3)} 0px;
+            border-bottom: 1px solid ${({ theme }) => "#f6f6f6"};
+            width: 100%;
+            ul {
+                margin-top: ${({ theme }) => theme.spacing(1.75)};
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: ${({ theme }) => theme.spacing(2)};
+                li {
+                    width: 100%;
+                    display: flex;
+                    gap: ${({ theme }) => theme.spacing(2)};
+                    h6 {
+                        font-size: ${({ theme }) => ".875rem"} !important;
+                        line-height: 130%;
+                    }
+                    p.text-light {
+                        color: #BFBFBF !important;
+                        font-weight: 500 !important;
+                    }
+                    div.info-one {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px
+                    }
+                    div.info-two {
+                        margin-left: auto;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px
+                    }
+                }
+            }
+        }
 `;
