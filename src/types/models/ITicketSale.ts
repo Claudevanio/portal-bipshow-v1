@@ -15,7 +15,7 @@ export interface ITicketSale {
     codigo: string,
     jaUtilizado: boolean,
     utilizador: {
-        nome:string
+        nome: string
     },
     numero: number,
     valorIngresso: number,
@@ -27,4 +27,7 @@ export interface ITicketSale {
     status?: string,
     podeEditar?: boolean
     facial?: boolean
+    podeTransferir?: boolean
+    onClickTransfer?: () => void
+    onClickCancel?: () => void
 }

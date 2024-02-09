@@ -1,0 +1,1 @@
+export { InfoTicket } from './InfoTicket';

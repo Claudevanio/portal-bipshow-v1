@@ -6,7 +6,7 @@ import { Input } from '../Input/Input'
 import { useEffect, useState } from 'react'
 import { ArrowDropDown, CancelOutlined, Close, Search } from '@mui/icons-material'
 import { Montserrat } from 'next/font/google'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useGeoLocation } from '@/hooks'
 import { Autocomplete, Menu, Modal, Tab, Tabs } from '@mui/material'
 import { estadosArray, getCidadesByUF } from '@/utils'
@@ -16,6 +16,7 @@ import { useRegister } from '@/shared/hooks/useRegister'
 import { LegacyAvatar } from '../Avatar/legacy/Avatar/Avatar'
 import { useSearch } from '@/shared/hooks/useSearch'
 import { AvatarWithTabs } from '../AvatarWithTabs/AvatarWithTabs'
+import { useAuth } from '@/shared/hooks/useAuth'
 
 const fontMontSerrat = Montserrat({ subsets: ['latin'] })
 
@@ -34,10 +35,13 @@ export function Navbar() {
 
   const {user, handleLoadUser, clearDefaultValues} = useRegister()
   
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const {isAuthModalOpen, setIsAuthModalOpen} = useAuth()
+
   const [profileModalOpen, setProfileModalOpen] = useState(false)
 
   const [authType, setAuthType] = useState<'login' | 'register'>('login')
+
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     if((locationValue.city && locationValue.uf) && (locationValue.city !== '' && locationValue.uf !== '') ){
@@ -318,13 +322,13 @@ export function Navbar() {
                 : <>
                   <Button
                     onClick={() => {
-                      router.push('/meus-ingressos')
+                      router.push('/profile?tab=meus-ingressos')
                     }}
                   >Meus Ingressos</Button>
                   <div
                     className='w-12 h-fit cursor-pointer'
                     onClick={() => {
-                      router.push('/profile')
+                      router.replace('/profile')
                     }}
                   >
                     {user?.imagem ? 
@@ -461,15 +465,17 @@ export function Navbar() {
         orientation="vertical"
         className="mt-2"
         value={
-          pathName === '/meus-ingressos' ? 0 : 
-          pathName === '/profile' ? 1 : 0
+          searchParams.get('tab') === 'meus-ingressos' ? 0 : searchParams.get('tab') === 'orders' ? 2 : pathName === '/profile' ? 1 : 0
         }
         onChange={(event, tab) => {
           if(tab === 0){
-            router.push('/meus-ingressos')
+            router.push('/profile?tab=meus-ingressos')
             setProfileModalOpen(false)
           } else if(tab === 1){
             router.push('/profile')
+            setProfileModalOpen(false)
+          } else if(tab === 2){
+            router.push('/profile?tab=orders')
             setProfileModalOpen(false)
           }
         }}
@@ -516,6 +522,26 @@ export function Navbar() {
         />
         <Tab
           value={2}
+          icon={
+            <Image
+              src={"/ticket-black.svg"}
+              alt="Ticket Icon"
+              width={24}
+              height={24}
+            />
+          }
+          iconPosition="start"
+          label="Minhas Compras"
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            justifyContent: "start",
+          }}
+        />
+        <Tab
+          value={3}
           icon={
             <Image
               src={"/logout.svg"}

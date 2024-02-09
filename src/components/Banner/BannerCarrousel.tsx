@@ -30,18 +30,22 @@ export const CarouselComponent = (
     const slick = document.querySelector('.slick-track'); 
   });
 
-  // const [windowSize, setWindowSize] = useState(window.innerWidth);
-  // const handleWindowResize = () => {
-  //   setWindowSize(window.innerWidth);
-  // };
-  // useEffect(() => {
-  //   window.addEventListener('resize', handleWindowResize);
-  //   return () => {
-  //     window.removeEventListener('resize', handleWindowResize);
-  //   };
-  // }, []);
+  const [windowSize, setWindowSize] = useState(window && window.innerWidth);
+  const handleWindowResize = () => {
+    if(!window) return;
 
-  // window.addEventListener('resize', handleWindowResize);
+    setWindowSize(window.innerWidth);
+  };
+  useEffect(() => {
+    if(!window) return;
+    
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  window.addEventListener('resize', handleWindowResize);
 
   const sliderRef = useRef<any>();
 
@@ -77,22 +81,40 @@ export const CarouselComponent = (
           />
         </button>
         <Slider {...settings} ref={sliderRef}>
-          <Image
-            className='w-[100%] h-[100%]'
-            src={'/bannerPrincipal.svg'}
-            alt="Logo"
-            width={1920}
-            height={600}
-          />
+          
+          {
+             windowSize <= 700 ?
+              <div
+                className='bg-background'
+              >
+                <Image
+                  className='w-[100%] h-[400px]'
+                  src={'/bannerBipShow.svg'}
+                  alt="Logo"
+                  width={1920}
+                  height={600}
+                  />
+                </div>
+              
+              :
+              
+                <Image
+                  className='w-[100%] h-[100%]'
+                  src={'/bannerPrincipal.svg'}
+                  alt="Logo"
+                  width={1920}
+                  height={600}
+                />
+          } 
           
           {cp?.eventos.map((item : any) => {
-              // if (windowSize <= 700) {
-              //   return (
-              //     <div className="item" key={item.nome}>
-              //       <CardBanner image={item?.imagens?.mobiledestaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />
-              //     </div>
-              //   );
-              // }
+              if (windowSize <= 700) {
+                return (
+                  <div className="item" key={item.nome}>
+                    <CardBanner image={item?.imagens?.mobiledestaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />
+                  </div>
+                );
+              }
               return (
                 <div className="item" key={item.nome}>
                   <CardBanner image={item?.imagens?.destaque?.link} address={item.endereco as IAddress} endDate={item.dataFim} startDate={item.dataRealizacao} hour={item.horaInicio} title={item.nome} id={item.id} slug={item.link} />

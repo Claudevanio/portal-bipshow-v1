@@ -107,6 +107,8 @@ export interface IAuth {
   setIsNotUserPhoto: React.Dispatch<React.SetStateAction<IUser | undefined>>;
   onUpdatedUser: (data: IUser) => Promise<void>;
   forgotPasswordDefaultValues: any;
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -182,6 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoadingSubmitUpdatedUser, setIsLoadingSubmitUpdatedUser] = useState<boolean>(false);
   const [isNotUserPhoto, setIsNotUserPhoto] = useState<IUser>();
   const [isToken, setIsToken] = useState<any>();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
   const [forgotPasswordDefaultValues, setForgotPasswordDefaultValues] = useState<any>();
 
@@ -1301,6 +1304,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         onUpdatedUser: handleUpdatedUser,
         handleUpdateEmail,
         forgotPasswordDefaultValues,
+        isAuthModalOpen,
+        setIsAuthModalOpen
       }}
     >
       {children}

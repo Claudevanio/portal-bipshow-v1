@@ -2,10 +2,10 @@
 import React, {
   createContext, useCallback, useContext, useEffect, useState,
 } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   CANCELED_PAYMENT, PRINT_OUT_TICKETS, GET_TICKETS_CONFIRMATIONS,
-  TRANSFER_TICKETS, apiTokeUser 
+  TRANSFER_TICKETS, apiTokeUser, GET_TICKETS_LOCKED 
 } from '@/services';
 import { ITicketPurchaseConfirmationUser, IUser } from '@/types';
 import { useFetch } from './useFetch';
@@ -13,6 +13,7 @@ import { TypeEnum, useError } from "./useDialog";
 
 interface ITicketsProvider {
     ticketsUser: ITicketPurchaseConfirmationUser[];
+    ticketsUserCanceled: ITicketPurchaseConfirmationUser[];
     handleSelectInfoTicket: (idOrder: number, idEvento: number) => void;
     infoTicket: ITicketPurchaseConfirmationUser | undefined;
     handleClearInfoTicket: () => void;
@@ -42,9 +43,12 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     showErrorDialog(message, type ?? TypeEnum.INFO);
   };
   const [isTicketsUser, setIsTicketsUser] = useState<ITicketPurchaseConfirmationUser[]>([]);
+  const [ticketsUserCanceled, setTicketsUserCanceled] = useState<ITicketPurchaseConfirmationUser[]>([]);
   const [isInfoTicket, setIsInfoTicket] = useState<ITicketPurchaseConfirmationUser | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { data, error } = useFetch<{ bilhetes: ITicketPurchaseConfirmationUser[] }>(GET_TICKETS_CONFIRMATIONS, 'user');
+  const { data: dataCanceled } = useFetch<{ bilhetes: ITicketPurchaseConfirmationUser[] }>(GET_TICKETS_LOCKED, 'user');
+
   const [isLoadingCanceledPayment, setIsLoadingCanceledPayment] = useState<boolean>(false);
   const [isInfoCanceledPayment, setIsInfoCanceledPayment] = useState<{
     motivo: string;
@@ -53,6 +57,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isShowAndCloseModalPayment, setIsShowAndCloseModalPayment] = useState<boolean>(false);
   const [isStepper, setIsStepper] = useState<number>(0);
   const router = useRouter();
+  const pathName = usePathname( )
   const [isLoadingDownloadTicket, setIsLoadingDownloadTicket] = useState<boolean>(false);
   const [loadingTransfer, setLoadingTransfer] = useState<boolean>(false);
 
@@ -67,20 +72,17 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const handleClearInfoTicket = useCallback((idTicket?: number) => {
     setIsInfoTicket(undefined);
 
-    router.query.id = '';
-
     if (idTicket) {
-      router.push(router);
       setIsTicketsUser((current) => current.filter((ticket) => ticket.id !== idTicket));
     } else {
+      router.push(pathName);
       // router.replace('/profile/tickets');
     }
-  }, [router]);
+  }, [router, pathName]);
 
   const handleSelectInfoTicket = useCallback(async (idOrder: number, idEvento: number) => {
     if (data && data.bilhetes) {
-      router.query.id = String(idEvento);
-      router.replace(router);
+      router.replace(pathName + `?tab=meus-ingressos&id=${idEvento}`)
       const findTicket = data.bilhetes.find((i : any) => i.id === idOrder);
 
       if (findTicket) {
@@ -106,6 +108,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
     }
   }, [showErrorDialog]);
+
 
   const handleDownloadTicketSales = useCallback(async (code: string, guid: string) => {
     try {
@@ -157,6 +160,12 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [data, handleFormattedTicketsPerStatus, error]);
 
+  useEffect(() => {
+    if (dataCanceled) {
+      setTicketsUserCanceled(dataCanceled.bilhetes);
+    }
+  }, [dataCanceled]);
+
   return (
     <ContextTickets.Provider value={{
       ticketsUser: isTicketsUser,
@@ -176,6 +185,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       isLoadingDownloadTicket,
       handleTranferTickets,
       loadingTransfer,
+      ticketsUserCanceled
     }}
     >
       {children}

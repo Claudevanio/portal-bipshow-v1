@@ -40,4 +40,5 @@ export const UPDATED_USER = "rest/v1/usuarios";
 export const GET_CITY_CODE_IBGE = "rest/v1/cidades/ibge";
 export const GET_TICKETS_CONFIRMATIONS = "rest/v1/bilhetes/confirmados";
 export const GET_TICKETS_LOCKED = "rest/v1/bilhetes/encerrados";
+export const GET_TICKETS_TRANSFEREDS = "/rest/v1/transferencias";
 export const TRANSFER_TICKETS = "rest/v1/pedidos";

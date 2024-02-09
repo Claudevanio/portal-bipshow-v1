@@ -68,7 +68,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
     return `http://www.google.com/calendar/event?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}&location=${location}&trp=false&sprop=&sprop=${text}`;
   };
 
-  const [activeTab, setActiveTab] = useState<"info" | "tickets">("info");
+  const [activeTab, setActiveTab] = useState<"info" | "tickets">("tickets");
 
   function handleClickShare() {
     if (navigator.share && document.location.origin) {
@@ -108,7 +108,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
               }}
             ></div>
             <img 
-              src={eventTicket?.capa?.link && eventTicket?.capa?.link[0] === "/" ? baseUrlImages + eventTicket?.capa?.link : eventTicket?.capa?.link}
+              src={eventTicket?.imagens?.minicapa?.link && eventTicket?.imagens?.minicapa?.link[0] === "/" ? baseUrlImages + eventTicket?.imagens?.minicapa?.link : eventTicket?.imagens?.minicapa?.link}
               alt="Evento"
               className="w-full rounded-xl h-80 object-fill md:hidden"
               />
@@ -138,6 +138,23 @@ export default function EventoPage({ params }: { params: { id: string } }) {
           <div className="flex items-center w-full gap-8 border-b-2 border-gray pb-2 md:hidden">
             <h4
               className={`text-sm flex items-center gap-2 font-medium cursor-pointer ${
+                activeTab == "tickets" ? "text-primary" : "text-textPrimary"
+              }`}
+              onClick={() => setActiveTab("tickets")}
+            >
+              <Image
+                className={`${activeTab == "tickets" ? "" : "brightness-0"}`}
+                src={"/Ticket.svg"}
+                alt="Logo"
+                width={20}
+                height={20}
+              />
+              Ingressos
+            </h4>
+            <div className="border-l-2 border-gray h-6" />
+
+            <h4
+              className={`text-sm flex items-center gap-2 font-medium cursor-pointer ${
                 activeTab == "info" ? "text-primary" : "text-textPrimary"
               }`}
               onClick={() => setActiveTab("info")}
@@ -152,23 +169,6 @@ export default function EventoPage({ params }: { params: { id: string } }) {
               Informações
             </h4>
 
-            <div className="border-l-2 border-gray h-6" />
-
-            <h4
-              className={`text-sm flex items-center gap-2 font-medium cursor-pointer ${
-                activeTab == "tickets" ? "text-primary" : "text-textPrimary"
-              }`}
-              onClick={() => setActiveTab("tickets")}
-            >
-              <Image
-                className={`${activeTab == "tickets" ? "" : "brightness-0"}`}
-                src={"/Ticket.svg"}
-                alt="Logo"
-                width={20}
-                height={20}
-              />
-              Ingressos
-            </h4>
           </div>
 
           <div className={`md:flex w-full gap-6`}>

@@ -1,12 +1,15 @@
 'use client';
 
+import { useAuth } from '@/shared/hooks/useAuth';
 import { useRegister } from '@/shared/hooks/useRegister';
+import { WhatsApp } from '@mui/icons-material';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export const Footer = () => {
 
   const {user} = useRegister();
+  const {setIsAuthModalOpen} = useAuth()
 
 
 return <footer className="bg-grayLight relative overflow-hidden">
@@ -41,7 +44,20 @@ return <footer className="bg-grayLight relative overflow-hidden">
       <p
         className='text-textPrimary font-medium'
       >
-        (62) 3241-0541 <br/> 
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="whatsapp://send?phone=5562982260746"
+        >
+          <WhatsApp
+            sx={{
+              color: '#00E676',
+              mr: 1,
+            }}
+            />
+        </a>
+          (62) 9 82260-0746 
+        <br/> 
         contato@bipshow.com.br
       </p>
       <p
@@ -56,9 +72,8 @@ return <footer className="bg-grayLight relative overflow-hidden">
     <h2 className="font-medium text-primary">Acesso rápido</h2>
     <div className="flex flex-col space-y-2 text-sm text-textPrimary font-normal pl-6">
       <a rel="noopener noreferrer" className='list-item' href="/">Início</a>
-      {user ? <Link href={'/meus-ingressos'} className='list-item' >Meus Ingressos</Link> : <a rel="noopener noreferrer" className='list-item' href={'#'}>Meus Ingressos</a>}
-      <a rel="noopener noreferrer" className='list-item' href="http://uzer.com.br/" target='_blank'>Para produtores</a>
-      <a rel="noopener noreferrer" className='list-item' href="http://uzer.com.br/" target='_blank'>Central de dúvidas</a>
+      {user ? <Link href={'/meus-ingressos'} className='list-item' >Meus Ingressos</Link> : <p rel="noopener noreferrer" className='list-item cursor-pointer' onClick={() => setIsAuthModalOpen(true)} >Meus Ingressos</p>}
+      <a rel="noopener noreferrer" className='list-item' href="https://uzerticket.com.br/home/eventos/" target='_blank'>Area de produtores</a>
       <a rel="noopener noreferrer" className='list-item'  href="http://uzer.com.br/" target='_blank'>Institucional</a>
       <a rel="noopener noreferrer" className='list-item'  href="https://www.planalto.gov.br/ccivil_03/_Ato2015-2018/2015/Decreto/D8537.htm#art28" target='_blank'>Lei de meia-entrada</a>
     </div>

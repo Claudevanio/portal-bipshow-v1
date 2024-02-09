@@ -15,6 +15,8 @@ import { FormAddress } from "@/components/FormAddress";
 import { states } from "@/shared/config/states";
 import { Orders } from './Orders';
 import { OrdersProvider } from '@/shared/hooks/useOrders';
+import { TicketsProvider } from '@/shared/hooks/useTickets';
+import { Tickets } from './Tickets';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,6 +31,8 @@ export default function Profile() {
   } = useRegister();
   const [originalEmail, setOriginalEmail] = useState(user?.email);
   const router = useRouter();
+
+  const {setIsAuthModalOpen} = useAuth();
 
   const searchParams = useSearchParams();
   const pathname = usePathname()
@@ -45,6 +49,9 @@ export default function Profile() {
     function handleIsOrdersTab() {
       if (searchParams.get('tab') === 'orders') {
         setActiveTab(2);
+      }
+      if (searchParams.get('tab') === 'meus-ingressos') {
+        setActiveTab(0);
       }
     }
     handleIsOrdersTab();
@@ -119,18 +126,24 @@ export default function Profile() {
     }
   };
 
+  useEffect(() => {
+    if(!user?.id) {
+      setIsAuthModalOpen(true);
+    }
+  }, [user]);
+
   return (
-    <form onSubmit={methods.handleSubmit(onSubmit)}>
-      <FormProvider {...methods}>
         <div className="w-full flex flex-1 flex-row gap-2 px-4 md:px-14 xl:px-20 2xl:px-14  pt-10 pb-10 overflow-x-hidden">
           <AvatarWithTabs
             activeTab={activeTab}
             size="normal"
             handleChangeTab={handleChange}
           />
-          <div className="w-full flex flex-1 flex-column gap-4  overflow-x-hidden">
+          <div className="w-full flex flex-1 flex-column gap-4 overflow-x-hidden">
             {activeTab == 1 && (
               <div className="flex-column gap-4 flex-1 p-4">
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <FormProvider {...methods}>
                 <div className="flex flex-row gap-3  w-full p-5 pb-4 items-center">
                   <Image src="/my-profile.svg" alt="" width={32} height={32} />
                   <h2 className="h-fit font-semibold text-2xl">Meu perfil</h2>
@@ -260,9 +273,14 @@ export default function Profile() {
                     </div>
                   </div>
                 )}
+              
+      </FormProvider>
+      </form>
               </div>
             )}
-            {activeTab === 0 && <MeusIngressos />}
+            {activeTab === 0 && <TicketsProvider>
+              <Tickets/>
+            </TicketsProvider> }
             {
               activeTab === 2 && (
                 <OrdersProvider>
@@ -272,7 +290,5 @@ export default function Profile() {
             }
           </div>
         </div>
-      </FormProvider>
-    </form>
   );
 }

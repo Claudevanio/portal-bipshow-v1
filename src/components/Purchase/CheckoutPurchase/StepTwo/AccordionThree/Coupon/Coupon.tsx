@@ -39,6 +39,7 @@ export const Coupon: React.FC = () => {
         sx={{
           '& .MuiTableCell-root': {
             textAlign: 'center',
+            minWidth: '100px !important'
           },
         }}
       >
@@ -156,6 +157,9 @@ export const Coupon: React.FC = () => {
                                   message: 'Insira um valor',
                                   value: true,
                                 },
+                              }}
+                              style={{
+                                minWidth: '130px'
                               }}
                               type="text"
                               onChange={(event) => {
