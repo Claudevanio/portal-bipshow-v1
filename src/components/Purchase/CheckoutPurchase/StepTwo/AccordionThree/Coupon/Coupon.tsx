@@ -26,21 +26,19 @@ export const Coupon: React.FC = () => {
 
   return (
     <ContainerCoupon>
-      <h6 className="title">{couponAppliep ? 'Cupom aplicado' : 'Incluir cupom de desconto'}</h6>
+      <h6 className="title mt-4">{couponAppliep ? 'Cupom aplicado' : 'Incluir cupom de desconto'}</h6>
       {couponAppliep && (
         <div className="coupon-applied">
-          <p className="information">
+          <p className="information pt-2">
             {couponAppliep.coupon}
           </p>
           <div className="btn">
             {loadingCouponDiscount && (
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+              <CircularProgress/>
             )}
-            {!loadingCouponDiscount && (
+            {/* {!loadingCouponDiscount && (
               <Button type="button" variant="outline-text" text="Remover cupom" onClick={handleRemoveCoupon} />
-            )}
+            )} */}
           </div>
         </div>
       )}
@@ -85,7 +83,7 @@ export const Coupon: React.FC = () => {
         </form>
       )}
       {couponAppliep && (
-        <div className="discount">
+        <div className="discount mb-6">
           <h6 className="title">Valor de desconto</h6>
           <p className="information">
             {couponAppliep.valorDesconto.toLocaleString('pt-BR', {

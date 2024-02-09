@@ -17,7 +17,7 @@ export const SearchEvents: React.FC = () => {
       <SEO
         description="Compre ingressos para seus eventos favoritos"
         image="https://www.synpass.com.br/assets/banner.png"
-        nome="Synpass"
+        nome="BipShow"
         imageTwo="https://www.synpass.com.br/assets/banner.png"
       />
         <div

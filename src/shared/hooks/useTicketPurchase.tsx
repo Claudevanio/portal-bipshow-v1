@@ -817,6 +817,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const handleSubmitCouponDiscount = useCallback(async (isCoupon: string) => {
     try {
       if (guidePurchase) {
+        debugger;
         setIsLoadingCouponDiscount(true);
         const { data } = await apiTokeUser.put(`${APLICATION_COUPON_DISCOUNT}/${guidePurchase.guide}/cupomOnline`, {
           cc: isCoupon,

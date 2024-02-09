@@ -17,7 +17,7 @@ import { baseUrl } from '@/constants';
           description={`Compre Ingressos - ${data?.nome}`}
           id={data?.id || 'Erro'}
           image={`${process.env.URL_API}${data?.image}`}
-          nome={`Synpass - ${data?.nome}`}
+          nome={`BipShow - ${data?.nome}`}
         />
         <TicketPurchaseProvider>
           <Purchase />

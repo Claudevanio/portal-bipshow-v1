@@ -11,7 +11,7 @@ export const SEO: React.FC<ISEO> = ({
         {nome}
       </title>
       <meta name="description" content={description} />
-      <meta name="application-name" content="Synpass" />
+      <meta name="application-name" content="BipShow" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       <meta name="apple-mobile-web-app-title" content={nome} />

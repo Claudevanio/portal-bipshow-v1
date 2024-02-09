@@ -9,7 +9,7 @@ const Tickets: NextPage = () => {
       <SEO
         description="Compre ingressos para seus eventos favoritos"
         image="https://www.synpass.com.br/assets/banner.png"
-        nome="Synpass - Pagamento"
+        nome="BipShow - Pagamento"
         imageTwo="https://www.synpass.com.br/assets/banner.png"
       />
       {/* <Order /> */}

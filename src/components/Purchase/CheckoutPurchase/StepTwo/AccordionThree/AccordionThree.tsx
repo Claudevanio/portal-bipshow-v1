@@ -28,7 +28,7 @@ export const AccordionThree: React.FC = () => {
   const methods = useForm<IPurchase>();
   const {
     loading, selectedPayment, handleQuantityinstallment, installments, loadinginstallment, setInstallment, amount, onChangePaymentCardType, optionCardPayment, handleSubmitIngressoCortesia,
-    guide, handleLoadPurchase
+    guide, handleLoadPurchase, couponAppliep
   } = useTicketPurchase();
   const cardNumber = methods.watch('cartao');
   const installment = methods.watch('parcelas');
@@ -58,6 +58,7 @@ export const AccordionThree: React.FC = () => {
     
   };
 
+
   const isTypePayment = useMemo(() => {
     switch (selectedPayment?.formaPagamento) {
       case 'CartaoCredito':
@@ -82,7 +83,7 @@ export const AccordionThree: React.FC = () => {
       handleQuantityinstallment(cardNumber);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cardNumber, setInstallment]);
+  }, [cardNumber, setInstallment,couponAppliep]);
 
   useEffect(() => {
     if (installment) {

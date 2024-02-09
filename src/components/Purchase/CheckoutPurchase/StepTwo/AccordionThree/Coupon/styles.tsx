@@ -24,8 +24,7 @@ export const ContainerCoupon = styled.div`
         display: flex;
         align-items: center;
         width: 70%;
-        justify-content: space-between;
-        margin-top: -6px;
+        justify-content: space-between; 
         @media(max-width: 767px) {
             width: 90%;
         }
