@@ -8,6 +8,7 @@ import { ContainerLoginAndRegister } from "./styles";
 import { Login } from "./Login";
 import { Register } from "./Register";
 import { ILoginAndRegister } from "./interface";
+import { usePathname, useSearchParams } from 'next/navigation';
 
 export const LoginAndRegister: React.FC<ILoginAndRegister> = ({
     type,
@@ -16,16 +17,36 @@ export const LoginAndRegister: React.FC<ILoginAndRegister> = ({
 }) => {
     const { defaultValues, setDefaultValues } = useRegister();
 
-    useEffect(() => {
-        
-        setDefaultValues({
-        });
+    const pathName = usePathname();
 
-    }, []);
+    const query = useSearchParams()
 
     const methods = useForm<IUser>({
-        defaultValues,
+        defaultValues: defaultValues,
     });
+    
+
+    useEffect(() => {
+        if(pathName !== '/registrar'){ 
+            return;
+        }
+        if(defaultValues && (JSON.stringify(defaultValues) !== JSON.stringify(methods.getValues()))){
+            methods.reset(defaultValues);
+        }
+    }, [pathName, defaultValues, methods, setDefaultValues]);
+
+     
+    useEffect(() => { 
+        if (pathName !== '/registrar')
+        return
+        if(!query.get('payload'))
+        return
+        const payload = JSON.parse(query.get('payload') as string);
+        if(JSON.stringify(defaultValues) === JSON.stringify(payload))
+        return
+        setDefaultValues(payload);
+    }, [pathName, query, ]);
+
 
     return (
         <ContainerLoginAndRegister>

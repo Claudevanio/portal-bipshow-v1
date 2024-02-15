@@ -2,7 +2,7 @@
 import React, {
   createContext, useCallback, useContext, useEffect, useState,
 } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   CANCELED_PAYMENT, PRINT_OUT_TICKETS, GET_TICKETS_CONFIRMATIONS,
   TRANSFER_TICKETS, apiTokeUser, GET_TICKETS_LOCKED 
@@ -57,7 +57,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isShowAndCloseModalPayment, setIsShowAndCloseModalPayment] = useState<boolean>(false);
   const [isStepper, setIsStepper] = useState<number>(0);
   const router = useRouter();
-  const pathName = usePathname( )
+  const pathName = usePathname()
+  const searchParams = useSearchParams()
   const [isLoadingDownloadTicket, setIsLoadingDownloadTicket] = useState<boolean>(false);
   const [loadingTransfer, setLoadingTransfer] = useState<boolean>(false);
 
@@ -71,14 +72,17 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const handleClearInfoTicket = useCallback((idTicket?: number) => {
     setIsInfoTicket(undefined);
-
     if (idTicket) {
       setIsTicketsUser((current) => current.filter((ticket) => ticket.id !== idTicket));
     } else {
-      router.push(pathName);
-      // router.replace('/profile/tickets');
+      router.replace('/profile?tab=meus-ingressos');
     }
   }, [router, pathName]);
+
+  useEffect(() => {
+    if(!searchParams.get('id'))
+      handleClearInfoTicket()
+  }, [searchParams, handleClearInfoTicket])
 
   const handleSelectInfoTicket = useCallback(async (idOrder: number, idEvento: number) => {
     if (data && data.bilhetes) {

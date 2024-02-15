@@ -9,7 +9,7 @@ export const ContainerEmpty = styled.div`
     h5 {
         text-transform: uppercase !important;
         font-weight: 800 !important;
-        color: ${({ theme }) => "#E3E3E3"} !important;
+        color: ${({ theme }) => "#39474F"} !important;
         text-align: center;
     }
 `;

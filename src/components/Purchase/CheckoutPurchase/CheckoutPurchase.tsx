@@ -94,7 +94,7 @@ export const CheckoutPurchase: React.FC<ICheckoutPurchase> = ({ handleClickCheck
         <StepOne />
         )}
         {stepper === 2 && (
-          purchaseSuccess || webView ? (
+          purchaseSuccess ? (
             <StepThree />
           ) : <StepTwo />
         )}

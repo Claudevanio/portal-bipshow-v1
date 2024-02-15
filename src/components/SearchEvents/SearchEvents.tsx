@@ -16,9 +16,9 @@ export const SearchEvents: React.FC = () => {
     <ContainerSearchEvents>
       <SEO
         description="Compre ingressos para seus eventos favoritos"
-        image="https://www.synpass.com.br/assets/banner.png"
+        image="https://bipshow.com/bannerPrincipal.svg"
         nome="BipShow"
-        imageTwo="https://www.synpass.com.br/assets/banner.png"
+        imageTwo="https://bipshow.com/bannerPrincipal.svg"
       />
         <div
         className='w-full flex items-center pt-12 mb-12 justify-between px-4 md:px-32 pb-4 border-b-2 border-gray'

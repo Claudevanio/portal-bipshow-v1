@@ -105,7 +105,7 @@ export const StepOne: React.FC = () => {
   // useEffect(() => {
   //   if(!haveCpf)
   //     return
-  //   debugger;
+  //   
   //   setTimeout(() => {
   //     dataNascimentoRef.current?.firstChild?.dispatchEvent(new Event('blur', { bubbles: true }));
   //   }, 3000);
@@ -148,7 +148,7 @@ export const StepOne: React.FC = () => {
 
   const handleChangeCountry = (e: any) => {
     setValue("idPais", +e.target.value);
-    // debugger;
+    // 
     // setValue("idPais", +e.target.value);
     // // onSelectCountry(countries?.find((country) => country.id === e.target.value));
     // setValue("DD", countries?.find((country) => country.id === e.target.value)?.codigoArea);

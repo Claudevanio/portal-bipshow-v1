@@ -13,6 +13,8 @@ import { Offcanvas } from 'react-bootstrap';
 import { Purchase } from '@/components/Purchase';
 import { ContainerInfoTicket, Image } from './styles';
 import { Content } from './Content';
+import { api } from '@/services';
+import { baseUrlImages } from '@/constants';
 
 export const InfoTicket: React.FC = () => {
   const { infoTicket, handleClearInfoTicket } = useOrders();
@@ -45,6 +47,26 @@ export const InfoTicket: React.FC = () => {
     setIsTickets(tickets);
   }, [infoTicket, user, setIsTickets, setIsGuidePurchase]);
 
+  const [ticketData, setTicketData] = React.useState<any>();
+
+  const fetchTicketData = async () => {
+    if(infoTicket) {
+      console.log(infoTicket.evento.id)
+      const response = await api.get(`/rest/v1/eventos/${infoTicket.evento.id}/online`);
+      setTicketData(response.data);
+    }
+  }
+
+  useEffect(() => {
+    if (infoTicket) {
+      fetchTicketData();
+    }
+  }, [infoTicket]);
+
+  const imageURL = ticketData?.capa?.link && ticketData?.capa?.link[0] === "/" ? baseUrlImages + ticketData?.capa?.link : ticketData?.capa?.link;
+
+  const imageMobileURL  = ticketData?.imagens?.minicapa?.link && ticketData?.imagens?.minicapa?.link[0] === "/" ? baseUrlImages + ticketData?.imagens?.minicapa?.link : ticketData?.imagens?.minicapa?.link;
+
   return (
     infoTicket ? (
       <ContainerInfoTicket>
@@ -63,7 +85,23 @@ export const InfoTicket: React.FC = () => {
         </button>
         <div className="header">
           <h5 className="title">{infoTicket.evento.nome}</h5>
-          <Image image={`${process.env.URL_API}${infoTicket.evento.foto}`} />
+          {/* <Image image={`${process.env.URL_API}${infoTicket.evento.foto}`} /> */}
+          
+          <div
+              className="w-full h-80 rounded-xl hidden md:block object-cover"
+              style={{
+                backgroundImage: `url(${imageURL})`,
+                backgroundSize: "100%",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundClip: "border-box",
+              }}
+            ></div> 
+            <img 
+              src={imageMobileURL}
+              alt="Evento"
+              className="w-full rounded-xl h-80 object-fill md:hidden"
+              />
           <div className="date">
             <Calendar width={20} height={20} color={'#000'} />
             <p className="text-dark">

@@ -17,6 +17,7 @@ import { useOrders } from './useOrders';
 import { IPlace, ISector, ITicket, ITicketPurchase, IValuePerTypePayment, TicketSelectUserProps, IEventTicket as IEventTicketProps, IOrder } from '@/types';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import { baseUrl } from '@/constants';
 
 export type SelectedChairProps = {
   nome: string,
@@ -161,15 +162,17 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isTables, setIsTables] = useState<number[]>([]);
   const [isChairs, setIsChairs] = useState<any>();
   const Router = useRouter();
-  const id = useParams().id as string;
+  const id = useParams().id as string; 
   const { push } = useRouter();
   const { data } = useFetch<IEventTicketProps>(`${GET_EVENTS}/${id}/online`, 'site');
   
   const query = useSearchParams();
   const pathName = usePathname();
 
+  const isWebview = pathName.includes('/payment/webview');
+
   const eventosMultipleIds = query.get('eventosIds')?.split('-') ?? undefined;
-  const { tokenUser, guid } = query as any;
+  // const { tokenUser, guid } = query as any;
   
   const [multipleData, setMultipleData] = useState<IEventTicketProps[]>([])
   useEffect(() => {
@@ -371,7 +374,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
         isEventTicket.tiposDeIngresso &&
         isEventTicket.tiposDeIngresso.length > 0
       ) {
-        // debugger;
+        // 
         const formattedTicketsPerPurchase = [] as ITicketPurchase[];
         chairs.forEach((item, index) => {
           const findIdTypeTicket = item.typeTicket
@@ -443,7 +446,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const handleSelectSector = useCallback(async (id: number, nome: string, href?: string) => {
     try {
-      // debugger;
+      // 
       setIsLoadingSector(true);
       const { data } = await apiTokeUser.get(`${GET_SECTOR_REGIONS}/${id}`) as { data: any } as { data: ISectorRanks };
       const result = await apiTokeUser.get(`${GET_CHAIRS}/${isEventTicket?.id}/${id}`) as { data: { cadeiras: any } };
@@ -534,7 +537,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [isSeletedChairs]);
 
   const handleSelectChair = useCallback((idSector: number, chair: string, number: number, idChair: number) => {
-    // debugger;
+    // 
     console.log(isChairs)
     if (isEventTicket) {
       if (isSeletedChairs.find((item) => item.identifierChair === `${chair} - ${idSector}`)) {
@@ -658,9 +661,24 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const handleLoadOrder = useCallback(async (guid: string) => {
     try {
-      // debugger;
+      // 
+ 
 
-      const { data } = await apiTokeUser.get(`${GET_PURCHASE}/${guid}`) as { data: IOrder };
+      const tokenUser = query.get('tokenUser');
+
+      // const { data } = await apiTokeUser.get(`${GET_PURCHASE}/${guid}`) as { data: IOrder }; 
+      (
+        apiTokeUser.defaults
+          .headers
+      ).Authorization = `Bearer ${tokenUser}`;
+
+      const {data} = await apiTokeUser.get(`${GET_PURCHASE}/${guid}`, {
+        headers: {
+          'Authorization': `Bearer ${tokenUser}`
+        }
+      }) as { data: IOrder };
+
+      debugger;
 
       if (data.pedido && data.pedido.ingressos) {
         const isTicketWebview = data.pedido.ingressos.map((i, index) => {
@@ -693,9 +711,9 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [toast]);
 
   const handleInsertTitulares = useCallback(async (isTitulares: string) => {
-    // debugger;
+    // 
     const api = axios.create({
-      baseURL: process.env.URL_API_TITULARES,
+      baseURL: process.env.NEXT_PUBLIC_URL_API_TITULARES,
       headers: {
         "Content-Type": "application/json",
       },
@@ -704,6 +722,9 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const { data }: any = await api.get(`/titular/${parseInt(isTitulares)}/1a2b3c4d5e`);
 
     setTitularId(data.id);
+
+    if(!data.titulares) 
+      return
 
     setIsTicketSelectedUser(data.titulares.map((titular: any, index: any) => ({
       index,
@@ -763,17 +784,21 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [isEventTicket, handleLoadHtmlMap]);
 
   useEffect(() => {
-    if (tokenUser && guid && authenticationUser) {
+    
+    const guid = query.get('guid');
+    const titulares = query.get('titularesId');
+    if (guid && pathName.includes('/payment/webview')) {
       handleShow();
       handleLoadOrder(guid as string);
-      if (query.get('titularesId')) {
-        handleInsertTitulares(query.get('titularesId') as string);
+      if (titulares) {
+        debugger;
+        handleInsertTitulares(titulares as string);
       }
-      if (router?.query?.titularesId) {
-        handleInsertTitulares(router?.query?.titularesId as any);
-      }
+      // if (router?.query?.titularesId) {
+      //   handleInsertTitulares(router?.query?.titularesId as any);
+      // }
     }
-  }, [tokenUser, guid, handleLoadOrder, authenticationUser, handleInsertTitulares, query]);
+  }, [handleLoadOrder, authenticationUser, handleInsertTitulares, query, pathName]);
 
   const handleSetIsEventTicket = useCallback((state: IEventTicketProps | undefined) => {
     setIsEventTicket(state);

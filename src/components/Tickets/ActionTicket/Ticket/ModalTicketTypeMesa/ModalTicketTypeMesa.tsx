@@ -45,7 +45,7 @@ export const ModalTicketTypeMesa: React.FC<IModalTicketTypeMesa> = ({
       if (findUrlMapHTML && findUrlMapHTML.mapa) {
         const areas = await handleDataMapHTMLTable(findUrlMapHTML.mapa?.coordenadas, mesas);
 
-        // debugger;
+        // 
 
         const string = 'https://synpass.com.br/images/mapa-mesa/acasa/mesas-selecionadas.jpeg'
         // get only the path part of the url

@@ -24,6 +24,7 @@ export function Navbar() {
 
   const [value, setValue] = useState('')
   const router = useRouter()
+ 
 
   const { handleSearchEvents, handleClearSearchEvents, location, setLocation } = useSearch()
 
@@ -51,12 +52,12 @@ export function Navbar() {
   }, [locationValue])
 
   async function fetchUser(){
-    debugger;
+    
     await handleLoadUser()
   }
 
   useEffect(() => {
-    debugger;
+    
     if(!user)
       fetchUser()
   }
@@ -73,6 +74,8 @@ export function Navbar() {
   }, [pathName])
 
   const { handleLogoutUser } = useRegister()
+
+  const isWebview = pathName.includes('/payment/webview') || pathName.includes('/viewer-app') || pathName.includes('/faq-app')
   
   
   return (
@@ -109,6 +112,11 @@ export function Navbar() {
             </div>
             <div
               className='md:hidden flex items-center gap-4 relative'
+                style={
+                  isWebview ? {
+                  display: 'none' 
+                } : {}
+              }
             > 
             {user?.imagem ? 
               <LegacyAvatar
@@ -125,7 +133,13 @@ export function Navbar() {
             </div>
         </div>
         <div
-          className='flex items-center justify-between w-full md:w-3/5 flex-col md:flex-row gap-4 '>
+          className='flex items-center justify-between w-full md:w-3/5 flex-col md:flex-row gap-4 '
+          style={
+              isWebview ? {
+              display: 'none' 
+            } : {}
+          }
+          >
             <div
               className='flex items-center gap-2 relative'
             >
@@ -322,7 +336,7 @@ export function Navbar() {
                 : <>
                   <Button
                     onClick={() => {
-                      router.push('/profile?tab=meus-ingressos')
+                      router.replace('/profile?tab=meus-ingressos')
                     }}
                   >Meus Ingressos</Button>
                   <div
@@ -366,7 +380,7 @@ export function Navbar() {
               onClose={() => setIsAuthModalOpen(false)}
               handleChangeType={(type) => setAuthType(type)}
               onClickPurchase={() => {
-                debugger;
+                
                 setIsAuthModalOpen(false)
                 handleLoadUser()
                 // router.push('/checkout')
@@ -375,7 +389,7 @@ export function Navbar() {
             <Close
               className='absolute top-2 right-4 md:top-[15%] md:right-[8%] cursor-pointer z-10 text-gray'
               onClick={() => {
-                debugger;
+                
                 setIsAuthModalOpen(false)
                 clearDefaultValues()
               }} 

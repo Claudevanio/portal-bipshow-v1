@@ -1,15 +1,18 @@
 import styled from 'styled-components';
 
 export const ContainerModalPurchaseSummary = styled.div`
-    padding: ${({ theme }) => theme.spacing(3)};
-    padding-top: ${({ theme }) => theme.spacing(3.5)};
+    padding: ${({ theme }) => theme.spacing(2)};
+    padding-top: ${({ theme }) => theme.spacing(2.5)};
     border-top: 6px solid ${({ theme }) => '#8779F8'};
-    border-radius: 8px;
+    /* border-radius: 8px; */
     width: fit-content;
     min-width: 35%;
     background-color: white;
+    overflow-y: auto;
+    max-height: 90vh;
     @media(max-width: 767px) {
         border-radius: 0px;
+        max-height: 100vh;
         width: 100%;
         height: 100%;
         overflow-y: auto;
@@ -19,26 +22,27 @@ export const ContainerModalPurchaseSummary = styled.div`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: ${({ theme }) => theme.spacing(3)};
+        padding-bottom: ${({ theme }) => theme.spacing(2)};
         border-bottom: 1px solid ${({ theme }) => "#f6f6f6"};
     }
     div.content-modal {
         display: flex;
-        flex-direction: column;
+        flex-direction: column; 
+        font-size: .875rem;
         div.tickets {
-            padding: ${({ theme }) => theme.spacing(3)} 0px;
+            padding: ${({ theme }) => theme.spacing(2)} 0px;
             border-bottom: 1px solid ${({ theme }) => "#f6f6f6"};
             width: 100%;
             ul {
-                margin-top: ${({ theme }) => theme.spacing(1.75)};
+                margin-top: ${({ theme }) => theme.spacing(.75)};
                 width: 100%;
                 display: flex;
                 flex-direction: column;
-                gap: ${({ theme }) => theme.spacing(2)};
+                gap: ${({ theme }) => theme.spacing(1)};
                 li {
                     width: 100%;
                     display: flex;
-                    gap: ${({ theme }) => theme.spacing(2)};
+                    gap: ${({ theme }) => theme.spacing(1)};
                     h6 {
                         font-size: ${({ theme }) => ".875rem"} !important;
                         line-height: 130%;
@@ -62,7 +66,7 @@ export const ContainerModalPurchaseSummary = styled.div`
             }
         }
         div.payment {
-            padding: ${({ theme }) => theme.spacing(3)} 0px;
+            padding: ${({ theme }) => theme.spacing(2)} 0px;
             border-bottom: 1px solid ${({ theme }) => "#f6f6f6"};
             width: 100%;
             div.infos {
@@ -85,7 +89,7 @@ export const ContainerModalPurchaseSummary = styled.div`
             }
         }
         div.subtotal {
-            padding: ${({ theme }) => theme.spacing(3)} 0px;
+            padding: ${({ theme }) => theme.spacing(2)} 0px;
             border-bottom: 1px solid ${({ theme }) => "#f6f6f6"};
             width: 100%;
             display: flex;
@@ -97,7 +101,7 @@ export const ContainerModalPurchaseSummary = styled.div`
             }
         }
         div.total {
-            padding: ${({ theme }) => theme.spacing(3)} 0px;
+            padding: ${({ theme }) => theme.spacing(2)} 0px;
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -112,7 +116,7 @@ export const ContainerModalPurchaseSummary = styled.div`
         }
         div.butttons {
             width: 100%;
-            margin-top: ${({ theme }) => theme.spacing(6)};
+            margin-top: ${({ theme }) => theme.spacing(2)};
             display: flex;
             justify-content: flex-end;
             gap: ${({ theme }) => theme.spacing(2)};
@@ -153,6 +157,13 @@ export const ContainerModalPurchaseSummary = styled.div`
             font-weight: 500;
             background-color: ${({ theme }) => '#8779F8'};
             color: ${({ theme }) => "#FFFFFF"}
+        }
+    }
+    
+    * {    
+        font-size: .875rem;
+        * {
+            font-size: .875rem;
         }
     }
 `;

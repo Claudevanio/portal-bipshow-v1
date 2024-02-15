@@ -80,7 +80,7 @@ export default function Home() {
   }, [isCp])
 
   useEffect(() => {
-    debugger;
+    
     if(location?.uf && location?.uf !== "" && eventos && eventos.length > 0){
       const events = eventos.filter((evento) => {
         return evento.localidade.includes(location.uf)

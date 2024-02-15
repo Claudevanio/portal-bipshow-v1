@@ -30,4 +30,5 @@ export interface ITicketSale {
     podeTransferir?: boolean
     onClickTransfer?: () => void
     onClickCancel?: () => void
+    onClickDownload?: () => void
 }

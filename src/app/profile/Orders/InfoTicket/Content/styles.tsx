@@ -82,7 +82,7 @@ export const ContainerContent = styled.div`
                 }
                 @media(max-width: 767px) {
                     div.mode-desktop {
-                        display: none;
+                        /* display: none; */
                     }
                     div.mode-mobile {
                         display: block;

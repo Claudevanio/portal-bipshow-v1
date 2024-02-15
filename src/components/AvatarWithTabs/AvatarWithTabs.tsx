@@ -18,6 +18,7 @@ export const AvatarWithTabs = ({
 }) => {
   const { user } = useRegister();
   const { handleLogoutUser } = useRegister()
+ 
   return (
     <div className=" hidden items-center p-6  md:block border-r-[1px] border-[#d9cff2] ">
       <div className="w-250 h-250 rounded-full bg-background p-1 bg-gradient">
@@ -39,6 +40,7 @@ export const AvatarWithTabs = ({
               height={24}
             />
           }
+          onClick={() => handleChangeTab('_', 0)}
           iconPosition="start"
           label="Meus Ingressos"
           sx={{
@@ -71,6 +73,7 @@ export const AvatarWithTabs = ({
         />
         <Tab
           value={2}
+          onClick={() => handleChangeTab('_', 2)}
           icon={
             <Image
               src={"/ticket-black.svg"}

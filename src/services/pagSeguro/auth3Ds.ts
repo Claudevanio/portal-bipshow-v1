@@ -17,7 +17,7 @@ export type PedidoProps = {
 export type Callback = (result?: { id: string }, err?: any) => void;
 
 export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento: TypePaymentCardProps, installments: number, sessionPayment: CreateSessionPagSeguro, callback: Callback) {
-  debugger;
+
   const customer = pedido.usuario;
   const { telefone } = customer;
   const isCartao = cartao;

@@ -49,7 +49,7 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isTicketsUser, setIsTicketsUser] = useState<ITicketPurchaseUserFormatted[]>([]);
   const [isInfoTicket, setIsInfoTicket] = useState<ITicketPurchaseUser | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { data, error } = useFetch<{ pedidos: ITicketPurchaseUser[]; total: number; }>(GET_PURCHASE_USER, 'user');
+  const { data, error } = useFetch<{ pedidos: ITicketPurchaseUser[]; total: number; }>(GET_PURCHASE_USER + '?i=0&t=35', 'user');
   const [isTicketsSales, setIsTicketsSales] = useState<ITicketSale[]>([]);
   const [isLoadingCanceledPayment, setIsLoadingCanceledPayment] = useState<boolean>(false);
   const [isInfoCanceledPayment, setIsInfoCanceledPayment] = useState<{
@@ -66,37 +66,118 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const handleCloseModal = () => setIsShowAndCloseModalPayment(false);
 
-  const handleFormattedTicketsPerStatus = useCallback((purchases: ITicketPurchaseUser[]) => {
-    const isFormattedPerStatus = [] as ITicketPurchaseUserFormatted[];
+  function transformarArray(pedidos: ITicketPurchaseUser[]): ITicketPurchaseUserFormatted[] {
+    const agora = new Date();
+  
+    return pedidos.reduce((accumulador, pedido) => {
+      let status = '';
+  
+      if (pedido.status === 'CONCLUIDO') {
+        const dataEvento = new Date(pedido?.evento?.dataRealizacao ?? new Date());
+        if (dataEvento <= agora) {
+          status = 'CONCLUIDO';
+        } else {
+          status = 'ATIVO';
+        }
+      } else if (pedido.pagamento && pedido.pagamento.status === 'Cancelado') {
+        status = 'Cancelado';
+      }
+  
+      accumulador.push({
+        status: status,
+        items: [pedido]
+      });
+  
+      return accumulador;
+    }, [] as any[]);
+  }
+  interface Pedido {
+    id: number;
+    guid: string;
+    valor: number;
+    pagamento: {
+      status: string;
+      horario: string;
+    };
+    evento: {
+      dataRealizacao: string;
+    };
+    // ... outros campos necessários
+  }
+  
+  type Status = 'ATIVO' | 'CONCLUIDO' | 'CANCELADO';
 
-    purchases.forEach((item) => {
-      const isFindIndex = isFormattedPerStatus.findIndex((i) => i.status === item.status);
-      if (isFindIndex !== -1) {
-        isFormattedPerStatus[isFindIndex].items = [
-          ...isFormattedPerStatus[isFindIndex].items,
-          {
-            ...item,
-          },
-        ];
+  function agruparPedidosPorStatus(pedidos: ITicketPurchaseUser[]): ITicketPurchaseUserFormatted[] {
+    const agrupados: Record<Status, Pedido[]> = {
+      ATIVO: [],
+      CONCLUIDO: [],
+      CANCELADO: [],
+    };
+  
+    pedidos.forEach((pedido : any) => {
+      const dataEvento = new Date(pedido?.evento?.dataRealizacao ?? new Date());
+      const agora = new Date();
+  
+      if (pedido.pagamento.status === 'CANCELADO') {
+        agrupados['CANCELADO'].push(pedido);
+      } else if (dataEvento <= agora) {
+        agrupados['CONCLUIDO'].push(pedido);
       } else {
-        isFormattedPerStatus.push({
-          status: item.status,
-          items: [
-            {
-              ...item,
-            },
-          ],
-        });
+        agrupados['ATIVO'].push(pedido);
       }
     });
+  
+    // Converte o objeto agrupado em um array de objetos
+    return Object.entries(agrupados).map(([status, items]) => ({
+      status: status as Status,
+      items: items,
+    })) as ITicketPurchaseUserFormatted[];
+  }
+  
 
-    setIsTicketsUser(isFormattedPerStatus);
+  const handleFormattedTicketsPerStatus = useCallback((purchases: ITicketPurchaseUser[]) => { 
+
+    // purchases.forEach((item) => {
+    //   const isFindIndex = isFormattedPerStatus.findIndex((i) => i.status === item.status);
+    //   if (isFindIndex !== -1) {
+    //     isFormattedPerStatus[isFindIndex].items = [
+    //       ...isFormattedPerStatus[isFindIndex].items,
+    //       {
+    //         ...item,
+    //       },
+    //     ];
+    //   } else {
+    //     isFormattedPerStatus.push({
+    //       status: item.status,
+    //       items: [
+    //         {
+    //           ...item,
+    //         },
+    //       ],
+    //     });
+    //   }
+    // });
+
+    const isFormattedPerStatus = transformarArray(purchases)
+
+    const agrupados = agruparPedidosPorStatus(purchases)
+
+    console.log('isFormattedPerStatus', agrupados)
+
+    setIsTicketsUser(agrupados);
     setIsLoading(false);
   }, []);
 
   const handleClearInfoTicket = useCallback(() => {
     setIsInfoTicket(undefined); 
+    if(searchParams.get('idOrder'))
+      router.replace('/profile?tab=orders')
   }, [router]);
+
+  useEffect(() => {
+    if(!searchParams.get('idOrder'))
+      handleClearInfoTicket()
+  }, [searchParams, handleClearInfoTicket])
 
   const handleLoadTicketsSale = useCallback(async (id: number) => {
     try {
@@ -112,8 +193,9 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const handleSelectInfoTicket = useCallback(async (idOrder: number, idEvento: number) => {
     if (data && data.pedidos) { 
-      debugger;
+      
       // router.push('/profile?tab=meus-ingressos&' + new URLSearchParams({ idOrder: idOrder.toString(), idEvento: idEvento.toString() }).toString()) 
+      router.push('/profile?tab=orders&' + new URLSearchParams({ idOrder: idOrder.toString(), idEvento: idEvento.toString() }).toString())
 
       const findTicket = data.pedidos.find((i) => i.id === idOrder);
 
@@ -126,23 +208,34 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const handleCanceledPayment = useCallback(async (idPayment: string) => {
     try {
+      debugger
       setIsLoadingCanceledPayment(true);
-      const { data } = await apiTokeUser.post(`${CANCELED_PAYMENT}/${idPayment}`);
+      const response = await apiTokeUser.post(`${CANCELED_PAYMENT}/${idPayment}`);
 
       setIsLoadingCanceledPayment(false);
-      if (data && data.motivo) {
+      if (true) {
         setIsInfoCanceledPayment({
-          motivo: data.motivo,
-          status: data.status,
+          motivo: response.data.motivo,
+          status: response.data.status,
         });
+      if(!data)
+        return 
+      const findTicket = data.pedidos.findIndex((i : any) => i.pagamento.id === idPayment);
+      if(findTicket !== -1) {
+        const newPedido = [...data.pedidos]
+        newPedido[findTicket].pagamento.status = 'CANCELADO'
+        newPedido[findTicket].status = 'CANCELADO'
+        handleFormattedTicketsPerStatus(newPedido)
+      }
+        
       } else {
-        callErrorDialogComponent(data.mensagem, TypeEnum.INFO)
+        callErrorDialogComponent(response.data.mensagem, TypeEnum.INFO)
       }
     } catch (err) {
       setIsLoadingCanceledPayment(false);
       callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
     }
-  }, [showErrorDialog]);
+  }, [showErrorDialog, data, handleFormattedTicketsPerStatus]);
 
   const handleDownloadTicketSales = useCallback(async (code: string, guid: string) => {
     try {

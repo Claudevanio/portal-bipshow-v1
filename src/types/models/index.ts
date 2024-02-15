@@ -5,6 +5,7 @@ export * from './CityCodeIBGEProps';
 export * from './CountriesProps';
 export * from './CreateSessionPagSeguroProps';
 export * from './ICategories';
+export * from './IFormNewEvent'
 export * from './Evento';
 export * from './IAddress';
 export * from './IAlert';

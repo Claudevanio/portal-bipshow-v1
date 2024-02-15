@@ -957,7 +957,7 @@ export function TicketsContainerDefinido ({
             className='w-full'
             value={selectedItem?.idSector}
             onChange={(e) => {
-              // debugger;
+              // 
               const value = e.target.value
               if(!value)
                 return

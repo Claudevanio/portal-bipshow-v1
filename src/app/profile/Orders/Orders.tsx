@@ -19,7 +19,8 @@ export const Orders: React.FC = () => {
         </div>
       )}
       {ticketsUser && !infoTicket && ticketsUser.length > 0 && ticketsUser.map((item) => {
-        if (item.status === 'CONCLUIDO') {
+        
+        if (item.status === 'ATIVO') {
           return (
             <div className="active" key={item.status}>
               <h6 className="title">Ativos</h6>
@@ -42,11 +43,14 @@ export const Orders: React.FC = () => {
             </div>
           );
         }
-        if (item.status === 'RESERVADO') {
+        if (item.status === 'CONCLUIDO') {
           return (
             <div className="active" key={item.status}>
-              <h6 className="title">Reservado</h6>
+              <h6 className="title">Utilizados</h6>
               <ul>
+                {
+                  item.items.length === 0 && ( <Empty text="Você não possuí pedidos utilizados." />)
+                }
                 {item.items.map((i) => (
                   <Card
                     onClick={() => handleSelectInfoTicket(i.id, i.evento.id)}
@@ -65,32 +69,59 @@ export const Orders: React.FC = () => {
             </div>
           );
         }
-        if (item.status === 'AGUARDANDO') {
-          return (
-            <div className="active" key={item.status}>
-              <h6 className="title">Aguardando</h6>
-              <ul>
-                {item.items.map((i) => (
-                  <Card
-                    onClick={() => handleSelectInfoTicket(i.id, i.evento.id)}
-                    active
-                    key={i.id}
-                    tickets={{
-                      address: `${i.evento.endereco}`,
-                      date: i.evento.dataRealizacao || '',
-                      foto: `${process.env.URL_API}${i.evento.foto}`,
-                      name: i.evento.nome || '',
-                    }}
-                    idEvento={i.evento.id}
-                  />
-                ))}
-              </ul>
-            </div>
-          );
+        // if (item.status === 'AGUARDANDO') {
+        //   return (
+        //     <div className="active" key={item.status}>
+        //       <h6 className="title">Aguardando</h6>
+        //       <ul>
+        //         {item.items.map((i) => (
+        //           <Card
+        //             onClick={() => handleSelectInfoTicket(i.id, i.evento.id)}
+        //             active
+        //             key={i.id}
+        //             tickets={{
+        //               address: `${i.evento.endereco}`,
+        //               date: i.evento.dataRealizacao || '',
+        //               foto: `${process.env.URL_API}${i.evento.foto}`,
+        //               name: i.evento.nome || '',
+        //             }}
+        //             idEvento={i.evento.id}
+        //           />
+        //         ))}
+        //       </ul>
+        //     </div>
+        //   );
+        // }
+        if(item.status === 'CANCELADO' && item.items.length > 0){
+          return <div className="disabled" key={item.status}>
+            <h6 className="title">Cancelados</h6>
+            <ul>
+              {item.items.map((i) => (
+                <Card
+                  onClick={() => handleSelectInfoTicket(i.id, i.evento.id)}
+                  key={i.id}
+                  tickets={{
+                    address: `${i.evento.endereco}`,
+                    date: i.evento.dataRealizacao || '',
+                    foto: `${process.env.URL_API}${i.evento.foto}`,
+                    name: i.evento.nome || '',
+                  }}
+                  idEvento={i.evento.id}
+                />
+              ))}
+            </ul>
+          </div>
+        }
+        if(item.items.length <= 0){
+          return <></>
         }
         return (
           <div className="disabled" key={item.status}>
-            <h6 className="title">Cancelados</h6>
+            <h6 className="title first-letter:uppercase">
+              {
+                item.status
+              }  
+            </h6> 
             <ul>
               {item.items.map((i) => (
                 <Card

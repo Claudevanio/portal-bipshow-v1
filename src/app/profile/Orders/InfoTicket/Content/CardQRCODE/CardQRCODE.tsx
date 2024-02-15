@@ -1,8 +1,13 @@
+'use client'
+
 import React from 'react';
 import { ITicketSale } from '@/types';
 import { QRCodeSVG } from 'qrcode.react';
 import { Logo } from '@/components/icons/Logo';
 import { ContainerCardQRCODE } from './styles';
+import { DownloadOutlined } from '@mui/icons-material';
+import { Button } from '@/components';
+import { useRegister } from '@/shared/hooks/useRegister';
 
 export const CardQRCODE: React.FC<ITicketSale> = ({
   nome,
@@ -13,7 +18,11 @@ export const CardQRCODE: React.FC<ITicketSale> = ({
   facial,
   codigo,
   id,
+  onClickDownload
 }) => {
+
+  const { user } = useRegister();
+
   return (
     <ContainerCardQRCODE>
       <div className="qrcode">
@@ -28,13 +37,24 @@ export const CardQRCODE: React.FC<ITicketSale> = ({
         }
         {!facial && 
         (
-          <div>
+          <div
+            className='flex flex-col items-center justify-center gap-2'
+          >
           <p className="text-dark">{codigo}</p>
           <QRCodeSVG
             className="qrcode"
             value={`${process.env.URL_API}/imprima/bilhete/mobile?c=${codigo}&eid=${id}`}
           />
-          <Logo width={63} height={10} />
+          {
+            onClickDownload && utilizador.nome == user?.nome &&
+            <Button
+              onClick={() => onClickDownload()}
+            >
+                <DownloadOutlined
+              className="cursor-pointer "
+            /> Baixar
+              </Button>
+          }
           </div>
         )}
       </div>

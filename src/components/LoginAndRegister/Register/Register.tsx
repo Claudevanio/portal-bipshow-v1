@@ -16,8 +16,9 @@ import { IRegister } from './IRegister';
 import { StepFour } from './StepFour';
 import { StepFive } from './StepFive';
 import { ArrowLeft } from '@mui/icons-material';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { ButtonBack } from '@/components/ButtonBack';
+import { useRegister } from '@/shared/hooks/useRegister';
 
 const MiniStep: React.FC<({activeTab:number, stepCount: number})> = ({ activeTab, stepCount }) => {
   return (
@@ -61,8 +62,10 @@ export const Register: React.FC<IRegister> = ({
     createdUser,
     onAddPhoto,
     checkEmailExistente,
-    typesDoc
+    typesDoc,
   } = useAuth();
+
+  const { defaultValues } = useRegister();
 
   interface IRegisterUser extends IUser{
     DDD: string;
@@ -76,7 +79,7 @@ export const Register: React.FC<IRegister> = ({
 
   const onSubmit = React.useCallback(
     async (data: IUser) => {
-      debugger;
+      
       
       if (photoInvalida === 400) {
         onAddPhoto(undefined);
@@ -98,7 +101,7 @@ export const Register: React.FC<IRegister> = ({
       }
 
       if (isStepper === 4 && photo && !isInvalidPicture && createdUser) {
-        debugger;
+        
         const ddd = getValues('DDD')
         data.telefone = data.telefone?.startsWith(ddd) ? data.telefone : `${ddd}${data.telefone}`;
         handleNextStepRegister(data, onClickPurchase, true);
@@ -128,6 +131,14 @@ export const Register: React.FC<IRegister> = ({
   //     }
   //   }, [photoAvatar]);
 
+  const query = useSearchParams()
+
+  useEffect(() => {
+    if (query.get('payload')){
+      setIsStepper(4);
+    }
+  }, [query, setIsStepper])
+
   return (
     <ContainerRegister>
       {pathname === '/register' && (
@@ -142,7 +153,7 @@ export const Register: React.FC<IRegister> = ({
           </a>
         </Link>
       )}
-      <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-full flex flex-col items-center justify-center"> 
         {/* <h4 className="title">Registro</h4> */}
         {/* <Stepper
           steps={StepperRegister}

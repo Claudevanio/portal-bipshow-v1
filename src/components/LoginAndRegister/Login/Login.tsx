@@ -88,7 +88,7 @@ export const Login: React.FC<ILogin> = ({
   };
 
   const onSubmit = (data: any) => {
-    debugger;
+    
     
     if (isCpf) {
       data.cpf = data.emailOrCpf;

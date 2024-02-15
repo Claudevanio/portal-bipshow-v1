@@ -20,9 +20,10 @@ import { ModalPurchaseSummary } from './ModalPurchaseSummary';
 import { OptionsPayment } from './OptionsPayment';
 import { Coupon } from './Coupon';
 import { PIX } from './PIX';
-import { Accordion, AccordionDetails, AccordionSummary, Modal } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Modal } from '@mui/material';
 import { LoadingPayment } from '@/components/LoadingPayment';
 import { FormAddress } from '@/components/FormAddress';
+import { RadioButtonChecked } from '@mui/icons-material';
 
 export const AccordionThree: React.FC = () => {
   const methods = useForm<IPurchase>();
@@ -32,6 +33,8 @@ export const AccordionThree: React.FC = () => {
   } = useTicketPurchase();
   const cardNumber = methods.watch('cartao');
   const installment = methods.watch('parcelas');
+  const endereco = methods.watch('endereco');
+
   const { user } = useRegister();
   const [isOpenModalEditAddress, setIsOpenModalEditAddress] = useState<boolean>(false);
   const [isPurchaseSummary, setIsPurchaseSummary] = useState<boolean>(false);
@@ -51,7 +54,7 @@ export const AccordionThree: React.FC = () => {
 
     setIsDataPurchase(data);
 
-    debugger;
+    
     if(guide)
       handleIsOpenModalPurchaseSummary();
       // await handleLoadPurchase(guide.guide, guide.id, data)
@@ -79,6 +82,7 @@ export const AccordionThree: React.FC = () => {
   }, [installments]);
 
   useEffect(() => {
+    debugger
     if (cardNumber && cardNumber.length >= 19) {
       handleQuantityinstallment(cardNumber);
     }
@@ -95,6 +99,8 @@ export const AccordionThree: React.FC = () => {
     }
   }, [installment, installments, setInstallment]);
 
+  const [isAddressOpen, setIsAddressOpen] = useState<boolean>(false);
+
   return (
     <ContainerAccordionThree>
      <Modal open={isOpenModalEditAddress} onClose={handleIsCloseModalEditAddress} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description"> 
@@ -110,7 +116,7 @@ export const AccordionThree: React.FC = () => {
         <ModalPurchaseSummary dataPurchase={isDataPurchase} onClose={handleIsClsoeModalPurchaseSummary} />
       </Modal>
       
-      <LoadingPayment open={loading} />
+      {loading && <LoadingPayment open={loading} />}
       
       <OptionsPayment />
       {selectedPayment && selectedPayment?.formaPagamento === 'Boleto' && (
@@ -131,22 +137,47 @@ export const AccordionThree: React.FC = () => {
                   value="CREDIT_CARD"
                   onClick={() => onChangePaymentCardType('CREDIT_CARD')}
                 />
-                <Radio
+                {/* <Radio
                   id="DEBIT_CARD"
                   label="Cartão de débito"
                   name="DEBIT_CARD"
                   checked={optionCardPayment === 'DEBIT_CARD'}
                   value="CREDIT_CARD"
                   onClick={() => onChangePaymentCardType('DEBIT_CARD')}
-                />
+                /> */}
               </div>
               <div className="input-card">
                 <Accordion
+                  expanded={isAddressOpen}
+                  onChange={() => setIsAddressOpen(!isAddressOpen)}
                   className='my-4'
                 >
-                  <AccordionSummary>
+                  <AccordionSummary
+                    sx={{
+                      '.MuiAccordionSummary-content': {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      }
+                    }}
+                  >
                     <h6 className="title">Endereço da Cobrança</h6>
+                    {
+                      !isAddressOpen && ((user?.endereco && user?.endereco?.cep) || (endereco && endereco?.cep)) && (
+                        <Box
+                          className='flex items-center gap-4 pt-4 text-sm'
+                        >
+                          <RadioButtonChecked
+                            className='text-primary'
+                          />                          
+                          {
+                              !endereco && user?.endereco ? `${user.endereco.cep} - ${user.endereco.bairro}${user.endereco.complemento ? ` ${user.endereco.complemento}` : ''}, ${user.endereco.localidade ?? user.endereco.nomeCidade + '/' + user.endereco.estado}` : endereco ? `${endereco.cep} - ${endereco.bairro}${endereco.complemento ? ` ${endereco.complemento}` : ''}, ${endereco.localidade ?? endereco.nomeCidade + '/' + endereco.estado}` : 'Sem endereço selecionado'
+                          }
+                        </Box>
+                      )
+                    }
                   </AccordionSummary>
+                  
                   <AccordionDetails>
                     <FormAddress
                       loading={false}

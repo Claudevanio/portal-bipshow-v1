@@ -98,10 +98,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
     });
     return data;
   }, []);
-
-  useEffect(() => {
-    console.log('defaultvalues', defaultValues)
-  }, [defaultValues])
+ 
 
   const handleLoadUser = useCallback(async () => {
     try {
@@ -109,7 +106,10 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
         // setIsLoading(true);
         const tokenUser = Cache.get({key: '@tokenUser'}) as string;
         const isTokenUrl = query.get('tokenUser');
-        const isTokenUser = tokenUser || isTokenUrl;
+        if(isTokenUrl){
+          Cache.remove({key: '@tokenUser'});
+        }
+        const isTokenUser = isTokenUrl ?? tokenUser;
 
 
         if (isTokenUser) {
@@ -208,7 +208,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleUpdateUser = useCallback(
     async (user: IUser) => {
       try {
-        debugger;
+        
         setIsLoadingUpdatedAddress(true);
         if (isUser) {
           console.log('isUser', isUser)
@@ -277,7 +277,8 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearDefaultValues = () => {
     setDefaultValues({});
-  };
+  }; 
+
 
   return (
     <RegisterContext.Provider

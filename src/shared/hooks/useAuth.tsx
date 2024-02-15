@@ -32,7 +32,7 @@ import { states } from '../config/states';
 import { format, parseISO } from 'date-fns';
 import { useRegister } from './useRegister';
 import { TypeEnum, useError } from './useDialog';
-import { baseUrl } from '@/constants';
+import { baseUrl } from '@/constants'; 
 
 interface CommonHeaderProperties extends HeadersDefaults {
   Authorization: string;
@@ -109,6 +109,7 @@ export interface IAuth {
   forgotPasswordDefaultValues: any;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  getRegisterURLWithPayloadOnQuery: (payload: IUser) => string;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -428,7 +429,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       onClickPurchase?: () => void,
     ) => {
       try {
-        debugger;
+        
         setIsLoading(true);
         let isFormattedCPFOrEmail = '';
         if (type === 'cpf' && user.cpf) { isFormattedCPFOrEmail = user.cpf.replace(/[^\d]/g, ''); }
@@ -691,7 +692,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           await sleep(6000);
         }
         
-        debugger;
+        
         // const url = `${baseUrl}${GENARATE_TOKEN}`;
 
         const token = await api(
@@ -811,7 +812,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleNextStepRegister = useCallback(
     async (data: IUser, onClickPurchase?: () => void, finish?: boolean) => {
       try {
-        debugger;
+        
         setIsLoadingCountry(true);
         const isVerifyForNextStep = isSelectCountry.nomePais === 'Brasil' ? data.CPF : data.numeroDoc;
         if (data.nome && isVerifyForNextStep && isStepper === 0) {
@@ -891,7 +892,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleUpdatedUserPhoto = useCallback(
     async (userEdit: IUser) => {
       try {
-        debugger;
+        
         const isUserFormatted = {
           nome: userEdit.nome,
           email: userEdit.email,
@@ -970,7 +971,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleUpdatedUser = useCallback(
     async (userEdit: IUser) => {
-      debugger;
+      
       try {
         setIsLoadingSubmitUpdatedUser(true);
         if (user) {
@@ -1245,6 +1246,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     handleLoadCountries();
   }, [handleLoadCountries, authentication, isPhotoAvatar]);
 
+  const getRegisterURLWithPayloadOnQuery = (data: IUser) => {
+    const payload = JSON.stringify(data);
+    return `https://bipshow.com/registrar?payload=${payload}`;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -1305,7 +1311,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         handleUpdateEmail,
         forgotPasswordDefaultValues,
         isAuthModalOpen,
-        setIsAuthModalOpen
+        setIsAuthModalOpen,
+        getRegisterURLWithPayloadOnQuery
       }}
     >
       {children}

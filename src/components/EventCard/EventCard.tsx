@@ -50,9 +50,9 @@ export const EventCard = ({ event }: EventCardProps) => {
         />
         <div className=' w-[100%] h-[100%] bg-gradient-to-t flex justify-between items-center from-background to-transparent'>
           <div className='w-[75%] h-[100%] relative z-[2] flex flex-col justify-end items-start'>
-            <h1 className='text-textPrimary text-lg font-medium'>{event.nome}</h1>
+            <h1 className='text-textPrimary font-medium whitespace-nowrap max-w-[99%] text-ellipsis overflow-hidden'>{event.nome}</h1>
             <p className='text-textPrimary text-sm font-medium'>{event.localidade}</p>
-            <p className='text-primary text-xs '>{event.nomeDoLugar}</p>
+            <p className='text-primary text-xs whitespace-nowrap max-w-[99%] text-ellipsis overflow-hidden'>{event.nomeDoLugar}</p>
           </div>
           <div
             className='flex flex-col items-center justify-center w-fit text-textPrimary font-medium'

@@ -13,6 +13,8 @@ import { Danger } from '@/components/icons/Danger';
 import { FaceDetectionComponent } from './FaceDetection';
 import { ContainerStepFive } from './styles';
 import { ButtonBack } from '@/components/ButtonBack';
+import { AccountBoxOutlined, Flare, FlareOutlined, WbSunny, WbSunnyOutlined } from '@mui/icons-material';
+import { Sunglasses } from '@/components/icons/Sunglasses';
 
 export const StepFive: React.FC = () => {
   const {
@@ -29,25 +31,46 @@ export const StepFive: React.FC = () => {
               listStyle:'circle !important',
             }}
           >
-            <li>
+            <li
+              className='flex items-center gap-4'
+            >
+              <FlareOutlined
+                className='w-5 h-5'/>
               <p>
                 Faça a foto em um fundo claro e sem texturas
                 diferentes (ex.: parede)
               </p>
             </li>
-            <li>
+            <li
+              className='flex items-center gap-4'
+            >
+              <WbSunnyOutlined
+                className='w-5 h-5'
+              />
               <p>
                 Procure um lugar bem iluminado, mas evite tirar
                 fotos com foco de luz atrás da pessoa
               </p>
             </li>
-            <li>
+            <li
+              className='flex items-center gap-4'
+            >
+              <div
+                className='w-5 h-5'
+              >
+                <Sunglasses/>
+              </div>
               <p>
                 Não utilize acessórios, como óculos, máscara,
                 boné etc.
               </p>
             </li>
-            <li>
+            <li
+              className='flex items-center gap-5'
+            >
+              <AccountBoxOutlined
+                className='w-5 h-5'
+              />
               <p>
                 Enquadre somente o rosto de frente na foto, sem
                 sorrir

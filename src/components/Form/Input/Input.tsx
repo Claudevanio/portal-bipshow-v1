@@ -32,7 +32,7 @@ export const Input: React.FC<IInput> = ({
 
     useEffect(()=>{
         if(!inputRef.current || !ref) return;
-        debugger;
+        
 
         ref && ref(inputRef.current)
 
@@ -114,7 +114,7 @@ export const Input: React.FC<IInput> = ({
                             }
                             if(e.target.value.length <= 1 && setIsCpf){                       
                                 if (setIsCpf) {
-                                    // debugger;
+                                    // 
                                     const firstLetterNumber = /^\d/;
                                     if (firstLetterNumber.test(e.target.value)) {
                                         setIsCpf(true);

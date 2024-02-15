@@ -159,7 +159,7 @@ export const ForgotPassowrd: React.FC = () => {
   }, [insideStepper, isCpf, dispositivoCheckado, setIsEmail, dataForgotPassword, setDispositivoCheckado]);
 
   const wrongDate = (value: string) => {
-    debugger;
+    
     const isFormat = value.split("/");
     const isAfterDateNow = isAfter(
       Date.now(),

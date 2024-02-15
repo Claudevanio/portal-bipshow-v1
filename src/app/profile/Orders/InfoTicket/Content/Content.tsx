@@ -101,10 +101,10 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
               {infoTicket.pagamento.status === 'REEMBOLSADO' && (
               <Alert variant={IAlert.WARNING} text="Pagamento foi reembolsado." />
               )}
-              {(infoTicket.pagamento.status === 'APROVADO' || infoTicket.pagamento.status === 'REGISTRADO') && (
+              {(infoTicket.pagamento.status === 'APROVADO' || infoTicket.pagamento.status === 'REGISTRADO') &&(
               <div className="list-purchase">
                 <div>
-                  <div className="header-list-purchase">
+                  {/* <div className="header-list-purchase">
                     <h6 className="title">
                       {quantityTicketsPerUser}
                       {' '}
@@ -119,13 +119,14 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
                       loading={isLoadingDownloadTicket}
                       disabled={isLoadingDownloadTicket}
                     />
-                  </div>
+                  </div> */}
                   <div className="mode-desktop">
                     {ticketsSales.length > 0 && (
                       ticketsSales.map((item) => (
                         <CardQRCODE
                           key={item.id}
                           {...item}
+                          onClickDownload={() => handleDownloadTicketSales(item.codigo, infoTicket.guid)}
                           id={infoTicket.evento.id}
                         />
                       ))

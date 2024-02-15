@@ -76,6 +76,7 @@ return <footer className="bg-grayLight relative overflow-hidden">
       <a rel="noopener noreferrer" className='list-item' href="https://uzerticket.com.br/home/eventos/" target='_blank'>Area de produtores</a>
       <a rel="noopener noreferrer" className='list-item'  href="http://uzer.com.br/" target='_blank'>Institucional</a>
       <a rel="noopener noreferrer" className='list-item'  href="https://www.planalto.gov.br/ccivil_03/_Ato2015-2018/2015/Decreto/D8537.htm#art28" target='_blank'>Lei de meia-entrada</a>
+      <Link href={'/criar-evento'} className='list-item text-[#049E8A]' >Crie seu evento agora!</Link>
     </div>
   </div>
   <div className="flex flex-col space-y-4">

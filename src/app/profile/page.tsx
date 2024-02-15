@@ -38,10 +38,20 @@ export default function Profile() {
   const pathname = usePathname()
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    debugger;
     setActiveTab(newValue);
+    if (newValue == 0) {
+      router.replace("/profile?tab=meus-ingressos");
+    }
+    if (newValue == 1) {
+      router.replace("/profile");
+    }
+    if (newValue == 2) {
+      router.replace("/profile?tab=orders");
+    }
     if (newValue == 3) {
       handleLogoutUser();
-      router.push("/");
+      router.replace("/");
     }
   };
    
@@ -129,7 +139,9 @@ export default function Profile() {
   useEffect(() => {
     if(!user?.id) {
       setIsAuthModalOpen(true);
-    }
+      return;
+    } 
+    setIsAuthModalOpen(false);
   }, [user]);
 
   return (

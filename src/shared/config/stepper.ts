@@ -70,3 +70,22 @@ export const stepperResetPassword = [
     number: 1,
   },
 ];
+
+export const stepperNewEvent = [
+  {
+    stage: 'Dados do evento',
+    number: 0,
+  },
+  {
+    stage: 'Dados de contato',
+    number: 1,
+  },
+  {
+    stage: 'Necessidades do evento',
+    number: 2,
+  },
+  {
+    stage: 'Finalização',
+    number: 3,
+  },
+];
