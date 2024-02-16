@@ -1248,7 +1248,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const getRegisterURLWithPayloadOnQuery = (data: IUser) => {
     const payload = JSON.stringify(data);
-    return `https://bipshow.com/registrar?payload=${payload}`;
+    const baseUrl = window ? window.location.origin : 'https://bipshow.com';
+    return `${baseUrl}/registrar?payload=${payload}`;
   }
 
   return (
