@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Radio } from "@/components/Form/Radio/Radio";
 import { findFlagUrlByIso2Code } from "country-flags-svg";
 import { validateCPF } from "@/shared/config/validateCPF";
+import { Checkbox } from '@mui/material';
 
 export const StepOne: React.FC = () => {
   const { formState, watch, setValue, getValues, setFocus } = useFormContext();

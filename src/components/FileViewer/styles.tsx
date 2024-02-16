@@ -7,7 +7,8 @@ export const ContainerFilewView = styled.div`
 
     display: block;
     
-    height: 100vh;
+    max-height: 100%;
+    overflow: hidden;
 
     .fab {
         position: 'fixed';

@@ -16,7 +16,7 @@ export default function ViewerPage() {
         <SEO
             description={description?.toString()}
             image="https://bipshow.com/bannerPrincipal.svg"
-            nome={`Uzer Synpass - ${filename?.toString()}`}
+            nome={`BipShow - ${filename?.toString()}`}
             imageTwo="https://bipshow.com/bannerPrincipal.svg"
         />
         <FileViewer isAppView={true} filename={filename?.toString()!} title={description?.toString()!} />

@@ -19,6 +19,7 @@ import { ArrowLeft } from '@mui/icons-material';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { ButtonBack } from '@/components/ButtonBack';
 import { useRegister } from '@/shared/hooks/useRegister';
+import { Checkbox } from '@mui/material';
 
 const MiniStep: React.FC<({activeTab:number, stepCount: number})> = ({ activeTab, stepCount }) => {
   return (
@@ -133,6 +134,8 @@ export const Register: React.FC<IRegister> = ({
 
   const query = useSearchParams()
 
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+
   useEffect(() => {
     if (query.get('payload')){
       setIsStepper(4);
@@ -177,6 +180,23 @@ export const Register: React.FC<IRegister> = ({
                   : 'Criar conta'}
             </h6>
             {isStepper === 0 && <StepOne />}
+            
+      {
+        isStepper === 0 && <div
+          className='text-sm py-4' 
+        >
+        Ao criar sua conta você concorda com nosso <a href='/viewer-app/termos/termos-de-uso' target='_blank' rel='noopener noreferrer' className='text-primary'>Termos de Uso</a> e <a href='/viewer-app/privacidade/politica-de-privacidade' target='_blank' rel='noopener noreferrer' className='text-primary'>Política de Privacidade</a>
+        <div>
+          <Checkbox
+            checked={isTermsAccepted}
+            onChange={(e) => setIsTermsAccepted(e.target.checked)}
+          />
+          <span>
+            Aceito os termos
+          </span>
+        </div>
+
+      </div>}
             {isStepper === 1 && (
             <FormAddress
               variant="register"
@@ -247,8 +267,7 @@ export const Register: React.FC<IRegister> = ({
                         }
                       disabled={
                         isLoading
-                        || !gender || 
-                        (!emailValidado
+                        || !gender || (isStepper === 0 && !isTermsAccepted) || (!emailValidado
                             && isStepper === 2
                             && validateEmail)
                             || (isStepper === 4 && !photoAvatar)

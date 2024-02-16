@@ -37,7 +37,7 @@ return <footer className="bg-grayLight relative overflow-hidden">
       height={200}
     />
   </div>
-<div className="container grid grid-cols-1 mx-auto p-6 relative z-[5] gap-x-3 gap-y-8 sm:grid-cols-3 md:grid-cols-4">
+<div className="container grid grid-cols-1 mx-auto p-6 relative z-[5] gap-x-3 gap-y-8 sm:grid-cols-3 md:grid-cols-5">
   <div className="flex flex-col space-y-4">
     <h2 className="font-medium text-primary">Go - Goiânia</h2>
     <div className="flex flex-col space-y-2 text-sm dark:text-gray-400">
@@ -75,8 +75,10 @@ return <footer className="bg-grayLight relative overflow-hidden">
       {user ? <Link href={'/meus-ingressos'} className='list-item' >Meus Ingressos</Link> : <p rel="noopener noreferrer" className='list-item cursor-pointer' onClick={() => setIsAuthModalOpen(true)} >Meus Ingressos</p>}
       <a rel="noopener noreferrer" className='list-item' href="https://uzerticket.com.br/home/eventos/" target='_blank'>Area de produtores</a>
       <a rel="noopener noreferrer" className='list-item'  href="http://uzer.com.br/" target='_blank'>Institucional</a>
-      <a rel="noopener noreferrer" className='list-item'  href="https://www.planalto.gov.br/ccivil_03/_Ato2015-2018/2015/Decreto/D8537.htm#art28" target='_blank'>Lei de meia-entrada</a>
-      <Link href={'/criar-evento'} className='list-item text-[#049E8A]' >Crie seu evento agora!</Link>
+      <Link className='list-item'  href="/viewer-app/meia-entrada/Meia%20entrada" >Lei de meia-entrada</Link>
+      <Link href={'/faq'} className='list-item' >FAQ</Link>
+      <Link href={'/viewer-app/termos/termos-de-uso'} className='list-item' >Termos de uso</Link>
+      <Link href={'/viewer-app/privacidade/Pol%C3%ADtica%20de%20Privacidade'} className='list-item' >Política de privacidade</Link>
     </div>
   </div>
   <div className="flex flex-col space-y-4">
@@ -133,6 +135,21 @@ return <footer className="bg-grayLight relative overflow-hidden">
       </a>
     </div>
   </div>
+  <div className="flex flex-col space-y-4">
+    <h2 className="font-medium text-primary">Criar um evento</h2>
+    
+    <div className="flex flex-col space-y-2 text-sm text-textPrimary font-normal">
+      <Link href={'/criar-evento'} className='text-[#049E8A]' >
+        <button
+          className="bg-green text-white rounded-md py-2 px-4 w-3/4 hover:bg-[#049E8A] transition duration-300 ease-in-out"
+        >
+          Criar meu evento agora!
+
+        </button>
+      </Link>
+    </div>
+  </div>
+
   <div className="flex flex-col space-y-4">
     <h2 className="font-medium text-primary">Baixe o aplicativo</h2>
     <div className="flex flex-col space-y-4 text-sm dark:text-gray-400">
