@@ -52,7 +52,7 @@ export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento
         },
       },
       amount: {
-        value: 100 * 5201,
+        value: parseFloat((pedido.total * 100).toFixed(2)),
         currency: 'BRL',
       },
       billingAddress: {

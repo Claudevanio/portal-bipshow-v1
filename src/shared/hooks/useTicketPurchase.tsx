@@ -421,7 +421,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               dataNascimento: user.dataNascimento,
               bandeira: selectedBrand === '' ? data.brand : selectedBrand,
               email: user.email,
-              // authenticationId,
+              authenticationId,
               tipoDoCartao: isOptionCardPayment,
               enderecoCobranca: user.endereco ? {
                 cep: user.endereco.cep,
