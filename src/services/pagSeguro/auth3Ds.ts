@@ -24,7 +24,7 @@ export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento
   const enderecoCobranca = isCartao.endereco;
   const isStates = states.find((i) => i.estado === enderecoCobranca?.estado);
   const telefoneFormatted = telefone?.replace('(', '').replace(')', '').replace(' ', '').replace('-', '');
-
+  const numero = Number(isCartao.numero.trim().replace(/\s/g, ''));
   const request = {
     data: {
       customer: {
@@ -43,9 +43,9 @@ export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento
         type: tipoPagamento,
         installments: 1,
         card: {
-          number: 6505050000001109,
+          number: numero,
           expMonth: isCartao.mes,
-          expYear: isCartao.ano,
+          expYear: +isCartao.ano > 2000 ? isCartao.ano : +`20${isCartao.ano}`,
           holder: {
             name: isCartao.nome,
           },

@@ -8,7 +8,7 @@ export const ContainerLoadingPayment = styled.div`
     background-color: ${({ theme }) => "#00000059"};
     top: 0px;
     left: 0px;
-    z-index: 10000000;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: center;

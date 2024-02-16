@@ -33,7 +33,7 @@ export const ContainerSelect = styled.div`
         -moz-appearance: none;
         -ms-appearance: none;
         -o-appearance: none; 
-        text-transform: uppercase;
+        /* text-transform: uppercase; */
         select::-ms-expand { display: none; }/* Remove seta padrão do IE*/;
         background: transparent;
         border: none;

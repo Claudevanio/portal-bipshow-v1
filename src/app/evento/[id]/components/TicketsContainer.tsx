@@ -63,7 +63,7 @@ function SingleTicketCard(
 
         > 
           <p
-            className='text-xs w-24 max-w-24 text-ellipsis overflow-hidden whitespace-nowrap font-semibold text-softBlue'
+            className='text-xs w-36 max-w-36 md:w-24 md:max-w-24  font-semibold text-softBlue'
           >
             {nome}
           </p>

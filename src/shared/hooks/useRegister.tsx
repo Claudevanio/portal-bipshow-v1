@@ -196,7 +196,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleLogoutUser = useCallback(() => {
     localStorage.setItem('shouldChangeText', 'true');
     Cache.remove({key: '@tokenUser'})
-    router.push('/');
+    router.replace('/');
     setIsUser(undefined);
     apiTokeUser.defaults.headers.Authorization = '';
     setTimeout(() => {

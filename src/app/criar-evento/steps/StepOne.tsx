@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Radio } from "@/components/Form/Radio/Radio";
 import { findFlagUrlByIso2Code } from "country-flags-svg";
 import { validateCPF } from "@/shared/config/validateCPF";
+import {tipos, categories} from '@/utils'
 
 export const StepOne: React.FC = () => {
   const { watch, setValue, getValues, setFocus } = useFormContext();
@@ -186,10 +187,12 @@ export const StepOne: React.FC = () => {
           label="Tipo de evento"
           disabled={isLoading}
           loading={false}
-          options={[
-            { value: 0, innerText: "Palestra" },
-            { value: 1, innerText: "Curso" },
-          ]}
+          options={
+            tipos.map((tipo) => ({
+              value: tipo.id,
+              innerText: tipo.name,
+            }))
+          }
           rules={{
             required: {
               value: true,
@@ -203,11 +206,12 @@ export const StepOne: React.FC = () => {
           label="Categoria"
           disabled={isLoading}
           loading={false}
-          options={[
-            { value: 0, innerText: "Categoria 1" },
-            { value: 1, innerText: "Categoria 2" },
-            { value: 2, innerText: "Categoria 3" },
-          ]}
+          options={
+            categories?.map((category) => ({
+              value: category.id,
+              innerText: category.name,
+            })) ?? []
+          }
           rules={{
             required: {
               value: true,

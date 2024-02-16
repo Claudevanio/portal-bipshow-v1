@@ -49,9 +49,8 @@ export default function Profile() {
     if (newValue == 2) {
       router.replace("/profile?tab=orders");
     }
-    if (newValue == 3) {
+    if (newValue == 3) { 
       handleLogoutUser();
-      router.replace("/");
     }
   };
    
@@ -136,13 +135,27 @@ export default function Profile() {
     }
   };
 
+  const shouldOpenAuthModal = () => {
+    return !user?.id && !user;
+  }
+
+
   useEffect(() => {
-    if(!user?.id) {
-      setIsAuthModalOpen(true);
-      return;
-    } 
-    setIsAuthModalOpen(false);
+    let timeoutId : any;
+
+    if (!user?.id || !user) {
+      timeoutId = setTimeout(() => {
+        setIsAuthModalOpen(shouldOpenAuthModal());
+      }, 3000);
+    } else {
+      setIsAuthModalOpen(false);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [user]);
+
 
   return (
         <div className="w-full flex flex-1 flex-row gap-2 px-4 md:px-14 xl:px-20 2xl:px-14  pt-10 pb-10 overflow-x-hidden">

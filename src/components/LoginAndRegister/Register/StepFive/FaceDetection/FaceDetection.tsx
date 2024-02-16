@@ -77,7 +77,7 @@ export const FaceDetectionComponent: React.FC = () => {
               className='flex items-center gap-4 w-full justify-center'
             >
               <ButtonBack
-                onClick={() => setIsStepper(isStepper - 1)}
+                onClick={() => onToPhoto(false)}
               />
               <Button
                 onClick={() => setContinueOnDesktop(true)}

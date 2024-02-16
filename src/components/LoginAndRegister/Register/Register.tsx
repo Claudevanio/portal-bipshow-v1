@@ -19,7 +19,7 @@ import { ArrowLeft } from '@mui/icons-material';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { ButtonBack } from '@/components/ButtonBack';
 import { useRegister } from '@/shared/hooks/useRegister';
-import { Checkbox } from '@mui/material';
+import { Checkbox, Modal } from '@mui/material';
 
 const MiniStep: React.FC<({activeTab:number, stepCount: number})> = ({ activeTab, stepCount }) => {
   return (
@@ -142,6 +142,19 @@ export const Register: React.FC<IRegister> = ({
     }
   }, [query, setIsStepper])
 
+  
+  const [isTermosModalOpen, setIsTermosModalOpen] = useState<boolean>(false);
+
+  const [currentFilePath, setCurrentFilePath] = useState<string | undefined>(undefined);
+
+  const handleCloseTermosModal = () => {
+    setIsTermosModalOpen(false);
+  }
+  const handleOpenTermosModal = () => {
+    setIsTermosModalOpen(true);
+  }
+  
+
   return (
     <ContainerRegister>
       {pathname === '/register' && (
@@ -185,7 +198,20 @@ export const Register: React.FC<IRegister> = ({
         isStepper === 0 && <div
           className='text-sm py-4' 
         >
-        Ao criar sua conta você concorda com nosso <a href='/viewer-app/termos/termos-de-uso' target='_blank' rel='noopener noreferrer' className='text-primary'>Termos de Uso</a> e <a href='/viewer-app/privacidade/politica-de-privacidade' target='_blank' rel='noopener noreferrer' className='text-primary'>Política de Privacidade</a>
+        Ao criar sua conta você concorda com nosso <span className='text-primary cursor-pointer' 
+        onClick={
+          () => {
+            handleOpenTermosModal()
+            setCurrentFilePath('termos.html')
+          }
+        }
+        >Termos de Uso</span> e <span className='text-primary cursor-pointer'
+        onClick={
+          () => {
+            handleOpenTermosModal()
+            setCurrentFilePath('privacidade.html')
+        }}
+        >Política de Privacidade</span>
         <div>
           <Checkbox
             checked={isTermsAccepted}
@@ -292,6 +318,24 @@ export const Register: React.FC<IRegister> = ({
           </form>
         </div>
       </div>
+      
+      <Modal
+          open={isTermosModalOpen}
+          onClose={handleCloseTermosModal}
+          className='w-full h-full flex items-center justify-center'
+        >
+          <div
+            className=' h-full w-full md:w-1/2 md:h-1/2  bg-background p-4'
+          >
+          <ButtonBack
+            onClick={handleCloseTermosModal}
+          />
+            <iframe
+              src={`html/${currentFilePath}`}
+              className='w-full h-[80%]'
+            />
+          </div>
+        </Modal>
     </ContainerRegister>
   );
 };

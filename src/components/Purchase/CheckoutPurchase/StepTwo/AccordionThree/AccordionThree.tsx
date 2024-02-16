@@ -137,14 +137,14 @@ export const AccordionThree: React.FC = () => {
                   value="CREDIT_CARD"
                   onClick={() => onChangePaymentCardType('CREDIT_CARD')}
                 />
-                {/* <Radio
+                <Radio
                   id="DEBIT_CARD"
                   label="Cartão de débito"
                   name="DEBIT_CARD"
                   checked={optionCardPayment === 'DEBIT_CARD'}
                   value="CREDIT_CARD"
                   onClick={() => onChangePaymentCardType('DEBIT_CARD')}
-                /> */}
+                />
               </div>
               <div className="input-card">
                 <Accordion
@@ -195,7 +195,7 @@ export const AccordionThree: React.FC = () => {
                       type="tel"
                       name="cartao"
                       id="cartao"
-                      label="Número do cartão de crédito"
+                      label="Número do cartão"
                       rules={{
                         required: {
                           value: true,

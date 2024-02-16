@@ -253,7 +253,7 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
             </div>
             {!eventTicket?.exibirCadeiras && !eventTicket?.local?.mapa && (
               <aside
-                className={`md:w-1/4 flex-col md:min-w-[18rem] gap-4 ${
+                className={`md:w-[30%] flex-col md:min-w-[18rem] gap-4 ${
                   activeTab == "tickets" ? "flex" : "hidden"
                 } md:flex`}
               >

@@ -46,4 +46,10 @@ export const ContainerTickets = styled.div`
         flex-direction: column;
         gap: ${({ theme }) => theme.spacing(1)};
     }
+    @media (max-width: 1400px) {
+        width: 90%;
+    }
+    @media (max-width: 1024px) {
+        width: 100%;
+    }
 `;

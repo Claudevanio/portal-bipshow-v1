@@ -5,11 +5,13 @@ import { useRegister } from '@/shared/hooks/useRegister';
 import { WhatsApp } from '@mui/icons-material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export const Footer = () => {
 
   const {user} = useRegister();
-  const {setIsAuthModalOpen} = useAuth()
+  const {setIsAuthModalOpen, setAfterLogin} = useAuth()
+  const router = useRouter()
 
 
 return <footer className="bg-grayLight relative overflow-hidden">
@@ -63,8 +65,8 @@ return <footer className="bg-grayLight relative overflow-hidden">
       <p
         className='text-textTertiary text-sm tracking-tighter'
       >
-      Av.Dep.Jamel Cecilio, 2690 Sala 606 e 607 <br/>
-      Ed. Metropolitan Tokyo- Jd.Goiás, Goiânia - GO - CEP 74810-100
+      Av.Dep.Jamel Cecilio, 2690 Sala 606 <br/>
+      Ed. Metropolitan Tokyo- Jd.Goiás, Goiânia, GO - CEP 74810-100
       </p>
     </div>
   </div>
@@ -72,7 +74,10 @@ return <footer className="bg-grayLight relative overflow-hidden">
     <h2 className="font-medium text-primary">Acesso rápido</h2>
     <div className="flex flex-col space-y-2 text-sm text-textPrimary font-normal pl-6">
       <a rel="noopener noreferrer" className='list-item' href="/">Início</a>
-      {user ? <Link href={'/meus-ingressos'} className='list-item' >Meus Ingressos</Link> : <p rel="noopener noreferrer" className='list-item cursor-pointer' onClick={() => setIsAuthModalOpen(true)} >Meus Ingressos</p>}
+      {user ? <Link href={'/meus-ingressos'} className='list-item' >Meus Ingressos</Link> : <p rel="noopener noreferrer" className='list-item cursor-pointer' onClick={() => {
+        setIsAuthModalOpen(true)
+        setAfterLogin(true)
+        }} >Meus Ingressos</p>}
       <a rel="noopener noreferrer" className='list-item' href="https://uzerticket.com.br/home/eventos/" target='_blank'>Area de produtores</a>
       <a rel="noopener noreferrer" className='list-item'  href="http://uzer.com.br/" target='_blank'>Institucional</a>
       <Link className='list-item'  href="/viewer-app/meia-entrada/Meia%20entrada" >Lei de meia-entrada</Link>

@@ -110,6 +110,8 @@ export interface IAuth {
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   getRegisterURLWithPayloadOnQuery: (payload: IUser) => string;
+  afterLogin: any;
+  setAfterLogin: (data: any) => void;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -186,6 +188,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isNotUserPhoto, setIsNotUserPhoto] = useState<IUser>();
   const [isToken, setIsToken] = useState<any>();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [afterLogin, setAfterLogin] = useState<any>(false);
 
   const [forgotPasswordDefaultValues, setForgotPasswordDefaultValues] = useState<any>();
 
@@ -1313,7 +1316,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         forgotPasswordDefaultValues,
         isAuthModalOpen,
         setIsAuthModalOpen,
-        getRegisterURLWithPayloadOnQuery
+        getRegisterURLWithPayloadOnQuery,
+        afterLogin,
+        setAfterLogin,
       }}
     >
       {children}

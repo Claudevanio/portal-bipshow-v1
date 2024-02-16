@@ -503,6 +503,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
   const handleSubmitReservation = useCallback(async (dataReservation: IReservation[], guide: string, idPurchase: number, dataPurchase?: IPurchase, authenticationId?: string) => {
     try {
+      debugger;
       
       const { data } = await apiTokeUser.post(`${CREATE_RESERVATION}/${guide}/reserve`, {
         lb: dataReservation,
@@ -568,11 +569,11 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
             } as any;
 
             const isInstallment = isOptionCardPayment === 'CREDIT_CARD' ? Number(isDataPurchase.parcelas) : 1;
-
             auth3Ds(isCartao, {
               total: amount,
               usuario: user,
             }, isOptionCardPayment, isInstallment, isSessionPayment, (result : any, error : any) => {
+              debugger;
               if (error) {
                 callErrorDialogComponent(error.mensagem ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
                 setIsLoading(false);

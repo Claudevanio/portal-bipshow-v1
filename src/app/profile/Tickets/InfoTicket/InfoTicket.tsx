@@ -47,16 +47,21 @@ export const InfoTicket: React.FC = () => {
         </button>
         <div className="header">           
           <div className="flex flex-col w-full">
-            <div
+            <img
+              src={imageURL}
+              alt="Evento"
+              className="w-full rounded-xl h-80 object-fill hidden md:block"
+            />  
+            {/* <div
               className="w-full h-80 rounded-xl hidden md:block object-cover"
               style={{
                 backgroundImage: `url(${imageURL})`,
-                backgroundSize: "cover",
+                backgroundSize: "100%",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundClip: "border-box",
               }}
-            ></div>
+            ></div> */}
             <img 
               src={imageMobileURL}
               alt="Evento"

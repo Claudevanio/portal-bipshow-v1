@@ -14,7 +14,8 @@ import Link from "next/link";
 import { Radio } from "@/components/Form/Radio/Radio";
 import { findFlagUrlByIso2Code } from "country-flags-svg";
 import { validateCPF } from "@/shared/config/validateCPF";
-import { Checkbox } from '@mui/material';
+import { Checkbox, Modal } from '@mui/material';
+import { ButtonBack } from '@/components/ButtonBack';
 
 export const StepOne: React.FC = () => {
   const { formState, watch, setValue, getValues, setFocus } = useFormContext();
@@ -179,9 +180,9 @@ export const StepOne: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCountry]);
 
-  
 
   return (
+    <>
     <ContainerStepOne>
 
       
@@ -606,5 +607,7 @@ export const StepOne: React.FC = () => {
         </div>
       </div>
     </ContainerStepOne>
+    </>
+
   );
 };

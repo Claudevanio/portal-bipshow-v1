@@ -36,7 +36,7 @@ export function Navbar() {
 
   const {user, handleLoadUser, clearDefaultValues} = useRegister()
   
-  const {isAuthModalOpen, setIsAuthModalOpen} = useAuth()
+  const {isAuthModalOpen, setIsAuthModalOpen, afterLogin} = useAuth()
 
   const [profileModalOpen, setProfileModalOpen] = useState(false)
 
@@ -383,6 +383,9 @@ export function Navbar() {
                 
                 setIsAuthModalOpen(false)
                 handleLoadUser()
+                if(afterLogin){
+                  router.push('/profile?tab=meus-ingressos')
+                }
                 // router.push('/checkout')
               }}
             />
