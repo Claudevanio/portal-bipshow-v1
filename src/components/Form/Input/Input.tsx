@@ -104,6 +104,7 @@ export const Input: React.FC<IInput> = ({
                         {...field}
                         ref={inputRef}
                         onFocus={() => setIsFocused(true)}
+                        tabIndex={1}
                         onBlur={() => setIsFocused(false)}
                         onChange={(e) => {
                             if(pseudoDisabled) return;
@@ -151,6 +152,7 @@ export const Input: React.FC<IInput> = ({
                                     setValue(name, "");
                                     setIsFocused(false);
                                 }}
+                                tabIndex={-1}
                             >
                                 <Clean
                                     color="rgba(0, 0, 0, 0.30)"
@@ -160,7 +162,9 @@ export const Input: React.FC<IInput> = ({
                             </IconButton>
                     )}
                     {password && isValue && (
-                        <IconButton onClick={password.onClick}>
+                        <IconButton onClick={password.onClick}
+                            tabIndex={-1}
+                        >
                             {rest.type === "text" && (
                                 <Password
                                     color="rgba(0, 0, 0, 0.30)"

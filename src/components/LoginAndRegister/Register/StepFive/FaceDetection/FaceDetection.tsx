@@ -7,9 +7,10 @@ import { Check, Close, QrCode } from '@mui/icons-material';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/Button/Button';
 import { useFormContext } from 'react-hook-form';
+import { ButtonBack } from '@/components/ButtonBack';
 
 export const FaceDetectionComponent: React.FC = () => {
-  const { onToPhoto, onAddPhoto, getRegisterURLWithPayloadOnQuery } = useAuth();
+  const { onToPhoto, onAddPhoto, getRegisterURLWithPayloadOnQuery, setIsStepper, isStepper } = useAuth();
 
   const { getValues } = useFormContext();
   
@@ -72,13 +73,20 @@ export const FaceDetectionComponent: React.FC = () => {
             >
               Se preferir, clique no botão abaixo para continuar no desktop
             </span>
-          <Button
-            onClick={() => setContinueOnDesktop(true)}
-            variant='secondary'
-            className=''
-          >
-            Continuar por aqui
-          </Button>
+            <div
+              className='flex items-center gap-4 w-full justify-center'
+            >
+              <ButtonBack
+                onClick={() => setIsStepper(isStepper - 1)}
+              />
+              <Button
+                onClick={() => setContinueOnDesktop(true)}
+                variant='secondary'
+                className=''
+              >
+                Continuar por aqui
+              </Button>
+          </div>
           <div
             className='h-4 pt-4'
           >&nbsp;</div>

@@ -388,6 +388,12 @@ export function Navbar() {
             />
             <Close
               className='absolute top-2 right-4 md:top-[10%] md:right-[6%] cursor-pointer z-10 text-gray'
+              style={
+                authType === 'login' ? {
+                  top: '6rem',
+                  right: '2rem'
+                } : {}
+              }
               onClick={() => {
                 setIsAuthModalOpen(false)
                 clearDefaultValues()

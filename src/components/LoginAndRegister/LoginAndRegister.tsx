@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { AuthProvider } from "@/shared/hooks/useAuth";
-import { Loading } from "@/components/Loading";
+// import { Loading } from "@/components/Loading";
 import { useRegister } from "@/shared/hooks/useRegister";
 import { IUser } from "@/types";
 import { ContainerLoginAndRegister } from "./styles";

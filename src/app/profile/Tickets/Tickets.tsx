@@ -120,7 +120,7 @@ export const Tickets: React.FC = () => {
                   tickets={{
                     address: `${item.evento.endereco}`,
                     date: item.evento.dataRealizacao || '',
-                    foto: `${process.env.URL_API}${item.evento.imagens[0].link}`,
+                    foto: `${process.env.URL_API}${item.evento.imagens[1].link}`,
                     name: item.evento.nome || '',
                   }}
                   idEvento={item.evento.id}
@@ -171,9 +171,9 @@ export const Tickets: React.FC = () => {
                               </p>
                             </div>
                               <div
-                                  className='flex gap-4 w-full'
+                                  className='flex gap-4 w-full items-center'
                               >
-                              {
+                              {/* {
                                 value.comValidacaoFacial ? 
                                 <svg width="120" height="120" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path fillRule="evenodd" clipRule="evenodd" d="M5.81815 5H10.679V6.64292H6.64347V10.7337H5V5.81815C5 5.37153 5.37098 5 5.81815 5ZM21.3215 5H26.1824C26.629 5 27.0005 5.37098 27.0005 5.81815V10.727H25.3576V6.64347H21.3149V5H21.3215ZM21.2663 25.3571H25.3571V21.3144H27V26.1752C27 26.629 26.629 26.9934 26.1818 26.9934H21.273V25.3571H21.2663ZM5 21.2663H6.64292V25.3571H10.6856V27H5.81815C5.37153 27 5 26.629 5 26.1819V21.2663Z" fill="#05B59D" />
@@ -181,6 +181,19 @@ export const Tickets: React.FC = () => {
                                 </svg> : <QRCode
                                   value={value}
                                 /> 
+                                } */}
+                                {
+                                  <div 
+                                    style={{
+                                      backgroundImage: `url(${value.evento.imagens[0].link})`,
+                                      backgroundSize: '100%',
+                                      backgroundPosition: 'center',
+                                      width: '96px',
+                                      height: '80px', 
+                                      borderRadius: '16px',
+                                      backgroundRepeat: 'no-repeat'
+                                    }}
+                                    />
                                 }
                               <div
                                 className='flex flex-col gap-2 w-full justify-between text-sm'
@@ -189,7 +202,7 @@ export const Tickets: React.FC = () => {
                                   className='text-textPrimary hidden md:block'
                                   >
                                     {
-                                      value.evento?.link
+                                      value.evento?.nome ?? value.evento?.link
                                     }
                                 </p>
                                 <p className='text-textPrimary flex items-center justify-between w-full'>

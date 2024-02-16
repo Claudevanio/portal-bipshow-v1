@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTickets } from '@/shared/hooks/useTickets';
 import { Empty } from '@/components/Empty';
 import { Calendar } from '@/components/icons/Calendar'; 
@@ -8,9 +8,33 @@ import { Location } from '@/components/icons/Location';
 import { ContainerInfoTicket, Image } from './styles';
 import { Content } from './Content';
 import { baseUrlImages } from '@/constants';
+import { api } from '@/services';
 
 export const InfoTicket: React.FC = () => {
   const { infoTicket, handleClearInfoTicket } = useTickets();
+
+  
+
+  const [ticketData, setTicketData] = React.useState<any>();
+
+  const fetchTicketData = async () => {
+    if(infoTicket) {
+      console.log(infoTicket.evento.id)
+      const response = await api.get(`/rest/v1/eventos/${infoTicket.evento.id}/online`);
+      setTicketData(response.data);
+    }
+  }
+
+    useEffect(() => {
+      if (infoTicket) {
+        fetchTicketData();
+      }
+    }, [infoTicket]);
+
+    const imageURL = ticketData?.capa?.link && ticketData?.capa?.link[0] === "/" ? baseUrlImages + ticketData?.capa?.link : ticketData?.capa?.link;
+
+    const imageMobileURL  = ticketData?.imagens?.minicapa?.link && ticketData?.imagens?.minicapa?.link[0] === "/" ? baseUrlImages + ticketData?.imagens?.minicapa?.link : ticketData?.imagens?.minicapa?.link;
+
 
   return (
     infoTicket ? (
@@ -26,7 +50,7 @@ export const InfoTicket: React.FC = () => {
             <div
               className="w-full h-80 rounded-xl hidden md:block object-cover"
               style={{
-                backgroundImage: `url(${infoTicket.evento.imagens[1].link && infoTicket.evento.imagens[1].link[0] === "/" ? baseUrlImages + infoTicket.evento.imagens[1].link : infoTicket.evento.imagens[1].link})`,
+                backgroundImage: `url(${imageURL})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
@@ -34,7 +58,7 @@ export const InfoTicket: React.FC = () => {
               }}
             ></div>
             <img 
-              src={infoTicket.evento.imagens[1].link && infoTicket.evento.imagens[1].link[0] === "/" ? baseUrlImages + infoTicket.evento.imagens[1].link : infoTicket.evento.imagens[1].link}
+              src={imageMobileURL}
               alt="Evento"
               className="w-full rounded-xl h-80 object-fill md:hidden"
               /> 

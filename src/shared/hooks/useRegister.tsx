@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import { GENARATE_TOKEN, GET_USER, UPDATED_USER, api, apiTokeUser } from '@/services';
 import axios, { HeadersDefaults } from 'axios';
-import { Loading } from '@/components/Loading/Loading';
 import { TypeEnum, useError } from './useDialog';
 import { IUser } from '@/types';
 import { Cache } from '@/adapters';
