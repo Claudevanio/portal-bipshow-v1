@@ -16,14 +16,16 @@ import { ButtonBack } from '@/components/ButtonBack';
 import { AccountBoxOutlined, Flare, FlareOutlined, WbSunny, WbSunnyOutlined } from '@mui/icons-material';
 import { Sunglasses } from '@/components/icons/Sunglasses';
 
-export const StepFive: React.FC = () => {
+export const StepFive: React.FC<{handleChangeType: any}> = ({handleChangeType}) => {
   const {
     toPhoto, photoAvatar, onAddPhoto, photoInvalida, onToPhoto,  setIsStepper, isStepper
   } = useAuth();
 
   return (
     <ContainerStepFive variant={photoInvalida}>
-      {!photoAvatar && toPhoto && <FaceDetectionComponent />}
+      {!photoAvatar && toPhoto && <FaceDetectionComponent
+        handleChangeType={handleChangeType}
+      />}
       {!toPhoto && !photoAvatar && (
         <div className="help">
           <ul

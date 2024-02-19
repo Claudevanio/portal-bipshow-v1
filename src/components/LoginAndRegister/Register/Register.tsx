@@ -235,7 +235,9 @@ export const Register: React.FC<IRegister> = ({
             {isStepper === 2 && <StepTwo />}
             {isStepper === 3 && <StepFour />}
 
-            {isStepper === 4 && <StepFive />}
+            {isStepper === 4 && <StepFive
+              handleChangeType={handleChangeType}
+            />}
             {!toPhoto && !(isStepper === 4 && !photoAvatar) ? (
               <div
                 className={`${
@@ -255,9 +257,9 @@ export const Register: React.FC<IRegister> = ({
                       setIsStepper(0);
                       return;
                     }
-                    if(isStepper === 1) {
-                      reset()
-                    }
+                    // if(isStepper === 1) {
+                    //   reset()
+                    // }
 
                     setIsStepper(isStepper - 1);
                 }

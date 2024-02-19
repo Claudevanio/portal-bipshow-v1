@@ -118,7 +118,7 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const dataEvento = new Date(pedido?.evento?.dataRealizacao ?? new Date());
       const agora = new Date();
   
-      if (pedido.pagamento.status === 'CANCELADO') {
+      if (pedido.pagamento.status === 'CANCELADO' || pedido.pagamento.status === 'REEMBOLSADO') {
         agrupados['CANCELADO'].push(pedido);
       } else if (dataEvento <= agora) {
         agrupados['CONCLUIDO'].push(pedido);

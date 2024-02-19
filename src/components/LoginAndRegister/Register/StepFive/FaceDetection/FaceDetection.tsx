@@ -9,7 +9,7 @@ import { Button } from '@/components/Button/Button';
 import { useFormContext } from 'react-hook-form';
 import { ButtonBack } from '@/components/ButtonBack';
 
-export const FaceDetectionComponent: React.FC = () => {
+export const FaceDetectionComponent: React.FC<{handleChangeType: any}> = ({handleChangeType}) => {
   const { onToPhoto, onAddPhoto, getRegisterURLWithPayloadOnQuery, setIsStepper, isStepper } = useAuth();
 
   const { getValues } = useFormContext();
@@ -71,7 +71,7 @@ export const FaceDetectionComponent: React.FC = () => {
             <span
               className='text-sm'
             >
-              Se preferir, clique no botão abaixo para continuar no desktop
+              Se preferir, clique no botão abaixo para tirar a foto pelo desktop
             </span>
             <div
               className='flex items-center gap-4 w-full justify-center'
@@ -84,9 +84,21 @@ export const FaceDetectionComponent: React.FC = () => {
                 variant='secondary'
                 className=''
               >
-                Continuar por aqui
+                Tirar foto pelo desktop
               </Button>
           </div>
+          
+          <span 
+              className='text-center w-full'
+              >
+                Terminou o cadastro no celular? 
+                <p
+                  className='text-primary cursor-pointer'
+                  onClick={() => handleChangeType('login')}
+                >
+                  Fazer login
+                </p>
+            </span>
           <div
             className='h-4 pt-4'
           >&nbsp;</div>

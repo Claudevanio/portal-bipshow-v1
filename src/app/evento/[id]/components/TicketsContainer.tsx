@@ -75,7 +75,9 @@ function SingleTicketCard(
             }
           </p>
         </div>
-        <div>
+        <div
+          className='md:min-w-[5.5rem]'
+        >
           <p
             className='text-sm font-bold text-textPrimary '
           >
