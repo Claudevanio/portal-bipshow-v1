@@ -81,8 +81,7 @@ export const AccordionThree: React.FC = () => {
     }
   }, [installments]);
 
-  useEffect(() => {
-    debugger
+  useEffect(() => { 
     if (cardNumber && cardNumber.length >= 19) {
       handleQuantityinstallment(cardNumber);
     }

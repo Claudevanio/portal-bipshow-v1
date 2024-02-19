@@ -408,7 +408,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
           data: PaymentPerPixProps
         } | null;
 
-        if (isSelectedTypePayment && isSelectedTypePayment.formaPagamento === 'CartaoCredito' && data && installment && data.senderHash) {
+        if (isSelectedTypePayment && isSelectedTypePayment.formaPagamento !== 'PIX' && data && installment && data.senderHash) {
           const isBody = {
             senderHash: data.senderHash,
             origem: isWebView ? 'app' : 'site',
@@ -534,9 +534,13 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
     }
   }, [showErrorDialog, eventTicket, isSessionPayment, authenticationUser]);
 
-  const handleLoadPurchase = useCallback(async (guide: string, idPurchase: number, isDataPurchase?: IPurchase) => {
+  const handleLoadPurchase = useCallback(async (guide: string, idPurchase: number, isDataPurchase?: IPurchase) => { 
     
     try { 
+      debugger;
+      if(!installment && isSelectedTypePayment?.formaPagamento === 'CartaoCredito')
+        return
+
       setIsLoading(true);
       if (isSessionPayment && user && isDataOrder && isDataOrder.sucesso && isDataOrder.pedido && isDataOrder.pedido.bilhetesPreencher) {
         const isFormattedDataCard: IPurchase = {
@@ -572,8 +576,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
             auth3Ds(isCartao, {
               total: amount,
               usuario: user,
-            }, isOptionCardPayment, isInstallment, isSessionPayment, (result : any, error : any) => {
-              debugger;
+            }, isOptionCardPayment, isInstallment, isSessionPayment, (result : any, error : any) => { 
               if (error) {
                 callErrorDialogComponent(error.mensagem ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
                 setIsLoading(false);
@@ -594,7 +597,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                   return isFormatted;
                 });
 
-                isFormattedDataCard.tipoDoCartao = 'CREDIT_CARD';
+                isFormattedDataCard.tipoDoCartao = isOptionCardPayment;
                 isFormattedDataCard.token = tokenCard.encryptedCard;
                 isFormattedDataCard.senderHash = isSessionPayment.senderHash;
                 handleSubmitReservation(isBodyReservation, guide, idPurchase, isFormattedDataCard, result.id);
@@ -855,8 +858,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   }, [guidePurchase, showErrorDialog]);
 
   const handleQuantityinstallment = useCallback(async (cardBin: string) => {
-    try {
-      debugger; 
+    try { 
       setIsLoadingInstallment(true);
 
         const isCardBin = cardBin.split(' ').join('').substring(0, 6);
