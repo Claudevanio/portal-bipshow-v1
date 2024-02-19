@@ -583,7 +583,9 @@ export const Login: React.FC<ILogin> = ({
                     </ContainerButton>
                   </React.Fragment>
                 ) : (
-                  <StepFive />
+                  <StepFive 
+                    handleChangeType={handleChangeType}
+                  />
                 )}
                 {notUserPhoto && !toPhoto && (
                   <ContainerButton isStepper={1} userNotExist={false}>
