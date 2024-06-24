@@ -37,8 +37,10 @@ export const Card: React.FC<ICard> = ({ nome, index, user }) => {
              />
           </div>
           <div className="infos">
-            <p className="text-dark">{user.nome}</p>
-            <p className="text-light">{TELEFONEMask(user.telefone || '')}</p>
+            <p className="text-dark">{user.nome}</p> 
+            <p className="text-light">{
+              user?.pais ? user?.telefone : TELEFONEMask(user.telefone || '')
+            }</p>
             <p className="text-light">{user.email}</p>
             <p className="text-light">{CPFMask(user.cpf || '')}</p>
           </div>

@@ -44,11 +44,12 @@ export const StepThree: React.FC = () => {
 
   const necessidadesEvento = watch('necessidadesEvento'); 
 
-  function handleNecessities(id: number) {
+  function handleNecessities(title: string) {
     if(!necessidadesEvento)
       return
+ 
     
-    const newNecessities = necessidadesEvento.includes(id) ? necessidadesEvento.filter((necessity: number) => necessity !== id) : [...necessidadesEvento, id];
+    const newNecessities = necessidadesEvento.includes(title) ? necessidadesEvento.filter((necessity: string) => necessity !== title) : [...necessidadesEvento, title];
     setValue('necessidadesEvento', newNecessities);
   }
  
@@ -75,7 +76,7 @@ export const StepThree: React.FC = () => {
               padding: '1px'
             }}
             borderStyle={{
-              padding: (necessidadesEvento && necessidadesEvento.includes(necessity.id)) ? '1px' : '0px',
+              padding: (necessidadesEvento && necessidadesEvento.includes(necessity.title)) ? '1px' : '0px',
             }}
           >
             <div
@@ -101,8 +102,8 @@ export const StepThree: React.FC = () => {
               >
                 <Checkbox
                   value={necessity.id}
-                  checked={necessidadesEvento && necessidadesEvento.includes(necessity.id)}
-                  onChange={() => handleNecessities(necessity.id)}
+                  checked={necessidadesEvento && necessidadesEvento.includes(necessity.title)}
+                  onChange={() => handleNecessities(necessity.title)}
                 />
               </div>
 

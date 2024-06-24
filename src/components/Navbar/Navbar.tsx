@@ -77,6 +77,10 @@ export function Navbar() {
 
   const isWebview = pathName.includes('/payment/webview') || pathName.includes('/viewer-app') || pathName.includes('/faq-app')
   
+  const isApp = pathName.includes('/viewer-app') || pathName.includes('/faq-app') || pathName.includes('/payment/webview')
+
+  if(isApp)
+    return <></>
   
   return (
     <>

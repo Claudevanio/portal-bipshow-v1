@@ -31,7 +31,7 @@ interface ITicketsProvider {
     stepper: number;
     setIsStepper: (state: number) => void;
     isLoadingDownloadTicket: boolean;
-    handleTranferTickets: (userTransfer: IUser) => Promise<void>;
+    handleTranferTickets: (userTransfer: IUser, hideDialog?: boolean) => Promise<void>;
     loadingTransfer: boolean;
 }
 
@@ -132,22 +132,26 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [showErrorDialog]);
 
-  const handleTranferTickets = useCallback(async (userTransfer: IUser) => {
+  const handleTranferTickets = useCallback(async (userTransfer: IUser, hideDialog?: boolean) => {
     try {
       if (isInfoTicket) {
+        debugger;
         setLoadingTransfer(true);
         await apiTokeUser.post(`${TRANSFER_TICKETS}/${isInfoTicket?.pedido.guid}/bilhete/utilizador`, {
           id: isInfoTicket.id,
-          tipoDocumento: 'cpf',
+          tipoDocumento: userTransfer?.idTipoDocumento ?? 'cpf',
+          pais: userTransfer?.idPais,
           nome: userTransfer.nome,
-          documento: userTransfer.CPF ? userTransfer.CPF.replaceAll('.', '').replaceAll('-', '') : userTransfer.CPF,
+          documento: userTransfer?.numeroDoc ? userTransfer.numeroDoc : userTransfer.CPF ? userTransfer.CPF.replaceAll('.', '').replaceAll('-', '') : userTransfer.CPF,
           email: userTransfer.email,
           telefone: userTransfer.telefone ? userTransfer.telefone.replace('(', '').replace(')', '').replaceAll(' ', '').replace('-', '') : userTransfer.telefone,
           telefoneDDI: 55,
         });
-        callErrorDialogComponent('Ingresso transferido com sucesso.', TypeEnum.SUCCESS);
+        if(!hideDialog){
+          callErrorDialogComponent('Ingresso transferido com sucesso.', TypeEnum.SUCCESS);
+          handleClearInfoTicket(isInfoTicket.id);
+        }
         setLoadingTransfer(false);
-        handleClearInfoTicket(isInfoTicket.id);
       }
     } catch (err: any) {
       setLoadingTransfer(false);

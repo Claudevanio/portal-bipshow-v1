@@ -51,7 +51,7 @@ export const ModalCancel: React.FC<IModalCancel> = ({ onHide, show }) => {
                   <WhatsApp
                     className='text-2xl text-[#25D366]'
                   />
-                  (62) 98226-0746
+                  (62) 98226-0746 
                 </button>
               </a>
 

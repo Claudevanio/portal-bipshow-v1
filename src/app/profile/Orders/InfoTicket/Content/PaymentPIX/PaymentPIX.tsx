@@ -18,8 +18,17 @@ export const PaymentPIX: React.FC<PaymentPIXProps> = ({ handleCloseModal }) => {
   const handleCopyPix = useCallback(() => {
     const isContent = (document.getElementById('chave-pix') as HTMLTextAreaElement);
 
-    isContent.select();
-    document.execCommand('copy');
+    if (isContent) {
+      const textToCopy = isContent.innerText || isContent.textContent;
+      navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+          callErrorDialogComponent("Código copiado.", TypeEnum.SUCCESS);
+        })
+        .catch((error) => {
+          console.error('Erro ao copiar: ', error);
+          callErrorDialogComponent("Erro ao copiar código.", TypeEnum.ERROR);
+        });
+    }
 
     callErrorDialogComponent("Código copiado.", TypeEnum.SUCCESS)
   }, [showErrorDialog]);

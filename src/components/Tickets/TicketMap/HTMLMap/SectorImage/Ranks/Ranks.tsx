@@ -51,6 +51,39 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const hasOverflow = contentRef.current.scrollWidth > 10;
+    if (!hasOverflow) {
+      return;
+    }
+  
+    if (contentRef.current) {
+      contentRef.current.style.cursor = 'grabbing';
+  
+      const start = e.touches[0].clientX;
+      const scrollLeft = contentRef.current.scrollLeft;
+  
+      const handleTouchMove = (e: TouchEvent) => {
+        e.preventDefault(); // Evite a rolagem padrão durante o toque
+        const x = e.touches[0].clientX - start;
+        if (contentRef.current) {
+          contentRef.current.scrollLeft = scrollLeft - x;
+        }
+      };
+  
+      const handleTouchEnd = () => {
+        if (contentRef.current) {
+          contentRef.current.style.cursor = 'grab';
+        }
+  
+        contentRef.current.removeEventListener('touchmove', handleTouchMove);
+        contentRef.current.removeEventListener('touchend', handleTouchEnd);
+      };
+  
+      contentRef.current.addEventListener('touchmove', handleTouchMove, { passive: false }); // Use passive: false para garantir que preventDefault() funcione
+      contentRef.current.addEventListener('touchend', handleTouchEnd);
+    }
+  };
   return (
     <ContainerRanks>
       <TransformWrapper
@@ -77,6 +110,7 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
                   ref={contentRef}
                   //scrollX on drag
                   onMouseDown={handleDragStart}
+                  onTouchStart={handleTouchStart}
                 >
                   <div className="letters">
                     {fileiras.map((item: any, index: number) => (

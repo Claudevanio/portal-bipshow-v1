@@ -12,7 +12,9 @@ const FAQAppPage: NextPage = () => {
                 nome="bipshow - Central de dúvidas"
                 imageTwo="https://bipshow.com/bannerPrincipal.svg"
             />
-            <FAQApp />
+            <FAQApp
+                notApp={true}
+            />
         </React.Fragment>
     );
 };

@@ -4,11 +4,12 @@ import React, {
 } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
-  GET_PURCHASE_USER, GET_BILHETE_VENDA, CANCELED_PAYMENT, PRINT_OUT_TICKETS, apiTokeUser
+  GET_PURCHASE_USER, GET_BILHETE_VENDA, CANCELED_PAYMENT, PRINT_OUT_TICKETS, apiTokeUser,
+  TRANSFER_TICKETS
 } from '@/services';
 import { useFetch } from './useFetch';
 import { TypeEnum, useError } from "./useDialog";
-import { ITicketPurchaseUser, ITicketSale } from '@/types';
+import { ITicketPurchaseUser, ITicketSale, IUser } from '@/types';
 
 interface ITicketPurchaseUserFormatted {
     status: string;
@@ -37,6 +38,11 @@ interface IOrdersProvider {
     setIsStepper: (state: number) => void;
     isLoadingDownloadTicket: boolean;
     handleCancelPIX: (paymentId: string) => Promise<void>;
+    handleTranferTickets: (userTransfer: IUser, hideDialog?: boolean) => Promise<void>;
+    loadingTransfer: boolean;
+    isOpenModalTranfer: boolean;
+    setIsOpenModalTranfer: (state: boolean) => void;
+    setCurrentTransferTicketId: (state: number) => void;
 }
 
 const ContextOrders = createContext({} as IOrdersProvider);
@@ -294,6 +300,53 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [searchParams, handleClearInfoTicket]
   )
 
+  const [loadingTransfer, setLoadingTransfer] = useState<boolean>(false);
+
+  const [isOpenModalTranfer, setIsOpenModalTranfer] = useState<boolean>(false);
+
+  const [currentTransferTicketId, setCurrentTransferTicketId] = useState<number>(0);
+
+  
+  const handleTranferTickets = useCallback(async (userTransfer: IUser, hideDialog?: boolean) => {
+    try {
+      if (currentTransferTicketId && isInfoTicket) {
+        debugger;
+        setLoadingTransfer(true); 
+        await apiTokeUser.post(`${TRANSFER_TICKETS}/${isInfoTicket?.guid}/bilhete/utilizador`, {
+          id: currentTransferTicketId,
+          tipoDocumento: userTransfer?.idTipoDocumento ?? 'cpf',
+          pais: userTransfer?.idPais,
+          nome: userTransfer.nome,
+          documento: userTransfer?.numeroDoc ? userTransfer.numeroDoc : userTransfer.CPF ? userTransfer.CPF.replaceAll('.', '').replaceAll('-', '') : userTransfer.CPF,
+          email: userTransfer.email,
+          telefone: userTransfer.telefone ? userTransfer.telefone.replace('(', '').replace(')', '').replaceAll(' ', '').replace('-', '') : userTransfer.telefone,
+          telefoneDDI: 55,
+        });
+        if(!hideDialog){
+          callErrorDialogComponent('Ingresso transferido com sucesso.', TypeEnum.SUCCESS);
+          // handleClearInfoTicket();
+        }
+        const newTicketsSales = isTicketsSales.map((item) => {
+          if (item.id === currentTransferTicketId) {
+            return {
+              ...item,
+              utilizador: userTransfer,
+            };
+          }
+          return item;
+        }) as ITicketSale[];
+        setIsTicketsSales(newTicketsSales);
+
+
+        setLoadingTransfer(false);
+      }
+    } catch (err: any) {
+      setLoadingTransfer(false);
+      callErrorDialogComponent(err?.response?.data?.erro ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+    }
+  }, [showErrorDialog, isInfoTicket, handleClearInfoTicket, currentTransferTicketId]);
+
+
   return (
     <ContextOrders.Provider value={{
       ticketsUser: isTicketsUser,
@@ -313,7 +366,12 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       stepper: isStepper,
       setIsStepper,
       isLoadingDownloadTicket,
-      handleCancelPIX
+      handleCancelPIX,
+      handleTranferTickets,
+      loadingTransfer,
+      isOpenModalTranfer,
+      setIsOpenModalTranfer,
+      setCurrentTransferTicketId
     }}
     >
       {children}

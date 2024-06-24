@@ -5,7 +5,12 @@ import { useProfile } from '@/shared/hooks/useProfile';
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '@mui/material';
 
-export const FAQApp: React.FC = () => {
+export const FAQApp: React.FC<{
+    notApp?: boolean
+}> = ({
+    notApp
+}
+) => {
     const { loading } = useProfile();
     const router = useRouter()
 
@@ -18,6 +23,10 @@ export const FAQApp: React.FC = () => {
     };
 
     const callFileViewer = (title: string, description: string) => {
+        if(notApp){
+            router.push(`/viewer/${title}/${description}`);
+            return;
+        }
         router.push(`/viewer-app/${title}/${description}`);
     };
 

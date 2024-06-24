@@ -776,7 +776,7 @@ export function TicketsContainerDefinido ({
         </div>}
 
         <div
-          className='w-full md:max-w-[75%] md:w-3/4 md:scale-[.7]'
+          className='w-full lg:max-w-[75%] lg:w-3/4 md:scale-[.85]'
         >
           <HTMLMap/>
         </div>

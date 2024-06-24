@@ -7,6 +7,7 @@ import { Logo } from '@/components/icons/Logo';
 import { ContainerCardQRCODE } from './styles';
 import { DownloadOutlined } from '@mui/icons-material';
 import { Button } from '@/components';
+import {Button as FormButton} from '@/components/Form/Button'
 import { useRegister } from '@/shared/hooks/useRegister';
 
 export const CardQRCODE: React.FC<ITicketSale> = ({
@@ -18,7 +19,8 @@ export const CardQRCODE: React.FC<ITicketSale> = ({
   facial,
   codigo,
   id,
-  onClickDownload
+  onClickDownload,
+  onClickTransfer
 }) => {
 
   const { user } = useRegister();
@@ -77,6 +79,11 @@ export const CardQRCODE: React.FC<ITicketSale> = ({
             })}
           </p>
         </div>
+        <FormButton
+          onClick={onClickTransfer}
+          text='Transferir' 
+        > 
+        </FormButton>
       </div>
     </ContainerCardQRCODE>
   );

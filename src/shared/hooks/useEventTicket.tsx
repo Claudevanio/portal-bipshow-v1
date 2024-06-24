@@ -18,6 +18,7 @@ import { IPlace, ISector, ITicket, ITicketPurchase, IValuePerTypePayment, Ticket
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import { baseUrl } from '@/constants';
+import { Pixel } from '@/utils/pixel';
 
 export type SelectedChairProps = {
   nome: string,
@@ -49,6 +50,7 @@ interface IEventTicket {
     valores: number[];
     data?: Date;
     cor?: string | null;
+    dates?: Date[];
     idSector?: number;
   } | null;
   ticketFormatted: {
@@ -56,6 +58,7 @@ interface IEventTicket {
     tiposDeIngresso: ITicket[];
     valores: number[];
     data?: Date;
+    dates?: Date[];
     cor?: string | null;
     idSector?: number;
   }[] | undefined;
@@ -115,6 +118,7 @@ interface IEventTicket {
   titularId?: number;
   setTitularId?: (state: number) => void;
   handleEditChair: (chair: SelectedChairProps) => void;
+  failedToLoadFromWebview: boolean;
 }
 
 const EventTicketContext = createContext({} as IEventTicket);
@@ -126,6 +130,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     nome: string | undefined;
     tiposDeIngresso: ITicket[];
     valores: number[];
+    dates?: Date[];
     idSector?: number;
   }[] | undefined>();
   const [isLoadingEventTicket, setIsLoadingEventTicket] = useState<boolean>(true);
@@ -163,13 +168,18 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isChairs, setIsChairs] = useState<any>();
   const Router = useRouter();
   const id = useParams().id as string; 
+  const indicacao = useParams().ind as string | undefined
+  const url = indicacao ? `${GET_EVENTS}/${id}/online/indicacao/${indicacao}` :  `${GET_EVENTS}/${id}/online` 
   const { push } = useRouter();
-  const { data } = useFetch<IEventTicketProps>(`${GET_EVENTS}/${id}/online`, 'site');
+  const { data } = useFetch<IEventTicketProps>(`${url}`, 'site');
+ 
   
   const query = useSearchParams();
   const pathName = usePathname();
 
   const isWebview = pathName.includes('/payment/webview');
+
+  const [failedToLoadFromWebview, setFailedToLoadFromWebview] = useState(false);
 
   const eventosMultipleIds = query.get('eventosIds')?.split('-') ?? undefined;
   // const { tokenUser, guid } = query as any;
@@ -226,6 +236,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
       valores: number[];
       data?: Date;
       cor?: string | null;
+      dates?: Date[];
       idSector?: number;
     }>;
 
@@ -257,6 +268,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
               },
             ],
             data: item?.dias && item?.dias.length > 0 ? new Date(dayjs(item?.dias[0].dia).add(2,'hours') as any) : new Date(dayjs(data?.dataRealizacao?.split(' ')[0]).add(2, 'hours') as any) ?? new Date(dayjs(data?.dataRealizacao?.split(' ')[0]).add(2, 'hours')  as any) ,
+            dates: item?.dias && item?.dias.length > 1 ? item?.dias.map((i: any) => new Date(dayjs(i.dia).add(2,'hours') as any)) : undefined,
             cor: setorCor?.cor,
             idSector: item.setor?.id,
           };
@@ -312,15 +324,25 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const handleSelectTicket = useCallback((index: number) => {
     if (isEventTicketFormatted && isEventTicketFormatted.length > 0) {
-      setIsTicketSelected(isEventTicketFormatted[index]);
+      setIsTicketSelected(isEventTicketFormatted[index]); 
+      Pixel.ViewContent({
+        contentName: isEventTicketFormatted[index].nome + ' ' +dayjs((isEventTicketFormatted[index] as any).data).format('DD/MM/YYYY'),
+        contentIds: [`${isEventTicket?.id}`],
+        contentType: 'product',
+        value: isEventTicketFormatted[index].valores[0],
+        fbId: data?.pixelFacebook
+      });
     }
   }, [isEventTicketFormatted]);
+  
 
   const handleSelectTicketQuantity = useCallback((id: number, quantity: number, index: number, idTable?: number) => {
     const ticket = isTicketSelected?.tiposDeIngresso.find((i, isIndex) => isIndex === index);
 
     if (ticket) {
       const findTicket = isTickets.find((i) => i.singleId === `${ticket.nome}${index}`);
+
+      const currentLoteActive = ticket.lotes && ticket.lotes.length > 0 ? ticket.lotes.find((i) => i.ativo) : null;
 
       if (findTicket && findTicket.id === id) {
         if (quantity) {
@@ -329,7 +351,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
               return {
                 id,
                 qtde: quantity,
-                lote: ticket.lotes && ticket.lotes.length > 0 ? ticket.lotes[0] : null,
+                lote: currentLoteActive,
                 index,
                 singleId: `${ticket.nome}${index}`,
                 valor: Number(ticket.valorUnitario),
@@ -352,7 +374,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
           {
             id,
             qtde: quantity,
-            lote: ticket.lotes && ticket.lotes.length > 0 ? ticket.lotes[0] : null,
+            lote: currentLoteActive,
             nome: ticket.nome,
             index,
             singleId: `${ticket.nome}${index}`,
@@ -627,7 +649,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setIsLoadingAreas(false);
   }, [isEventTicket]);
 
-  function resetPurchaseAndSelected(){
+  function resetPurchaseAndSelected(){ 
     setIsTickets([])
     setIsTicketSelected(null)
     setIsShowPurchase(false)
@@ -653,7 +675,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   useEffect(() => {
     if(!isEventTicket?.id) return
 
-    if (pathName !== `/evento/${isEventTicket?.id}` || !isShowPurchase) {
+    if (((!pathName.includes('/evento/')) && !pathName.includes('/payment/webview')) || !isShowPurchase) {
       resetPurchaseAndSelected()
     }
   }, [pathName, isEventTicket?.id, isShowPurchase])
@@ -662,24 +684,32 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const handleLoadOrder = useCallback(async (guid: string) => {
     try {
       // 
- 
 
-      const tokenUser = query.get('tokenUser');
+      // const tokenUser = query.get('tokenUser');
 
       // const { data } = await apiTokeUser.get(`${GET_PURCHASE}/${guid}`) as { data: IOrder }; 
-      (
-        apiTokeUser.defaults
-          .headers
-      ).Authorization = `Bearer ${tokenUser}`;
+      
+      // (
+      //   apiTokeUser.defaults
+      //     .headers
+      // ).Authorization = `Bearer ${tokenUser}`;
 
-      const {data} = await apiTokeUser.get(`${GET_PURCHASE}/${guid}`, {
+      const localApi = axios.create({
+        baseURL: baseUrl,
         headers: {
-          'Authorization': `Bearer ${tokenUser}`
-        }
-      }) as { data: IOrder };
+          Authorization: `Bearer ${query.get('tokenUser')}`,
+        },
+      });
 
-      debugger;
+      const {data} = await localApi.get(`${GET_PURCHASE}/${guid}`) as { data: IOrder };
 
+      if(data.sucesso === false){
+        setFailedToLoadFromWebview(true)
+        return
+      }
+
+      setFailedToLoadFromWebview(false)
+ 
       if (data.pedido && data.pedido.ingressos) {
         const isTicketWebview = data.pedido.ingressos.map((i, index) => {
           return {
@@ -706,9 +736,11 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
         toast.info(data.mensagem ?? 'Ocorreu um erro de comunicação.');
       }
     } catch (err: any) {
-
+      setFailedToLoadFromWebview(true)
     }
-  }, [toast]);
+  }, []);
+ 
+
 
   const handleInsertTitulares = useCallback(async (isTitulares: string) => {
     // 
@@ -729,6 +761,9 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setIsTicketSelectedUser(data.titulares.map((titular: any, index: any) => ({
       index,
       cpf: titular.cpf,
+      documento: titular?.documento,
+      tipoDocumento: titular?.tipoDocumento,
+      pais: titular?.pais,
       email: titular.email,
       idTipo: titular.idtipoIngresso,
       nome: titular.nome,
@@ -791,7 +826,6 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
       handleShow();
       handleLoadOrder(guid as string);
       if (titulares) {
-        debugger;
         handleInsertTitulares(titulares as string);
       }
       // if (router?.query?.titularesId) {
@@ -863,7 +897,8 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setIsTicketSelectedUser,
       isTicketSelectedUser,
       titularId,
-      handleEditChair
+      handleEditChair,
+      failedToLoadFromWebview,
     }}
     >
       {children}

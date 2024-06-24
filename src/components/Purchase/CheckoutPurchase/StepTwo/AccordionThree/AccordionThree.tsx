@@ -100,6 +100,12 @@ export const AccordionThree: React.FC = () => {
 
   const [isAddressOpen, setIsAddressOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    if(!user.endereco){
+      setIsAddressOpen(true);
+    }
+  }, []);
+
   return (
     <ContainerAccordionThree>
      <Modal open={isOpenModalEditAddress} onClose={handleIsCloseModalEditAddress} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description"> 

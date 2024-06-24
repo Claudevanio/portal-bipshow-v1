@@ -19,6 +19,9 @@ export const AccordionTwo: React.FC = () => {
         }
       <div className="content-info">
           <h6 className="title">As instruções serão enviadas por e-mail e disponibilizadas no app BipShow</h6>
+          {
+            // JSON.stringify(isTicketSelectedUser)
+          }
         {isTicketSelectedUser && isTicketSelectedUser.length > 0 && (
         <ul>
             {isTicketSelectedUser?.map((item) => (

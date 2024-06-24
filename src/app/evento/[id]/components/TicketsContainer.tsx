@@ -9,6 +9,7 @@ import ptBr from 'dayjs/locale/pt-br';
 import { EventMockList } from '@/utils/event-mock';
 import { useEventTicket } from '@/shared/hooks';
 import { IAction } from '@/components/Tickets/ActionTicket/Ticket/Action/interface';
+import { Pixel } from '@/utils/pixel';
 
 dayjs.locale(ptBr)
 
@@ -34,6 +35,13 @@ function SingleTicketCard(
 
   const handleChangeQTD = useCallback((type: 'next' | 'prev', idTable?: number) => {
     if (type === 'next' && isQuantity <= (quantityMax || 0) && id) {
+      Pixel.AddToCart({
+        contentName: nome,
+        contentIds: [`${id}`],
+        contentType: 'Event Ticket',
+        value: valor * (isQuantity + 1),
+        fbId: eventTicket.pixelFacebook
+      });
       setIsQuantity(isQuantity + 1);
       if (idTable) {
         handleSelectTicketQuantity(id, isQuantity + 1, index, idTable);
@@ -63,7 +71,7 @@ function SingleTicketCard(
 
         > 
           <p
-            className='text-xs w-36 max-w-36 md:w-24 md:max-w-24  font-semibold text-softBlue'
+            className='text-xs w-20 max-w-20 md:w-24 md:max-w-24  font-semibold text-softBlue'
           >
             {nome}
           </p>
@@ -76,18 +84,19 @@ function SingleTicketCard(
           </p>
         </div>
         <div
-          className='md:min-w-[5.5rem]'
+          className=' min-w-[40%] md:min-w-[5.5rem]'
         >
           <p
-            className='text-sm font-bold text-textPrimary '
+            className='text-xs md:text-sm font-bold text-textPrimary '
           >
              {valor > 0 &&<><span className='text-xs font-semibold'>R$</span> {Number(valor).toLocaleString('pt-br',{minimumFractionDigits: 2, maximumFractionDigits: 2})} </>} {valor === 0 && 'Grátis'}
           </p>
-          <p
+          {
+            !singleTicket.taxaIncluso && <p
             className='text-xxs font-semibold text-darkBlue whitespace-nowrap'
           >
             (+{Number(taxaFixa + taxaServico + taxaConveniencia).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2})} de taxa)
-          </p>
+          </p>}
         </div>
         <div
           className='flex items-center gap-2'
@@ -161,6 +170,9 @@ export function TicketsContainer ({
 
   return (  
     <GradientBorder
+      innerStyle={{
+        minWidth: '250px'
+      }}
     >
       {!ticket && <div
         className='flex flex-col gap-4 p-2'
@@ -179,7 +191,41 @@ export function TicketsContainer ({
             className={'flex items-center justify-between ' + (index+1 !== arr.length ? 'border-b-2 border-gray pb-4' : '')}
             key={index}
           >
-            <div
+            {
+              item.dates && item.dates.length > 1 && <div
+              className='flex items-center gap-1'
+            >
+              <p
+                className='font-bold text-3xl flex items-center'
+              >
+                {
+                  item.dates && item.dates.map((date, index) => <p>{dayjs(date).format('DD')}
+                  {
+                    index+1 !== item.dates.length && <span className='text-3xl'>/</span>
+                  }
+                  </p>)
+                }
+              </p>
+              <div
+                className='flex flex-col gap-0 '
+              >
+                <p>
+                  {
+                     item.data && dayjs(item.data).format('MMM').toUpperCase()
+                  }
+                </p>
+                <p
+                  className='text-[.6rem] first-letter:uppercase flex'
+                >
+                  {
+                    item.dates && item.dates.length > 1 && item.dates.map((date, index) => <p>{dayjs(date).format('ddd') + (index+1 !== item.dates.length ? '/' : '')}</p>)
+                  }
+                </p>
+              </div>
+            </div>
+            }
+            {
+              !item.dates && <div
               className='flex items-center gap-1'
             >
               <p
@@ -205,7 +251,7 @@ export function TicketsContainer ({
                   }
                 </p>
               </div>
-            </div>
+            </div>}
             <div
               className='flex flex-col text-xs font-normal w-full pl-4'
             >
@@ -247,9 +293,43 @@ export function TicketsContainer ({
       {
         ticket && <div className='flex flex-col gap-4 p-2'>
             <div
-              className='flex justify-between items-center pb-4 border-b-2 border-gray'
+                  className='flex items-center gap-1 text-textPrimary font-medium'
             >
+              
+            {
+              ticket.dates && ticket.dates.length > 1 && <div
+              className='flex items-center gap-1'
+            >
+              <p
+                className='font-bold text-3xl flex items-center'
+              >
+                {
+                  ticket.dates && ticket.dates.map((date, index) => <p>{dayjs(date).format('DD')}
+                  {
+                    index+1 !== ticket.dates.length && <span className='text-3xl'>/</span>
+                  }
+                  </p>)
+                }
+              </p>
               <div
+                className='flex flex-col gap-0 '
+              >
+                <p>
+                  {
+                     ticket.data && dayjs(ticket.data).format('MMM').toUpperCase()
+                  }
+                </p>
+                <p
+                  className='text-[.6rem] first-letter:uppercase flex'
+                >
+                  {
+                    ticket.dates && ticket.dates.length > 1 && ticket.dates.map((date, index) => <p>{dayjs(date).format('ddd') + (index+1 !== ticket.dates.length ? '/' : '')}</p>)
+                  }
+                </p>
+              </div>
+            </div>
+            }
+            {!ticket.dates && <div
                   className='flex items-center gap-1 text-textPrimary font-medium'
                 >
                   <p
@@ -275,7 +355,7 @@ export function TicketsContainer ({
                       }
                     </p>
                   </div>
-              </div>
+              </div>}
               <p
                 className='text-sm font-normal text-textPrimary flex gap-2 cursor-pointer'
                 onClick={() => {
@@ -315,6 +395,7 @@ export function TicketsContainer ({
                           index={indexArr}
                           key={indexArr}
                           valor={item.valorUnitario}
+                          taxaIncluso={eventTicket.taxaIncluso}
                           {...item}
                         />
                           
@@ -351,7 +432,10 @@ export function TicketsContainer ({
                   variant='primary'
                   className='pl-1'
                   disabled={ticketsPurchase && ticketsPurchase.length > 0 ? false : true}
-                  onClick={handleShowModal}       
+                  onClick={
+                    () => {
+                      handleShowModal()
+                    }}       
                 >
                   <Image
                     src={'/moneyIcon-gray.svg'}

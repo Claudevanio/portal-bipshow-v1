@@ -11,7 +11,8 @@ import { RegisterProvider } from '@/shared/hooks/useRegister'
 import Head from 'next/head'
 import Script from 'next/script'
 import { SearchProvider, useSearch } from '@/shared/hooks/useSearch'
-import { AuthProvider } from '@/shared/hooks/useAuth'
+import { AuthProvider } from '@/shared/hooks/useAuth'   
+import { Suspense } from 'react' 
 // import { useRouter } from 'next/router';
 // import { useEffect } from 'react';
 // import { isPrivateRoute } from '@/adapters';
@@ -20,7 +21,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'bipshow',
-  description: 'Comprou, sorriu, curtiu.',
+  description: 'Comprou, sorriu, curtiu.',  
 }
 
 
@@ -28,8 +29,7 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
-}) {
-
+}) { 
   return (
     <MuiThemeProvider
       theme={themeProvider}
@@ -40,7 +40,7 @@ export default function RootLayout({
           <RegisterProvider>
             <AuthProvider>
               <SearchProvider>
-                    <html lang="PT-BR">
+                    <html lang="PT-BR"> 
                           <Script type="text/javascript" async src="https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js" />
                           <Script src="https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js"></Script>
                           <Script

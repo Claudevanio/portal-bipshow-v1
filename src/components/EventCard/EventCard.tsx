@@ -13,7 +13,7 @@ export const EventCard = ({ event }: EventCardProps) => {
 
   return (
     <Link className='w-[100%] h-[100%] flex items-center justify-center'
-      href={`/evento/${event.id}${(event?.multipleIds && event?.eventosIds) ? `?eventosIds=${event?.eventosIds.join('-')}` : ''}`}
+      href={`/evento/${event.link}${(event?.multipleIds && event?.eventosIds) ? `?eventosIds=${event?.eventosIds.join('-')}` : ''}`}
     >
       <div className='w-[100%]  max-w-96 relative flex flex-col overflow-hidden group'>
         <div

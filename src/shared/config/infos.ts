@@ -4,6 +4,6 @@ export const infoAddress = {
 };
 
 export const infoContact = {
-  phone: '(62) 9829-5319',
-  email: 'contato@synpass.com.br',
+  phone: '62 98226-0746 ',
+  email: 'contato@bipshow.com.br',
 };

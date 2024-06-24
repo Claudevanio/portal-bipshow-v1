@@ -17,11 +17,11 @@ export type PedidoProps = {
 export type Callback = (result?: { id: string }, err?: any) => void;
 
 export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento: TypePaymentCardProps, installments: number, sessionPayment: CreateSessionPagSeguro, callback: Callback) {
-
+  debugger;
   const customer = pedido.usuario;
   const { telefone } = customer;
   const isCartao = cartao;
-  const enderecoCobranca = isCartao.endereco;
+  const { endereco: enderecoCobranca } = isCartao;
   const isStates = states.find((i) => i.estado === enderecoCobranca?.estado);
   const telefoneFormatted = telefone?.replace('(', '').replace(')', '').replace(' ', '').replace('-', '');
   const numero = Number(isCartao.numero.trim().replace(/\s/g, ''));
@@ -41,7 +41,7 @@ export function auth3Ds (cartao: CartaoProps, pedido: PedidoProps, tipoPagamento
       },
       paymentMethod: {
         type: tipoPagamento,
-        installments: 1,
+        installments: installments ?? 1,
         card: {
           number: numero,
           expMonth: isCartao.mes,

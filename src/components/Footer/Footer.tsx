@@ -5,7 +5,7 @@ import { useRegister } from '@/shared/hooks/useRegister';
 import { WhatsApp } from '@mui/icons-material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export const Footer = () => {
 
@@ -13,6 +13,12 @@ export const Footer = () => {
   const {setIsAuthModalOpen, setAfterLogin} = useAuth()
   const router = useRouter()
 
+  const pathName = usePathname()
+
+  const isApp = pathName.includes('/viewer-app') || pathName.includes('/faq-app') || pathName.includes('/payment/webview')
+
+  if(isApp)
+    return <></>
 
 return <footer className="bg-grayLight relative overflow-hidden">
   <Image
@@ -58,7 +64,7 @@ return <footer className="bg-grayLight relative overflow-hidden">
             }}
             />
         </a>
-          (62) 9 82260-0746 
+          (62) 98226-0746 
         <br/> 
         contato@bipshow.com.br
       </p>
@@ -80,16 +86,16 @@ return <footer className="bg-grayLight relative overflow-hidden">
         }} >Meus Ingressos</p>}
       <a rel="noopener noreferrer" className='list-item' href="https://uzerticket.com.br/home/eventos/" target='_blank'>Area de produtores</a>
       <a rel="noopener noreferrer" className='list-item'  href="http://uzer.com.br/" target='_blank'>Institucional</a>
-      <Link className='list-item'  href="/viewer-app/meia-entrada/Meia%20entrada" >Lei de meia-entrada</Link>
+      <Link className='list-item'  href="/viewer/meia-entrada/Meia%20entrada" >Lei de meia-entrada</Link>
       <Link href={'/faq'} className='list-item' >FAQ</Link>
-      <Link href={'/viewer-app/termos/termos-de-uso'} className='list-item' >Termos de uso</Link>
-      <Link href={'/viewer-app/privacidade/Pol%C3%ADtica%20de%20Privacidade'} className='list-item' >Política de privacidade</Link>
+      <Link href={'/viewer/termos/termos-de-uso'} className='list-item' >Termos de uso</Link>
+      <Link href={'/viewer/privacidade/Pol%C3%ADtica%20de%20Privacidade'} className='list-item' >Política de privacidade</Link>
     </div>
   </div>
   <div className="flex flex-col space-y-4">
     <h2 className="font-medium text-primary">Redes sociais</h2>
     <div className="flex flex-col space-y-2 text-sm text-textPrimary font-normal">
-      <a rel="noopener noreferrer" href="https://www.instagram.com/bipshow_/" target='_blank' className='flex gap-1 items-center'>
+      <a rel="noopener noreferrer" href="https://www.instagram.com/bipshow_oficial?igsh=amp5ZWg0MnppczAx&utm_source=qr" target='_blank' className='flex gap-1 items-center'>
         <Image
           src={'/Instagram.svg'}
           alt="Logo"

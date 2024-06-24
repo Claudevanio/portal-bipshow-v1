@@ -170,5 +170,7 @@ export interface IEventTicket {
     podeVenderBoleto?: boolean,
     ratingCompra?: any,
     voucherPorEmail?: any,
-    pixelFacebook?: any
+    pixelFacebook?: any,
+    pixelGoogle?: any,
+
 }

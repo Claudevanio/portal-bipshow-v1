@@ -10,9 +10,10 @@ import { LoadingPayment } from '@/components/LoadingPayment';
 import { PIX } from '@/components/icons/PIX';
 import { ContainerModalPurchaseSummary } from './styles';
 import { IModalPurchaseSummary } from './interface';
+import { Pixel } from '@/utils/pixel';
 
 export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurchase, onClose }) => {
-  const { ticketsPurchase } = useEventTicket();
+  const { ticketsPurchase, eventTicket } = useEventTicket();
   const {
     loading, selectedPayment, couponAppliep, handleLoadPurchase, guide, installment, amount, amountWithoutTaxa,
   } = useTicketPurchase();
@@ -115,6 +116,35 @@ export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurc
             })}
           </p>
         </div>
+        
+        <div className="desconto subtotal">
+          <h6 className="title">Taxa</h6>
+          <p className="text-dark">
+            {
+              (amount - ticketsPurchase.reduce((acc, item) => acc + (item.valor * item.qtde), 0) + (couponAppliep?.valorDesconto ?? 0)).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                style: 'currency',
+                currency: 'BRL',
+              })
+            }
+          </p>
+        </div> 
+
+        {
+          selectedPayment?.formaPagamento === 'CartaoCredito' && installment && installment.quantity > 1 && (
+            <div className="desconto subtotal">
+              <h6 className="title">Taxa de parcelamento</h6>
+              <p className="text-dark">
+                {selectedPayment?.formaPagamento === 'CartaoCredito' && installment && (installment.totalAmount - amount).toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+              </p>
+            </div>
+          )
+        }
+
         <div className="total">
           <h6 className="title">
             Total
@@ -142,7 +172,18 @@ export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurc
         <div className="butttons">
           <Button type="button" onClick={onClose} variant="outline" text="Cancelar" className="cancel" />
           {guide && (
-            <Button type="button" variant="medium" text="Finalizar" className="confirm" onClick={() => handleLoadPurchase(guide.guide, guide.id, dataPurchase)} loading={loading} disabled={loading} />
+            <Button type="button" variant="medium" text="Finalizar" className="confirm" onClick={() => {
+              handleLoadPurchase(guide.guide, guide.id, dataPurchase)
+
+              Pixel.Purchase({
+                contentName: ticketsPurchase.map((item) => item.nome).join(', '),
+                contentIds: ticketsPurchase.map((item) => item.id.toString()),
+                contentType: 'product',
+                value: amount,
+                fbId: eventTicket?.pixelFacebook
+              })
+            }
+            } loading={loading} disabled={loading} />
           )}
         </div>
       </div>

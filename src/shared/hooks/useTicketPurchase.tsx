@@ -157,6 +157,9 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
       origem: isWebView ? 'app' : 'site',
       lb: bilhetesPreencher.map((reservation: any, index: number) => ({
         cpf: isTicketSelectedUser ? isTicketSelectedUser[index]?.cpf : usuario.cpf,
+        tipoDocumento: isTicketSelectedUser ? isTicketSelectedUser[index]?.tipoDocumento : usuario.tipoDocumento,
+        documento: isTicketSelectedUser ? isTicketSelectedUser[index]?.documento : usuario.documento,
+        pais: isTicketSelectedUser ? isTicketSelectedUser[index]?.pais : usuario.pais,
         dependente: false,
         descricao: reservation.descricao,
         idTipo: reservation.idTipo,
@@ -258,8 +261,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
   const handleSelectedUser = useCallback(async (type: 'mine' | 'transfer', single?: number, idTipo?: number, userTransfer?: IUser, isChecked?: boolean) => {
     try {
-      
-      
+       debugger;  
       if (!isChecked && isTicketSelectedUser && isTicketSelectedUser.find((item) => item.cpf === user?.cpf && item.idTipo == idTipo) && isTicketSelectedUser.find((item) => item.cpf === userTransfer?.cpf && item.idTipo == idTipo)) {
         callErrorDialogComponent(
           'Usuário já está sendo usado. Verifique!',
@@ -270,18 +272,33 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
       if (type === 'mine' && idTipo !== null && ticketsPurchase && ticketsPurchase.length > 0 && user) {
         setIsLoadingSelectUser(true);
-        const { data } = await apiTokeUser.post(`${VALIDATION_USER_TICKET}/${eventTicket?.id}/utilizador/verifique`, {
-          cpf: user.cpf,
+
+        const dataToApi : any = {
           tid: idTipo,
           pid: guidePurchase?.id,
-        });
+        }
+
+        if (user.cpf && user.cpf.length > 1) {
+          dataToApi.cpf = user.cpf;
+        }
+
+        if(user.documentoEstrangeiro && user.documentoEstrangeiro.length > 1) {
+          dataToApi.pais = user.idPais; 
+          dataToApi.tipoDocumento = user.idTipoDocumento;
+          dataToApi.documento = user.documentoEstrangeiro;
+        }
+
+        const { data } = await apiTokeUser.post(`${VALIDATION_USER_TICKET}/${eventTicket?.id}/utilizador/verifique`, dataToApi);
 
         if (data && data.totalDisponivel && data.totalDisponivel > 0) {
           setIsTickets(ticketsPurchase.map((i) => {
             if (i.id === idTipo) {
               return {
                 ...i,
-                user,
+                user: {
+                  ...user,
+                  ...dataToApi
+                }
               };
             }
             return i;
@@ -296,7 +313,10 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                 index: single,
                 idTipo: item.idTipo,
                 filled: false,
-                nomeEvento: item.nomeEvento,
+                nomeEvento: item.nomeEvento, 
+                documento: user.documentoEstrangeiro,
+                tipoDocumento: user.idTipoDocumento,
+                pais: user.idPais
               };
             }
             return item;
@@ -306,11 +326,23 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
         }
       }
       if (type === 'transfer' && userTransfer && idTipo !== null && ticketsPurchase && ticketsPurchase.length > 0) {
-        const { data } = await apiTokeUser.post(`${VALIDATION_USER_TICKET}/${eventTicket?.id}/utilizador/verifique`, {
-          cpf: userTransfer.cpf,
+
+        const dataToApi : any = {
           tid: idTipo,
           pid: guidePurchase?.id,
-        });
+        }
+
+        if (userTransfer.cpf && userTransfer.cpf.length > 1) {
+          dataToApi.cpf = userTransfer.cpf;
+        }
+
+        if(userTransfer.idPais && userTransfer.idPais > 0) {
+          dataToApi.pais = userTransfer.idPais;
+          dataToApi.tipoDocumento = userTransfer.idTipoDocumento;
+          dataToApi.documento = userTransfer.numeroDoc;
+        }
+
+        const { data } = await apiTokeUser.post(`${VALIDATION_USER_TICKET}/${eventTicket?.id}/utilizador/verifique`, dataToApi);
 
         if (data && data.totalDisponivel && data.totalDisponivel > 0) {
           setIsTickets(ticketsPurchase.map((i) => {
@@ -321,7 +353,8 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                   nome: userTransfer.nome,
                   cpf: userTransfer.cpf,
                   telefone: userTransfer.telefone,
-                  email: userTransfer.email,
+                  email: userTransfer.email, 
+                  ...dataToApi
                 },
               };
             }
@@ -338,6 +371,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                 idTipo: item.idTipo,
                 filled: false,
                 nomeEvento: item.nomeEvento,
+                ...dataToApi
               };
             }
             return item;
@@ -398,7 +432,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
   const handleSubmitPayment = useCallback(async (guide: string, idPurchase: number, dataReservation: IReservation[], data?: IPurchase, authenticationId?: string) => {
     try {
-      if (user && user.endereco) {
+      if (user) {
         if (isSelectedTypePayment && isSelectedTypePayment.formaPagamento === 'CartaoCredito' && data && !validationFlag(data.cartao)) {
           callErrorDialogComponent('Número do cartão é inválido.', TypeEnum.ERROR);
           return;
@@ -408,7 +442,20 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
           data: PaymentPerPixProps
         } | null;
 
-        if (isSelectedTypePayment && isSelectedTypePayment.formaPagamento !== 'PIX' && data && installment && data.senderHash) {
+        const installmentFirstPosition = isInstallments && isInstallments[0]
+
+        const installmentToBody = installment ?? installmentFirstPosition;
+        debugger;
+
+        const secondaryAddress = dataReservation.length > 0 ? dataReservation[0]?.enderecoCobranca ?? data?.endereco : data?.endereco;
+
+        const foreigner = dataReservation[0]?.pais && {
+          pais: dataReservation[0]?.pais,
+          tipoDocumento: dataReservation[0]?.tipoDocumento,
+          documento: dataReservation[0]?.documento,
+        }
+
+        if (isSelectedTypePayment && isSelectedTypePayment.formaPagamento !== 'PIX' && data && installmentToBody && data.senderHash) {
           const isBody = {
             senderHash: data.senderHash,
             origem: isWebView ? 'app' : 'site',
@@ -417,6 +464,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               numero: data.cartao.split(' ').join(''),
               nome: data.nome,
               cpf: user.cpf,
+              ...foreigner,
               telefone: user.telefone,
               dataNascimento: user.dataNascimento,
               bandeira: selectedBrand === '' ? data.brand : selectedBrand,
@@ -432,11 +480,11 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                 numero: user.endereco.numero,
                 nomeCidade: user.endereco.cidade ?? user.endereco.nomeCidade,
                 uf: user?.endereco?.localidade ? user?.endereco?.localidade.split('/')[1] : user?.endereco?.localidade,
-              } : null,
+              } : secondaryAddress,
               parcela: {
-                parcelas: isOptionCardPayment === 'CREDIT_CARD' ? installment.quantity : 1,
-                valorParcela: isOptionCardPayment === 'CREDIT_CARD' ? installment.installmentAmount : amount,
-                total: isOptionCardPayment === 'CREDIT_CARD' ? installment.totalAmount : amount,
+                parcelas: isOptionCardPayment === 'CREDIT_CARD' ? installmentToBody.quantity : 1,
+                valorParcela: isOptionCardPayment === 'CREDIT_CARD' ? installmentToBody.installmentAmount : amount,
+                total: isOptionCardPayment === 'CREDIT_CARD' ? installmentToBody.totalAmount : amount,
               },
             }],
           };
@@ -454,7 +502,10 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               email: reservation.email,
               idTipo: reservation.idTipo,
               nome: reservation.nome,
-              telefone: reservation.telefone ? reservation.telefone : ''
+              telefone: reservation.telefone ? reservation.telefone : '',
+              pais: reservation?.pais,
+              tipoDocumento: reservation?.tipoDocumento,
+              documento: reservation?.documento,
             } as IReservation)),
           } as any;
 
@@ -499,12 +550,10 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
       setIsLoading(false);
       callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
     }
-  }, [user, showErrorDialog, isSelectedTypePayment, installment, amount, isOptionCardPayment, titularId]);
+  }, [user, isSelectedTypePayment, isInstallments, installment, callErrorDialogComponent, isWebView, selectedBrand, isOptionCardPayment, amount, titularId]);
 
   const handleSubmitReservation = useCallback(async (dataReservation: IReservation[], guide: string, idPurchase: number, dataPurchase?: IPurchase, authenticationId?: string) => {
-    try {
-      debugger;
-      
+    try { 
       const { data } = await apiTokeUser.post(`${CREATE_RESERVATION}/${guide}/reserve`, {
         lb: dataReservation,
       });
@@ -524,7 +573,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const handleCreateSesssionPayment = useCallback(async () => {
     
     try {
-      if (!isSessionPayment && eventTicket && authenticationUser) {
+      if (!isSessionPayment && eventTicket && user) {
         const { data } = await apiTokeUser.get(`${GET_SESSION_PAGSEGURO}/${eventTicket?.id}`) as { data: CreateSessionPagSeguro };
 
         setIsSessionPayment(data);
@@ -532,15 +581,12 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
     } catch (err: any) {
       callErrorDialogComponent(err.mensagem ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
     }
-  }, [showErrorDialog, eventTicket, isSessionPayment, authenticationUser]);
+  }, [showErrorDialog, eventTicket, isSessionPayment, user]);
 
   const handleLoadPurchase = useCallback(async (guide: string, idPurchase: number, isDataPurchase?: IPurchase) => { 
     
-    try { 
+    try {  
       debugger;
-      if(!installment && isSelectedTypePayment?.formaPagamento === 'CartaoCredito')
-        return
-
       setIsLoading(true);
       if (isSessionPayment && user && isDataOrder && isDataOrder.sucesso && isDataOrder.pedido && isDataOrder.pedido.bilhetesPreencher) {
         const isFormattedDataCard: IPurchase = {
@@ -571,10 +617,11 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               nome: isFormattedDataCard.nome,
               numero: isFormattedDataCard.cartao,
             } as any;
-
-            const isInstallment = isOptionCardPayment === 'CREDIT_CARD' ? Number(isDataPurchase.parcelas) : 1;
+            debugger;
+            
+            const isInstallment = isOptionCardPayment === 'CREDIT_CARD' ? Number(isDataPurchase.parcelas) : 1;  
             auth3Ds(isCartao, {
-              total: amount,
+              total: installment.totalAmount,
               usuario: user,
             }, isOptionCardPayment, isInstallment, isSessionPayment, (result : any, error : any) => { 
               if (error) {
@@ -587,6 +634,10 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                     idTipo: i.idTipo,
                     descricao: i.descricao,
                     nome: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.nome ?? isDataOrder?.pedido?.usuario?.nome ?? '',
+                    enderecoCobranca: isDataPurchase?.endereco,
+                    documento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.documento ?? '',
+                    tipoDocumento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.tipoDocumento ?? '',
+                    pais: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.pais ?? '',
                     cpf: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.cpf ?? '',
                     email: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.email ?? '',
                     telefone: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.telefone?.replace(/\D/g, "") ?? '',
@@ -615,6 +666,9 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
               descricao: i.descricao,
               nome: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.nome ?? isDataOrder?.pedido?.usuario?.nome ?? '',
               cpf: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.cpf ?? '',
+              documento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.documento ?? '',
+              tipoDocumento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.tipoDocumento ?? '',
+              pais: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.pais ?? '',
               email: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.email ?? '',
               telefone: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.telefone?.replace(/\D/g, "") ?? '',
               dependente: isTicketSelectedUser?.find((user) => user.idTipo === i.idTipo)?.filled ?? false,
@@ -628,12 +682,20 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
 
           handleSubmitReservation(isBodyReservation, guide, idPurchase, isFormattedDataCard);
         }
+      } else {
+        console.info(
+          isSessionPayment,
+          user,
+          isDataOrder,
+        );
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+        setIsLoading(false);
       }
     } catch (err) {
       setIsLoading(false);
 
       callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
-    }
+    } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showErrorDialog, isSelectedTypePayment, isSessionPayment, amount, user, handleSubmitReservation, isOptionCardPayment, isTicketSelectedUser]);
 
@@ -675,9 +737,62 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
     }
   }, [showErrorDialog, user, setIsDataOrder]);
 
+  function transformTicketsCadeiras(tickets : {
+    id: number,
+    qtde: number,
+    ehMeia: boolean | boolean[],
+    cadeiras?: number[],
+    lote?: number, 
+  }) : any[] {
+    const result = [];
+    if (!tickets.cadeiras) {
+        return [];
+    }
+    for (let i = 0; i < tickets.cadeiras.length; i++) {
+        const ehMeia = tickets.ehMeia[i];
+        const cadeira = tickets.cadeiras[i];
+        const newTicket = {
+            id: tickets.id,
+            qtde: tickets.qtde,
+            ehMeia: ehMeia,
+            cadeiras: [cadeira], 
+            lote: (tickets.lote as any)?.id ?? undefined,
+        };
+        result.push(newTicket);
+    }
+    return result;
+}
+
+function transformTicketsMesas(tickets : {
+  id: number,
+  qtde: number,
+  ehMeia: boolean | boolean[],
+  mesas?: number[],
+  lote?: number,
+}) : any[] {
+  const result = [];
+  if (!tickets.mesas) {
+      return [];
+  }
+  for (let i = 0; i < tickets.mesas.length; i++) {
+      const ehMeia = tickets.ehMeia[i];
+      const mesa = tickets.mesas[i];
+      const newTicket = {
+          id: tickets.id,
+          qtde: tickets.qtde,
+          ehMeia: ehMeia,
+          mesas: [mesa],
+          lote: (tickets.lote as any)?.id ?? undefined,
+      };
+      result.push(newTicket);
+  }
+  return result;
+}
+
+
   const handleSubmitPurchase = useCallback(async () => {
     try {
-      
+      debugger;
       const tokenUser = Cache.get({key: '@tokenUser'})
       console.log('tokenUser', tokenUser)
       if (ticketsPurchase && ticketsPurchase.length > 0 && eventTicket && tokenUser) {
@@ -744,16 +859,27 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
         
 
         
-        const arrayTickets = [...isTicketsPurchase, ...isMeiaPurchase];
-        const uniqueElements = Array.from(new Set(arrayTickets.map(item => item.id))).map(id => {
+        // const arrayTickets = [...isTicketsPurchase, ...isMeiaPurchase];
+
+        const isCadeiras = !!ticketsPurchase.find((i) => i.cadeiras && i.cadeiras.length > 0);
+        const isMesas = !!ticketsPurchase.find((i) => i.isTables && i.isTables.length > 0);
+
+        const arrayTickets =  isCadeiras ? transformTicketsCadeiras(ticketsPurchase[0]) : isMesas ? transformTicketsMesas(ticketsPurchase[0]) : isTicketsPurchase;
+
+        const uniqueElements = isMesas || isCadeiras ? arrayTickets :
+        Array.from(new Set(arrayTickets.map(item => item.id))).map(id => {
           return arrayTickets.find(element => element.id === id);
       });
 
+      const indication = pathName.includes('/indicacao') ? pathName.split('/indicacao/')[1] : undefined;
 
-        const isBody = {
+        const isBody : any = {
           eid: eventTicket.id,
           li: uniqueElements,
         };
+        if(indication) {
+          isBody['ind'] = indication
+        }
 
         const { data } = await apiTokeUser.post(CREATE_PURCHASE, {
           ...isBody,

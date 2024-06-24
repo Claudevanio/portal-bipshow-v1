@@ -4,6 +4,7 @@ import { ArrowBottom } from '@/components/icons/ArrowBottom';
 import { theme } from '@/shared';
 import { ContainerSelect } from './styles';
 import { ISelect } from './interface';
+import { CircularProgress } from '@mui/material';
 
 export const Select: React.FC<ISelect> = ({
   label, name, rules, errorText, options, loading, defaultValue, ...rest
@@ -31,7 +32,7 @@ export const Select: React.FC<ISelect> = ({
             {!loading && <ArrowBottom width={24} height={24} />}
           </label>
           <select className="form-select" aria-label="Default select example" {...field} onChange={field.onChange} {...rest} disabled={rest.disabled} name={name}>
-            {options?.map((item) => (
+            {options && options?.length > 0 &&  options?.map((item) => (
               getValues(name) === item.value ? (
                 <option value={item.value} key={item.value} selected>{item.innerText}</option>
               ) : (
@@ -40,8 +41,10 @@ export const Select: React.FC<ISelect> = ({
             ))}
           </select>
           {loading && (
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
+            <div>
+              <CircularProgress size={24} 
+                className='text-primary'
+              />
             </div>
           )}
           {errorText && errorText !== '' && (

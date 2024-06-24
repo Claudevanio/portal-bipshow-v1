@@ -45,9 +45,9 @@ export const SEO: React.FC<ISEO> = ({
       <meta name="twitter:title" content={nome} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
-      <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
       <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#5bbad5" />
     </Head>
   );

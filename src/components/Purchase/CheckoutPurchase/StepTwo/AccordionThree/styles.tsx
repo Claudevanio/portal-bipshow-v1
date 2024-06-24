@@ -17,9 +17,9 @@ export const ContainerAccordionThree = styled.div`
     }
     div.logo-pagseguro {
         img {
-            width: 150px;
+            width: 100px;
             @media(max-width: 767px) {
-                width: 120px;
+                width: 80px;
             }
         }
     }

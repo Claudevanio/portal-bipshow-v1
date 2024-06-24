@@ -52,7 +52,7 @@ export const SectorImage: React.FC = () => {
           <CircularProgress
             size={24}
           />
-      )}
+      )} 
       {!loadingSector && (
         <>
             {rank && (

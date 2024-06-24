@@ -4,18 +4,24 @@ import { ContainerStepTwp } from './styles';
 import { AccordionTwo } from './AccordionTwo';
 import { AccordionThree } from './AccordionThree';
 import { useTicketPurchase } from '@/shared/hooks/useTicketPurchase';
-import { Accordion, AccordionDetails, AccordionSummary
+import { Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress
  } from '@mui/material'
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { TermosDeUso } from './TermosDeUso';
+import { useEventTicket } from '@/shared/hooks';
+import { usePathname } from 'next/navigation';
+import { useError } from '@/shared/hooks/useDialog';
 
 export const StepTwo: React.FC = () => {
   const [isAccordion, setIsAccordion] = useState<number>(0);
   const [isAccordions, setIsAccordions] = useState<string[]>([String('0')]);
 
+  const pathName = usePathname();
+ 
   const {
-   amount
+   amount, 
   } = useTicketPurchase();
+  const { ticketsPurchase, failedToLoadFromWebview } = useEventTicket();
 
   const handleNextAccordion = useCallback((next: number) => {
     setIsAccordion(next);
@@ -24,10 +30,10 @@ export const StepTwo: React.FC = () => {
       String(next + 1),
     ]);
   }, []);
+ 
 
   return (
-    <ContainerStepTwp>
-
+    <ContainerStepTwp> 
       <Accordion
         expanded={isAccordion === 0 || isAccordions.includes('0')}
         onChange={() => handleNextAccordion(0)}
@@ -46,17 +52,22 @@ export const StepTwo: React.FC = () => {
           <p className="text-light">Termos de uso</p>
         </AccordionSummary>
         <AccordionDetails>
-            <div
-            style={{
+            <Box
+            sx={{
               maxHeight: '300px',
               overflow: 'auto',
-              marginBottom: '1rem'
+              marginBottom: '1rem',
+              '@media (max-width: 600px)': {
+                maxHeight: '150px',
+              },
             }}
             >
               {TermosDeUso}
-            </div>
+            </Box>
             <p className="text-[#00000099 text-sm pb-4">Ao avançar, declaro que li e estou ciente dos termos e condições acima</p>
-            <Button className="button-accept" type="button" text="Aceitar e avançar" variant="medium" onClick={() => handleNextAccordion(1)} />
+            <Button 
+              disabled={ticketsPurchase.length === 0}
+            className="button-accept" type="button" text="Aceitar e avançar" variant="medium" onClick={() => handleNextAccordion(1)} />
         </AccordionDetails>
       </Accordion>
 

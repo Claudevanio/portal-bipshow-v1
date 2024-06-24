@@ -15,6 +15,7 @@ import { Radio } from "@/components/Form/Radio/Radio";
 import { findFlagUrlByIso2Code } from "country-flags-svg";
 import { validateCPF } from "@/shared/config/validateCPF";
 import {tipos, categories} from '@/utils'
+import { GET_CATEGORIAS, GET_CATEGORIASSERVICOS, apiNotificacoes } from '@/services';
 
 export const StepOne: React.FC = () => {
   const { watch, setValue, getValues, setFocus } = useFormContext();
@@ -30,6 +31,23 @@ export const StepOne: React.FC = () => {
   useEffect(() => {
       setValue("DD", selectCountry.codigoArea);
   }, [setValue, selectCountry]); 
+
+  // const [tipos2, setTipos] = useState<any>();
+  // const [categories2, setCategories] = useState<any>();
+
+  // async function fetchInfo() { 
+  //   const response = (await apiNotificacoes.get(GET_CATEGORIAS)).data
+  //   const responseServicos = await (await apiNotificacoes.get(GET_CATEGORIASSERVICOS)).data
+  //   setTipos(response.data)
+  //   setCategories(responseServicos.data)
+  // }
+
+  // useEffect(() => {
+  //   fetchInfo()
+  // }, [])
+
+
+
  
  
 
@@ -148,11 +166,11 @@ export const StepOne: React.FC = () => {
           disabled={isLoading}
           loading={false}
           options={[
-            { value: 0, innerText: "Até 50" },
-            { value: 1, innerText: "Até 100" },
-            { value: 2, innerText: "Até 500" },
-            { value: 3, innerText: "Até 1000" },
-            { value: 4, innerText: "Acima de 1000" },
+            { value: 50, innerText: "Até 50" },
+            { value: 100, innerText: "Até 100" },
+            { value: 500, innerText: "Até 500" },
+            { value: 1000, innerText: "Até 1000" },
+            { value: 1500, innerText: "Acima de 1000" },
           ]}
           rules={{
             required: {
@@ -189,7 +207,7 @@ export const StepOne: React.FC = () => {
           loading={false}
           options={
             tipos.map((tipo) => ({
-              value: tipo.id,
+              value: tipo.name,
               innerText: tipo.name,
             }))
           }
@@ -201,14 +219,14 @@ export const StepOne: React.FC = () => {
           }}
         /> 
         <Select
-          name="idCategoria"
-          id="idCategoria"
+          name="categoria"
+          id="categoria"
           label="Categoria"
           disabled={isLoading}
           loading={false}
           options={
             categories?.map((category) => ({
-              value: category.id,
+              value: category.name,
               innerText: category.name,
             })) ?? []
           }
@@ -230,10 +248,10 @@ export const StepOne: React.FC = () => {
         <div
           className='flex gap-3 items-center'
         >
-          <Radio id="eventoOnline" name="eventoOnline" label="Online" value="0"
+          <Radio id="eventoOnline" name="eventoOnline" label="Online" value="online"
           />
-          <Radio id="eventoOnline" label="Presencial" name="eventoOnline" value="1" />
-          <Radio id="eventoOnline" label="Híbrido" name="eventoOnline" value="2" />
+          <Radio id="eventoOnline" label="Presencial" name="eventoOnline" value="presencial" />
+          <Radio id="eventoOnline" label="Híbrido" name="eventoOnline" value="hibrido" />
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import { useTickets } from '@/shared/hooks/useTickets';
 import { format } from 'date-fns';
 import { Button } from '@/components/Form/Button';
@@ -11,14 +11,18 @@ import { ModalCancel } from './ModalCancel';
 import { Modal } from '@mui/material';
 import Image from 'next/image';
 import { Button as SecondButton } from '@/components';
+import { TypeEnum, useError } from '@/shared/hooks/useDialog';
+import { useRegister } from '@/shared/hooks/useRegister';
 
 export const Content: React.FC = () => {
   const {
-    infoTicket, handleDownloadTicketSales, loadingCanceledPayment, isLoadingDownloadTicket, handleClearInfoTicket,
+    infoTicket, handleDownloadTicketSales, loadingCanceledPayment, isLoadingDownloadTicket, handleClearInfoTicket,handleTranferTickets, loadingTransfer
   } = useTickets();
+
+  const {user} = useRegister()
   const [isTypeActive, setIsTypeActive] = useState<'tickets' | 'details'>('tickets');
   const [isOpenModalTranfer, setIsOpenModalTransfer] = useState<boolean>(false);
-  const [isOpenModalCancel, setIsOpenModalCancel] = useState<boolean>(false);
+  const [isOpenModalCancel, setIsOpenModalCancel] = useState<boolean>(false); 
 
   const onClose = () => setIsOpenModalTransfer(false);
 
@@ -26,6 +30,14 @@ export const Content: React.FC = () => {
 
   const onCloseCancel = () => setIsOpenModalCancel(false);
   const onOpenCancel = () => setIsOpenModalCancel(true);
+
+  const callErrorDialogComponent = (message: string, type?: string) => {
+    showErrorDialog(message, type ?? TypeEnum.INFO);
+  };
+
+  const {
+    showErrorDialog,
+  } = useError();
 
   interface ILinkCalendarAdd {
     text?: string;
@@ -52,6 +64,23 @@ export const Content: React.FC = () => {
       });
     }
   }
+
+  useEffect(() => {
+    if(infoTicket && (infoTicket.utilizador?.nome === null || infoTicket.utilizador?.nome === "" || infoTicket.utilizador?.nome === undefined)){
+      callErrorDialogComponent('Este ingresso foi comprado a partir de um ponto de venda fisico, e foram gravados para este usuario', TypeEnum.INFO);
+      handleTranferTickets({
+        nome: user?.nome,
+        CPF: user?.cpf,
+        email: user?.email,
+        telefone: user?.telefone,
+      },
+        true
+      )
+      
+      
+      // handleClearInfoTicket();
+    }
+  }, []);
 
   return (
     <ContainerContent>

@@ -47,6 +47,11 @@ export const Login: React.FC<ILogin> = ({
     onAddPhoto,
     handleDeleteUser,
   } = useAuth();
+
+  const {
+    setDefaultValues,
+  } = useRegister();
+
   const [isTypePassordView, setIsTypePassoed] = useState<'password' | 'text'>(
     'password',
   );
@@ -719,7 +724,15 @@ export const Login: React.FC<ILogin> = ({
                     // disabled={isLoading ? isLoading : isTypeButton.disabled}
                     // loading={isLoading}
                     onClick={
-                      () => handleChangeType && handleChangeType('register')
+                      () => {
+                        const isEmail = methods.getValues('emailOrCpf').includes('@');
+                        if(isEmail){
+                          methods.setValue('email', methods.getValues('emailOrCpf'));
+                        }else {
+                          methods.setValue('cpf', methods.getValues('emailOrCpf'));
+                        }
+                        handleChangeType && handleChangeType('register')
+                      }
                     }
                   />
                   {/* <button

@@ -8,7 +8,7 @@ import { Button, GradientBorder } from "@/components";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import Link from "next/link";
 import { TicketsContainer } from "./components/TicketsContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IEventProps } from "@/types";
 import { eventosService } from "@/services";
 import { useEffectOnce } from "@/hooks";
@@ -23,7 +23,11 @@ import {
 } from "@/shared/hooks/useTicketPurchase";
 import { Offcanvas } from "react-bootstrap";
 import { Purchase } from "@/components/Purchase";
-import { HTMLMap } from "@/components/Tickets/TicketMap/HTMLMap";
+import { HTMLMap } from "@/components/Tickets/TicketMap/HTMLMap";  
+import { Pixel } from '@/utils/pixel';
+import FacebookPixel from '@/components/Pixel/Pixel';
+import { usePathname } from 'next/navigation';
+import GtmImersao from '@/components/GoogleTagManager/gtm166';
 
 dayjs.locale(ptBr);
 dayjs.extend(localizeFormat);
@@ -81,9 +85,28 @@ export default function EventoPage({ params }: { params: { id: string } }) {
   }
 
   const { showPurchase, handleCloseModal, ticketsPurchase } = useEventTicket();
+ 
+  const pathname = usePathname()
+
+  useEffect(() => {
+    if (eventTicket?.pixelFacebook && pathname.includes('evento') && (pathname.includes(eventTicket?.id?.toString()) || pathname.includes(eventTicket?.link))) {
+      Pixel.PageView(eventTicket.pixelFacebook);
+    } 
+  }, [eventTicket, pathname]);
+  
 
   return (
     <>
+    {
+        ( <FacebookPixel fbPixelId={eventTicket?.pixelFacebook} />)
+    }
+    {
+      eventTicket?.pixelGoogle && (
+        <GtmImersao
+          gtmId={eventTicket?.pixelGoogle}
+        />
+      )
+    }
       {eventTicket && ticketsPurchase && showPurchase ? (
         <TicketPurchaseProvider>
           <Purchase handleClose={handleCloseModal} />
@@ -233,22 +256,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
                       __html: eventTicket?.descricao ?? "",
                     }}
                   ></p>
-                </article>
-                <div className="flex flex-col gap-4 p-6 bg-softPurple rounded-xl text-textPrimary font-medium">
-                  <h5>Regras da compra online e acesso digital</h5>
-                  <p className="text-xs leading-5 ">
-                  O Acesso ao evento quando for feito por reconhecimento facial será de forma exclusiva por esse método, de modo que ficará o participante obrigado à vinculação de uma foto (selfie) no aplicativo ou portal de vendas BipShow. <br/>
-Caso o usuário utilize algum tipo de maquiagem, boné ou adereço que impossibilite o reconhecimento fácil, ficará sujeito à uma verificação de identidade INDIVIDUAL e MANUAL para acesso ao evento, caso em que será obrigatória  a apresentação, de DOCUMENTO OFICIAL COM FOTO para a entrada no evento; <br/>
-A foto (selfie) será submetida à validação pelo sistema do evento e autenticada por empresa especializada em reconhecimento facial e identificação de documentos (RG ou CNH), atestando, assim, a identidade e autenticidade dos dados de cada cliente; <br/>
-Caso o evento permita venda de ingresso do tipo QRCODE, modalidade essa onde você tem acesso ao seu ingresso logo após concluir a compra, acessando o app do BIpShow e não havendo necessidade de trocas antecipadas na bilheteria. Você pode apresentá-los no dia do evento de duas maneiras: Apresentando o arquivo na tela do seu celular ou imprimindo o seu ingresso numa folha A4 ou ofício (colorido ou preto e branco).  Lembrando que esse ingresso é pessoal e intransferível e não pode ser impresso mais de uma vez ou fotocopiado, pois cada código barras é único, ou seja, só libera uma entrada! <br/>
-Ao comprar o ingresso o usuário/participante tem ciência que é de uso único, exclusivo e intransferível, sendo vinculado ao CPF do adquirente; Caso o usuário/ participante queira efetuar a transferência do seu ingresso, poderá ser feita ou não e será disponibilizado ou não, conforme as regras gerais do evento. <br/>
- LGPD. Todos os dados, documentos, fotos e informações de cada cliente estarão seguros, e seguem rigorosamente as regras estipuladas na Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais); <br/>
-SEU INGRESSO É ÚNICO E PESSOAL. A Uzer Tecnologia (BipShow) não se responsabiliza sob hipótese nenhuma, por ingressos adquiridos fora dos canais de venda oficiais: bilheteria, pontos de venda e site ou app do BipShow. <br/>
-A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamento ou adiamento deste evento. O promotor ou realizador do evento é o único e exclusivo responsável, bem como pela eventual troca ou restituição do valor de face do ingresso. A Uzer Tecnologia (BipShow) é contratada por esses promotores ou realizadores de evento para comercializar e distribuir ingressos. <br/>
- Eleição de Foro. Todos os Participantes devem ler, entender e concordar com os Termos e Condições do Evento declarados neste instrumento, os quais são regidos de acordo com as leis do Brasil e que, com relação a qualquer controvérsia oriunda destes termos, a jurisdição e o foro únicos e exclusivos serão o do Foro de Goiânia/GO.
-
-                  </p>
-                </div>
+                </article> 
               </div>
             </div>
             {!eventTicket?.exibirCadeiras && !eventTicket?.local?.mapa && (
@@ -263,13 +271,29 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
           </div>
           {(eventTicket?.exibirCadeiras || eventTicket?.local?.mapa) && (
             <aside
-              className={`md:w-full flex-col gap-4 ${
+              className={`w-full flex-col gap-4 ${
                 activeTab == "tickets" ? "flex" : "hidden"
               } md:flex`}
             >
               <TicketsContainerDefinido currentEvent={currentEvent} />
             </aside>
           )}
+          
+          <div className="flex flex-col gap-4 p-6 bg-softPurple rounded-xl text-textPrimary font-medium">
+                  <h5>Regras da compra online e acesso digital</h5>
+                  <p className="text-xs leading-5 ">
+                  O Acesso ao evento quando for feito por reconhecimento facial será de forma exclusiva por esse método, de modo que ficará o participante obrigado à vinculação de uma foto (selfie) no aplicativo ou portal de vendas BipShow. <br/>
+Caso o usuário utilize algum tipo de maquiagem, boné ou adereço que impossibilite o reconhecimento fácil, ficará sujeito à uma verificação de identidade INDIVIDUAL e MANUAL para acesso ao evento, caso em que será obrigatória  a apresentação, de DOCUMENTO OFICIAL COM FOTO para a entrada no evento; <br/>
+A foto (selfie) será submetida à validação pelo sistema do evento e autenticada por empresa especializada em reconhecimento facial e identificação de documentos (RG ou CNH), atestando, assim, a identidade e autenticidade dos dados de cada cliente; <br/>
+Caso o evento permita venda de ingresso do tipo QRCODE, modalidade essa onde você tem acesso ao seu ingresso logo após concluir a compra, acessando o app do BIpShow e não havendo necessidade de trocas antecipadas na bilheteria. Você pode apresentá-los no dia do evento de duas maneiras: Apresentando o arquivo na tela do seu celular ou imprimindo o seu ingresso numa folha A4 ou ofício (colorido ou preto e branco).  Lembrando que esse ingresso é pessoal e intransferível e não pode ser impresso mais de uma vez ou fotocopiado, pois cada código barras é único, ou seja, só libera uma entrada! <br/>
+Ao comprar o ingresso o usuário/participante tem ciência que é de uso único, exclusivo e intransferível, sendo vinculado ao CPF do adquirente; Caso o usuário/ participante queira efetuar a transferência do seu ingresso, poderá ser feita ou não e será disponibilizado ou não, conforme as regras gerais do evento. <br/>
+ LGPD. Todos os dados, documentos, fotos e informações de cada cliente estarão seguros, e seguem rigorosamente as regras estipuladas na Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais); <br/>
+SEU INGRESSO É ÚNICO E PESSOAL. A Uzer Tecnologia (BipShow) não se responsabiliza sob hipótese nenhuma, por ingressos adquiridos fora dos canais de venda oficiais: bilheteria, pontos de venda e site ou app do BipShow. <br/>
+A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamento ou adiamento deste evento. O promotor ou realizador do evento é o único e exclusivo responsável, bem como pela eventual troca ou restituição do valor de face do ingresso. A Uzer Tecnologia (BipShow) é contratada por esses promotores ou realizadores de evento para comercializar e distribuir ingressos. <br/>
+ Eleição de Foro. Todos os Participantes devem ler, entender e concordar com os Termos e Condições do Evento declarados neste instrumento, os quais são regidos de acordo com as leis do Brasil e que, com relação a qualquer controvérsia oriunda destes termos, a jurisdição e o foro únicos e exclusivos serão o do Foro de Goiânia/GO.
+
+                  </p>
+                </div>
           {/* <ActionTicketMap/>
             <HTMLMap
               /> */}

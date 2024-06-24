@@ -7,14 +7,31 @@ export const ContainerHTMLMap = styled.div`
     border-radius: 8px;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
     height: fit-content;
-    min-width: 1000px;
-    max-width: 1000px;
+    min-width: 900px;
+    max-width: 900px;
     * {
         color: #39474F;
     }
 
     @media(max-width: 767px) {
         box-shadow: none;
-        min-width: unset;
+        min-width: 0;
+        max-width: 400px;
+    } 
+    @media(min-width:  768px) and (max-width: 820px) { 
+        min-width: 550px;
+        max-width: 550px;
+    }
+    @media(min-width:  820px) and (max-width: 1024px) { 
+        min-width: 700px;
+        max-width: 700px;
+    } 
+    @media(min-width: 1025px) and (max-width:  1535px) {
+        min-width: 800px;
+        max-width: 800px;
+    }
+    @media(min-width: 1535px) and (max-width: 1719px) {
+        min-width: 700px;
+        max-width: 700px;
     }
 `;

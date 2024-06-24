@@ -64,57 +64,79 @@ export const Register: React.FC<IRegister> = ({
     onAddPhoto,
     checkEmailExistente,
     typesDoc,
+    setIsLoading
   } = useAuth();
 
   const { defaultValues } = useRegister();
+
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   interface IRegisterUser extends IUser{
     DDD: string;
   }
 
-  const { handleSubmit, getValues, setValue, watch, reset } = useFormContext<IRegisterUser>();
+  const { handleSubmit, getValues, setValue, watch, reset, formState } = useFormContext<IRegisterUser>();
   // const [formData, setFormData] = useState();
   const pathname = usePathname();
 
   const gender = watch('gender');
 
   const onSubmit = React.useCallback(
-    async (data: IUser) => {
-      
+    async (data: IUser) => { 
+      if(isLoading || isSubmiting) {
+        console.log('parei aqui')
+        return;
+      }
+      if(isStepper ===4){
+        setIsLoading(true);
+      } 
+
+      setIsSubmiting(true);
       
       if (photoInvalida === 400) {
         onAddPhoto(undefined);
         setPhotoInvalida(undefined);
+        setIsSubmiting(false);
+        setIsLoading(false)
         return;
       }
 
       if (isStepper === 0) {
         const existe = await checkEmailExistente(getValues('email') || '');
+        setIsSubmiting(false); 
         if (existe) { 
           return;
         }
       }
       if (isStepper === 1 && !validateEmail) {
         setValidateEmail(true);
+        setIsSubmiting(false);
       }
       if(isStepper === 0 && typesDoc?.length > 0){
         setValidateEmail(true);
+        setIsSubmiting(false);
       }
 
-      if (isStepper === 4 && photo && !isInvalidPicture && createdUser) {
-        
+      if (isStepper === 4 && photo && !isInvalidPicture && createdUser) { 
         const ddd = getValues('DDD')
-        data.telefone = data.telefone?.startsWith(ddd) ? data.telefone : `${ddd}${data.telefone}`;
+        data.telefone = !ddd ? data.telefone : data.telefone?.startsWith(ddd) ? data.telefone : `${ddd}${data.telefone}`;
         handleNextStepRegister(data, onClickPurchase, true);
+        setIsSubmiting(false);
+        setIsLoading(false);
         return;
       }
       if (onClickPurchase || photo) {
         const ddd = getValues('DDD')
         data.telefone = data.telefone?.startsWith(ddd) ? data.telefone : `${ddd}${data.telefone}`;
         handleNextStepRegister(data, onClickPurchase);
+        setIsSubmiting(false);
+        setIsLoading(false);
       } else {
         handleNextStepRegister(data);
+        setIsSubmiting(false);
+        setIsLoading(false);
       }
+
     },
     [
       isStepper,
@@ -183,7 +205,7 @@ export const Register: React.FC<IRegister> = ({
               activeTab={isStepper}
               stepCount={StepperRegister.length}
               />
-          </div>
+          </div> 
           <form onSubmit={handleSubmit(onSubmit)}>
             <h6 className="title">
               {isStepper === 4
@@ -293,8 +315,8 @@ export const Register: React.FC<IRegister> = ({
                             : 'Finalizar'
                           : 'Avançar'
                         }
-                      disabled={
-                        isLoading
+                      disabled={ 
+                        formState.isSubmitting || isLoading
                         || !gender || (isStepper === 0 && !isTermsAccepted) || (!emailValidado
                             && isStepper === 2
                             && validateEmail)

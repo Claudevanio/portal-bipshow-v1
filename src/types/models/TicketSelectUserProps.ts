@@ -6,6 +6,9 @@ export interface TicketSelectUserProps {
     index: number;
     idTipo?: number;
     idtipoIngresso?: number;
+    documento?: string;
+    tipoDocumento?: number;
+    pais?: number;
     filled?: boolean;
     nomeEvento?: string;
 }

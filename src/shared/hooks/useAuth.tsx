@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { IUser } from '@/types';
-import axios, { AxiosError, HeadersDefaults } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, HeadersDefaults } from 'axios';
 import { Cache } from '@/adapters';
 import {
   GENARATE_TOKEN,
@@ -112,6 +112,7 @@ export interface IAuth {
   getRegisterURLWithPayloadOnQuery: (payload: IUser) => string;
   afterLogin: any;
   setAfterLogin: (data: any) => void;
+  setIsLoading: (data: boolean) => void;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -589,14 +590,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     [showErrorDialog],
   );
 
-  const handleCheckCountExistV3 = useCallback(async (token: string) => {
-    const api2 = axios.create({
-      baseURL: baseUrl,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+
+  const api2 = axios.create({
+    baseURL: baseUrl,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const pendingRequests: Map<string, any> = new Map();
+
+// Função para gerar uma chave única para cada solicitação
+const generateRequestKey = (config: AxiosRequestConfig): string => {
+  return `${config.method}_${config.url}`;
+};
+
+// Adicionando um interceptor de solicitação
+api2.interceptors.request.use(
+  (config) => {
+    // Gerando uma chave para a solicitação
+    const requestKey = generateRequestKey(config);
+
+    // Verificando se já existe uma solicitação pendente com a mesma chave
+    if (pendingRequests.has(requestKey)) {
+      // Cancelando a solicitação anterior
+      pendingRequests.get(requestKey).cancel('Duplicate request detected');
+    }
+
+    // Armazenando a nova solicitação
+    config.cancelToken = new axios.CancelToken((cancel) => {
+      pendingRequests.set(requestKey, { cancel });
     });
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+}
+);
+
+// Adicionando um interceptor de resposta para remover a solicitação da lista de pendentes
+api2.interceptors.response.use(
+  (response) => {
+    // Removendo a solicitação da lista de pendentes
+    const requestKey = generateRequestKey(response.config);
+    pendingRequests.delete(requestKey);
+
+    return response;
+  },
+  (error) => {
+    // Removendo a solicitação da lista de pendentes em caso de erro
+    const requestKey = generateRequestKey(error.config);
+    pendingRequests.delete(requestKey);
+
+    return Promise.reject(error);
+  }
+);
+  
+  const handleCheckCountExistV3 = useCallback(async (token: string) => {
+    api2.defaults.headers.Authorization = `Bearer ${token}`;
+    
 
     const data = (await api2.get(`${CREATE_USER}`)) as any;
 
@@ -609,7 +661,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleSubmitRegister = useCallback(
     async (data: IUser, onClickPurchase?: () => void, finish?: boolean) => {
-      try {
+      debugger
+      try { 
         if (onClickPurchase && finish) {
           handleSubmit(
             {
@@ -632,9 +685,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           );
           return;
         }
-        const { data: resultCodeIbge } = (await api.get(
+        
+        const responseIbge = data?.endereco?.codigoIbge && (await api.get(
           `${GET_CITY_CODE_IBGE}/${data?.endereco?.codigoIbge}`,
         )) as { data: CityCodeIBGEProps[] };
+
+        const resultCodeIbge = responseIbge?.data;
 
         setIsLoading(true);
         const isFormattedUser: IUser = {
@@ -738,11 +794,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           let dados: any = await handleCheckCountExistV3(
             token.data.access_token,
           );
+          setIsLoading(true);
 
           isFormattedUser.id = dados.data.id;
 
           result = await axios.put(
-            `${baseUrl}${UPDATED_USER}/${dados.data.id}`,
+            `${baseUrl}/${UPDATED_USER}/${dados.data.id}`,
             isFormattedUser,
             {
               headers: {
@@ -757,6 +814,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           dados = await handleCheckCountExistV3(token.data.access_token);
 
           setPhotoInvalida(dados?.data.statusSincronia);
+          
+
+          setIsLoading(false)
 
           if (
             dados?.data.statusSincronia !== 200
@@ -768,12 +828,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               TypeEnum.ERROR,
             );
             return;
-          }
-          result = (await api.post(CREATE_USER, isFormattedUser)) as {
-              data: { mensagem: string; sucesso: boolean };
-            };
-          setIsInvalidPicture(false);
+          }  
+
+          // result = (await api.post(CREATE_USER, isFormattedUser)) as {
+          //     data: { mensagem: string; sucesso: boolean };
+          //   };
+          // setIsInvalidPicture(false);
         }
+
+        setIsInvalidPicture(false);
 
         setIsLoading(false);
 
@@ -896,7 +959,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     async (userEdit: IUser) => {
       try {
         
-        const isUserFormatted = {
+        const isUserFormatted = { 
           nome: userEdit.nome,
           email: userEdit.email,
           telefone: userEdit.telefone,
@@ -921,7 +984,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           dataNascimento: userEdit.dataNascimento
             ? userEdit.dataNascimento.split(' ')[0]
             : userEdit.dataNascimento,
-        } as IUser;
+        } as any;
 
         if (userEdit.cpf) {
           isUserFormatted.cpf = userEdit.cpf;
@@ -1319,6 +1382,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getRegisterURLWithPayloadOnQuery,
         afterLogin,
         setAfterLogin,
+        setIsLoading,
       }}
     >
       {children}

@@ -24,8 +24,8 @@ export const Circle = styled.li<{
     wheelChair: boolean;
     excluded: boolean;
 }>`
-    width: ${({ theme }) => theme.spacing(3)};
-    height: ${({ theme }) => theme.spacing(3)};
+    width: ${({ theme }) => theme.spacing(2)};
+    height: ${({ theme }) => theme.spacing(2)};
     
     &.wheelChair {
         background-color: #CB97FE;

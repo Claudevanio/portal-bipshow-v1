@@ -11,6 +11,7 @@ export interface IAction {
     qtd?: number;
     limitePorUsuario?: number;
     totalDisponivel?: number;
+    taxaIncluso?: boolean;
     id?: number;
     index: number;
     tipo?: string;

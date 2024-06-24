@@ -4,6 +4,7 @@ import React, {
 import { useRouter } from 'next/router';
 import { api, SET_NEW_PASSWORD } from '@/services';
 import { TypeEnum, useError } from './useDialog';
+import { useParams } from 'next/navigation';
 
 export interface IDataForm {
   senha: string;
@@ -20,7 +21,8 @@ interface IResetPassword {
 const ResetPasswordContext = createContext({} as IResetPassword);
 
 export const ResetPasswordProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { query: { token } } = useRouter();
+  const params = useParams();
+  const { token } = params;
   const { showErrorDialog } = useError();
   const callErrorDialogComponent = (message: string, type?: string) => {
     showErrorDialog(message, type ?? TypeEnum.INFO);

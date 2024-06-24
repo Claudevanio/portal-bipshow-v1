@@ -78,9 +78,10 @@ export const ContainerRanks = styled.div`
             justify-content: space-between;
             min-width: 100%;
             gap: ${({ theme }) => theme.spacing(1)};
+            padding-bottom: 2.5rem;
             overflow-x: scroll;
             ::-webkit-scrollbar {
-                height: 12px !important;
+                height: 20px !important;
             }
             ::-webkit-scrollbar-track {
                 background: #f1f1f1;
@@ -95,8 +96,8 @@ export const ContainerRanks = styled.div`
                 padding-top: 4px;
                 padding-bottom: 4px;
                 h6 {
-                    width: ${({ theme }) => theme.spacing(3)};
-                    height: ${({ theme }) => theme.spacing(3)};
+                    width: ${({ theme }) => theme.spacing(2)};
+                    height: ${({ theme }) => theme.spacing(2)};
                     @media(max-width: 1024px) {
                         width: ${({ theme }) => theme.spacing(2)};
                         height: ${({ theme }) => theme.spacing(2)};

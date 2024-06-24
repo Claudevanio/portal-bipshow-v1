@@ -12,6 +12,7 @@ import { StepTwo } from './steps/StepTwo';
 import { StepThree } from './steps/StepThree';
 import { StepFour } from './steps/StepFour';
 import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
+import { LEAD_BIPSHOW, apiNotificacoes } from '@/services';
 
 export default function Home(){
   const methods = useForm<IFormNewEvent>({
@@ -26,14 +27,22 @@ export default function Home(){
 
   const router = useRouter()
 
-  function onSubmit(data: IFormNewEvent){
+  async function sendForm(data: IFormNewEvent){
+    const response =  await apiNotificacoes.post(LEAD_BIPSHOW, data)
+
+    return response.data
+
+  }
+
+  async function onSubmit(data: IFormNewEvent){
     if(currentStep < 3){
       setCurrentStep(currentStep + 1)
       return
     }
     if(!isConfirmDialogOpen){
       setIsConfirmDialogOpen(true)
-      console.log(data)
+      const response = await sendForm(data)
+      console.log(response)
       return
     }
   }

@@ -11,10 +11,11 @@ import { ContainerContent, ContainerContentInfoPurchase } from './styles';
 import { CardQRCODE } from './CardQRCODE';
 import 'react-multi-carousel/lib/styles.css';
 import { PaymentPIX } from './PaymentPIX';
+import { ModalTransfer } from './ModalTransfer';
 
 export const Content: React.FC = () => {
   const {
-    infoTicket, quantityTicketsPerUser, ticketsSales, handleDownloadTicketSales, handleCanceledPayment, loadingCanceledPayment, infoCanceledPayment, isLoadingDownloadTicket, 
+    infoTicket, quantityTicketsPerUser, ticketsSales, handleDownloadTicketSales, handleCanceledPayment, loadingCanceledPayment, infoCanceledPayment, isLoadingDownloadTicket,  isOpenModalTranfer, setIsOpenModalTranfer, setCurrentTransferTicketId
   } = useOrders();
   const { handleShowModal, loading } = useEventTicket();
   const [isTypeActive, setIsTypeActive] = useState<'tickets' | 'details'>('tickets');
@@ -127,6 +128,10 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
                           key={item.id}
                           {...item}
                           onClickDownload={() => handleDownloadTicketSales(item.codigo, infoTicket.guid)}
+                          onClickTransfer={() => {
+                            setCurrentTransferTicketId(item.id)
+                            setIsOpenModalTranfer(true) 
+                          }}
                           id={infoTicket.evento.id}
                         />
                       ))
@@ -159,6 +164,7 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
                 Abrir boleto
               </a>
             )}
+            
             {infoTicket.status === 'RESERVADO' && infoTicket.pagamento.urlBoleto && infoTicket.pagamento.id && (
             <Button variant="outline" type="button" text="Cancelar pagamento" className="btn-canceled-payment" onClick={() => handleCanceledPayment(infoTicket.pagamento.id)} disabled={loadingCanceledPayment} loading={loadingCanceledPayment} />
             )}
@@ -171,6 +177,22 @@ A Uzer Tecnologia (bipShow) não se responsabiliza pela realização, cancelamen
           )}
         </div>
         )}
+        
+      {isOpenModalTranfer && (
+        // <Modal
+        //   open={isOpenModalTranfer}
+        //   onClose={onClose}
+        //   >
+            <ModalTransfer
+              show={isOpenModalTranfer}
+              onHide={
+                () => {
+                  setIsOpenModalTranfer(false)
+                }
+              }
+              />
+        // </Modal>
+      )}
         <Modal open={isOpenModalPaymentPIX} onClose={handleCloseModal}  className="flex items-center justify-center">
           <PaymentPIX handleCloseModal={handleCloseModal} />
         </Modal>

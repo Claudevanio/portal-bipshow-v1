@@ -1,55 +1,29 @@
-'use client'  
-  import { EventTicketProvider } from '@/shared/hooks/useEventTicket';
-  import { GET_EVENTS, api } from '@/services'; 
-  import { SEOEvent } from '@/components/SEOEvent';
-  import { Purchase } from '@/components/Purchase';
-  import { TicketPurchaseProvider } from '@/shared/hooks/useTicketPurchase';
- 
-import { useEffect, useState } from 'react';
-
+import { EventTicketProvider } from '@/shared/hooks/useEventTicket'; 
+import { Purchase } from '@/components/Purchase';
+import { TicketPurchaseProvider } from '@/shared/hooks/useTicketPurchase'; 
+import { GET_EVENTS } from '@/services';
+import axios from 'axios';
+import { SEOEvent } from '@/components/SEOEvent';
     
 
-export default function Home({ params } : {params : any}){
-    async function fetchProps(context: {id: number}) {
-      const name = context;
-      let data = null;
-    
-      if (name) {
-        const result = await api.get(`${GET_EVENTS}/${name.id}/online`);
-        data = {
-          nome: result.data.nome,
-          id: result.data.link,
-          image: result.data.foto,
-        };
-      }
-    
-      return {
-        props: {
-          data,
-        },
-        revalidate: 60 * 20,
-      };
-    }
+export default async function Home({ params } : {params : any}){ 
 
-    const [dataEvent, setDataEvent] = useState<any>(null);
-    
-    useEffect(() => {
-      const fetchData = async () => {
-        const result = await fetchProps(params as any);
-        setDataEvent(result);
-      };
-      fetchData();
-    }
-    , [params]);
+    const result = await axios.get(`${process.env.URL_API}${GET_EVENTS}/${params.id}/online`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer 4b7a6d0fba9e09ac3d98a14b2e9c68f6',
+        'X-Requested-With': 'XMLHttpRequest',
+      },          
+    });
 
 
     return (
-      <EventTicketProvider>
+      <EventTicketProvider> 
         <SEOEvent
-          description={`Compre Ingressos - ${dataEvent?.nome}`}
-          id={dataEvent?.id || 'Erro'}
-          image={`${process.env.URL_API}${dataEvent?.image}`}
-          nome={`BipShow - ${dataEvent?.nome}`}
+          description={`Compre Ingressos - ${result?.data?.nome}`}
+          id={result?.data?.id || 'Erro'}
+          image={`${process.env.URL_API}${result?.data?.image}`}
+          nome={`Synpass - ${result?.data?.nome}`}
         />
         <TicketPurchaseProvider>
           <Purchase />

@@ -14,6 +14,12 @@ export const senhaMask = (v: string) => {
   return isValue.substring(0, 6);
 }
 
+export const INTERNATIONALNUMBERMask = (v: string) => {
+  let isValue = v;
+  isValue = isValue.replace(/\D/g, '');
+  return isValue;
+}
+
 export const TELEFONEMask = (v: string) => {
   let isValue = v.toString();
   isValue = isValue

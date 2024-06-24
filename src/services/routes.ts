@@ -42,3 +42,6 @@ export const GET_TICKETS_CONFIRMATIONS = "rest/v1/bilhetes/confirmados";
 export const GET_TICKETS_LOCKED = "rest/v1/bilhetes/encerrados";
 export const GET_TICKETS_TRANSFEREDS = "/rest/v1/transferencias";
 export const TRANSFER_TICKETS = "rest/v1/pedidos";
+export const GET_CATEGORIAS = "/api/v1/categorias";
+export const GET_CATEGORIASSERVICOS = "/api/v1/categorias/servico";
+export const LEAD_BIPSHOW = "api/v1/notificacoes/lead-bipshow";

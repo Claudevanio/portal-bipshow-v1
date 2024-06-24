@@ -3,13 +3,13 @@ export interface IFormNewEvent {
   participantesExpectativa?: number;
   nomeEvento?: string;
   tipoEvento?: string;
-  idCategoria?: number;
-  eventoOnline?: 0 | 1 | 2;
+  categoria?: string;
+  eventoOnline?: 'presencial' | 'online' | 'hibrido';
   nome?: string;
   idPaisContato?: number;
   cpf?: string;
   CPF?: string;
   email?: string;
   telefone?: string;
-  necessidadesEvento?: number[];
+  necessidadesEvento?: string[];
 }

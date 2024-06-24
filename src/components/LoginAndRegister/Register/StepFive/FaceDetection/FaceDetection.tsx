@@ -38,7 +38,7 @@ export const FaceDetectionComponent: React.FC<{handleChangeType: any}> = ({handl
 
   const isMobile = windowSize < 768;
 
-  const [continueOnDesktop, setContinueOnDesktop] = useState<boolean>(true);
+  const [continueOnDesktop, setContinueOnDesktop] = useState<boolean>(false);
 
   const newUrl = getRegisterURLWithPayloadOnQuery(getValues());
 

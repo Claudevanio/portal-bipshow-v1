@@ -39,6 +39,8 @@ export const StepOne: React.FC = () => {
   const [dataInvalida, setDataInvalida] = useState<boolean>(false);
   const [nascimentoCpf, setNascimentoCpf] = useState<string>("");
   const [showNome, setShowNome] = useState<boolean>(false);
+  const [isMenorIdade, setIsMenorIdade] = useState<boolean>(false);
+
   const [ddd, setDDD] = useState<string>("");
 
   const [email, setEmail] = useState<string>("");
@@ -81,9 +83,14 @@ export const StepOne: React.FC = () => {
     const fetchData = async () => {
       if (isCpf?.length === 14) {
         const { usuario } = await handleInfoCpf(isCpf);
-        setShowNome(false);
+        const isMenor = !!usuario.menor;
+        setShowNome(isMenor);
         setHaveCpf(true);
         setValue("nome", usuario.nome);
+        setIsMenorIdade(isMenor)
+        if(isMenor){
+          return
+        }
         setNascimentoCpf(
           format(parseISO(usuario?.dataNascimento), "dd/MM/yyyy")
         );
@@ -130,7 +137,11 @@ export const StepOne: React.FC = () => {
     let sameDate = value === defaultValues?.dataNascimentoCpf;
 
     if(!sameDate) {
-      setDataInvalida(true)
+      if(isMenorIdade){
+        setDataInvalida(false)
+      }else{
+        setDataInvalida(true)
+      }
     } else {
       setDataInvalida(false)
     }
@@ -454,7 +465,7 @@ export const StepOne: React.FC = () => {
               message: "Nome inválido. Verifique",
             },
           }}
-          disabled={isLoading || loadingCountry || haveCpf}
+          disabled={isLoading || loadingCountry || haveCpf && !isMenorIdade}
           errorText={
             formState.errors.nome && (formState.errors.nome.message as string)
           }
@@ -501,7 +512,10 @@ export const StepOne: React.FC = () => {
       </div>
 
       
-      <div className="phone">
+      <div className={selectCountry.nomePais === "Brasil" && "phone"} 
+      >
+        {
+          selectCountry.nomePais === "Brasil" &&
                         <Input
                             disabledClean
                             type="tel"
@@ -529,6 +543,7 @@ export const StepOne: React.FC = () => {
                                 (formState.errors.DDD.message as string)
                             }
                         />
+        }
                         {selectCountry.nomePais === "Brasil" ? (
                             <Input
                                 disabledClean
@@ -545,10 +560,10 @@ export const StepOne: React.FC = () => {
                                         value: 10,
                                         message: "Telefone inválido. Verifique",
                                     },
-                                    maxLength: {
-                                        value: 10,
-                                        message: "Telefone inválido. Verifique",
-                                    },
+                                    // maxLength: {
+                                    //     value: 10,
+                                    //     message: "Telefone inválido. Verifique",
+                                    // },
                                     pattern: {
                                         value: telefoneWithoutDDD,
                                         message: "Telefone inválido. Verifique",
@@ -581,6 +596,7 @@ export const StepOne: React.FC = () => {
                                         message: "Telefone inválido. Verifique",
                                     },
                                 }}
+                                style={{ width: "100%" }}
                                 disabled={isLoading}
                                 // errorText={
                                 //     formState.errors.telefone &&
