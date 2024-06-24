@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ContainerStepFive = styled.div<{
-    variant: any;
+  variant: any;
 }>`
     p.title {
         font-size: 20px;
@@ -39,7 +39,7 @@ export const ContainerStepFive = styled.div<{
                 justify-content: space-between;
                 align-items: center;
                 p {
-                    font-size: ${({ theme }) => ".875rem"};
+                    font-size: ${({ theme }) => '.875rem'};
                     font-style: normal;
                     font-weight: 500;
                     color: rgba(0, 0, 0, 0.6);
@@ -78,17 +78,17 @@ export const ContainerStepFive = styled.div<{
                 border-radius: 50%;
                 display: flex;
                 background-color: ${({ theme, variant }) => {
-    switch (variant) {
-      case 400:
-        return '#970D0D';
-      case 200:
-        return '#8779F8';
-      case 0:
-        return '#DDA410';
-      default:
-        return '#8779F8';
-    }
-  }};
+                  switch (variant) {
+                    case 400:
+                      return '#970D0D';
+                    case 200:
+                      return '#8779F8';
+                    case 0:
+                      return '#DDA410';
+                    default:
+                      return '#8779F8';
+                  }
+                }};
                 bottom: -2px;
                 right: 8px;
             }

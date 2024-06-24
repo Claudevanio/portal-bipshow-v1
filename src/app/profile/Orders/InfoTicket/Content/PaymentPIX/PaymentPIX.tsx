@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { useOrders } from '@/shared/hooks/useOrders';
 import { Button } from '@/components/Form/Button';
 import { Close } from '@/components/icons/Close';
-import { IconButton } from '@/components/IconButton'; 
+import { IconButton } from '@/components/IconButton';
 import { ContainerPaymentPIX } from './styles';
 import { PaymentPIXProps } from './interface';
 import { TypeEnum, useError } from '@/shared/hooks/useDialog';
@@ -16,21 +16,22 @@ export const PaymentPIX: React.FC<PaymentPIXProps> = ({ handleCloseModal }) => {
   const { infoTicket } = useOrders();
 
   const handleCopyPix = useCallback(() => {
-    const isContent = (document.getElementById('chave-pix') as HTMLTextAreaElement);
+    const isContent = document.getElementById('chave-pix') as HTMLTextAreaElement;
 
     if (isContent) {
       const textToCopy = isContent.innerText || isContent.textContent;
-      navigator.clipboard.writeText(textToCopy)
+      navigator.clipboard
+        .writeText(textToCopy)
         .then(() => {
-          callErrorDialogComponent("Código copiado.", TypeEnum.SUCCESS);
+          callErrorDialogComponent('Código copiado.', TypeEnum.SUCCESS);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error('Erro ao copiar: ', error);
-          callErrorDialogComponent("Erro ao copiar código.", TypeEnum.ERROR);
+          callErrorDialogComponent('Erro ao copiar código.', TypeEnum.ERROR);
         });
     }
 
-    callErrorDialogComponent("Código copiado.", TypeEnum.SUCCESS)
+    callErrorDialogComponent('Código copiado.', TypeEnum.SUCCESS);
   }, [showErrorDialog]);
 
   return (
@@ -46,12 +47,11 @@ export const PaymentPIX: React.FC<PaymentPIXProps> = ({ handleCloseModal }) => {
       <div className="body">
         <p className="info">Aguardando confirmação do pagamento via Pix para liberação dos bilhetes do pedido.</p>
         <h6 className="title">
-          Valor total a pagar
-          {' '}
+          Valor total a pagar{' '}
           {infoTicket?.valor.toLocaleString('pt-BR', {
             minimumFractionDigits: 2,
             style: 'currency',
-            currency: 'BRL',
+            currency: 'BRL'
           })}
         </h6>
         <div className="qrcode">

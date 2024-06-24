@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { Button } from './interface';
 
 export const ContainerButton = styled.button<{
-    variant: Button
+  variant: Button;
 }>`
-    width: ${({ variant }) => {
+  width: ${({ variant }) => {
     switch (variant) {
       case 'medium':
         return '100%';
@@ -18,8 +18,8 @@ export const ContainerButton = styled.button<{
         return '100%';
     }
   }};
-    text-align: center;
-    padding: ${({ theme, variant }) => {
+  text-align: center;
+  padding: ${({ theme, variant }) => {
     switch (variant) {
       case 'medium':
         return `${theme.spacing(1.5)} 0px`;
@@ -35,7 +35,7 @@ export const ContainerButton = styled.button<{
         return theme.spacing(1.5);
     }
   }};
-    background-color: ${({ theme, variant }) => {
+  background-color: ${({ theme, variant }) => {
     switch (variant) {
       case 'medium':
         return '#8779F8';
@@ -51,28 +51,28 @@ export const ContainerButton = styled.button<{
         return '#8779F8';
     }
   }};
-    border-radius: 32px;
-    font-size: ${({ theme, variant }) => {
+  border-radius: 32px;
+  font-size: ${({ theme, variant }) => {
     switch (variant) {
       case 'medium':
-        return "1rem";
+        return '1rem';
       case 'outline':
-        return "1rem";
+        return '1rem';
       case 'small':
-        return "1rem";
+        return '1rem';
       case 'outline-medium':
-        return "1rem";
+        return '1rem';
       default:
-        return "1rem";
+        return '1rem';
     }
   }};
-    font-weight: 400;
-    color: ${({ theme, variant }) => {
+  font-weight: 400;
+  color: ${({ theme, variant }) => {
     switch (variant) {
       case 'medium':
-        return "#FFFFFF";
+        return '#FFFFFF';
       case 'small':
-        return "#FFFFFF";
+        return '#FFFFFF';
       case 'outline':
         return '#8779F8';
       case 'outline-text':
@@ -98,33 +98,33 @@ export const ContainerButton = styled.button<{
         return 'none';
     }
   }};
+  transition: 400ms;
+  &:hover {
     transition: 400ms;
-    &:hover {
-        transition: 400ms;
-        filter: brightness(0.9);
-        border: ${({ theme, variant }) => {
-    switch (variant) {
-      case 'medium':
-        return 'none';
-      case 'small':
-        return 'none';
-      case 'outline':
-        return `1px solid ${'#8779F8'}`;
-      case 'outline-medium':
-        return `1px solid ${'#8779F8'}`;
-      default:
-        return 'none';
-    }
-  }};
-    }
-    &:disabled {
-        background-color: ${({ theme }) => '#C1C9D2'};
-    }
-    max-height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* div.spinner-border {
+    filter: brightness(0.9);
+    border: ${({ theme, variant }) => {
+      switch (variant) {
+        case 'medium':
+          return 'none';
+        case 'small':
+          return 'none';
+        case 'outline':
+          return `1px solid ${'#8779F8'}`;
+        case 'outline-medium':
+          return `1px solid ${'#8779F8'}`;
+        default:
+          return 'none';
+      }
+    }};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => '#C1C9D2'};
+  }
+  max-height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* div.spinner-border {
         height: ${({ theme }) => theme.spacing(3.5)};
         width: ${({ theme }) => theme.spacing(3.5)};
         @media(max-width: 1024px) {
@@ -132,9 +132,9 @@ export const ContainerButton = styled.button<{
             width: ${({ theme }) => theme.spacing(2.3)};
         }
     } */
-    @media(max-width: 1024px) {
-        font-size: ${({ theme }) => "1rem"};
-    }
-    text-decoration: ${({ variant }) => variant === 'outline-text' && 'underline'};
-    min-height: 50px;
+  @media (max-width: 1024px) {
+    font-size: ${({ theme }) => '1rem'};
+  }
+  text-decoration: ${({ variant }) => variant === 'outline-text' && 'underline'};
+  min-height: 50px;
 `;

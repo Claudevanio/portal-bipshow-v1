@@ -10,11 +10,12 @@ export const SectorRanks: React.FC = () => {
   return (
     <ContainerSectorRanks>
       <div className="header">
-        {rank && Object.keys(rank).map((nome) => (
-          <button onClick={() => handleSelectSectorRank(nome)} type="button" className={`${hrefSector === nome ? 'active' : ''}`} key={nome}>
-            {Object.keys(rank).length > 1 ? nome[nome.length - 1] : nome}
-          </button>
-        ))}
+        {rank &&
+          Object.keys(rank).map(nome => (
+            <button onClick={() => handleSelectSectorRank(nome)} type="button" className={`${hrefSector === nome ? 'active' : ''}`} key={nome}>
+              {Object.keys(rank).length > 1 ? nome[nome.length - 1] : nome}
+            </button>
+          ))}
       </div>
       {rank && hrefSector && (
         <Ranks alinhamento={rank[hrefSector].alinhamento} fileiras={rank[hrefSector].fileiras} ordemReversa={rank[hrefSector].ordemReversa} />

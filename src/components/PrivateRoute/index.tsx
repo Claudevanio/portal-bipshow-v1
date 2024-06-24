@@ -1,23 +1,13 @@
-'use client'
-import { useAuth } from '@/hooks'
-import { useSearch } from '@/shared/hooks/useSearch'
-import { SearchEvents } from '../SearchEvents'
+'use client';
+import { useAuth } from '@/hooks';
+import { useSearch } from '@/shared/hooks/useSearch';
+import { SearchEvents } from '../SearchEvents';
 
 interface PrivateRouteProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  
-  const { search, handleClearSearchEvents } = useSearch()
+  const { search, handleClearSearchEvents } = useSearch();
 
-  return (
-    <>
-      {!search || search === '' ? (
-        children
-      ) : (
-        <SearchEvents/>
-      )}
-    </>
-  )
-
-}
+  return <>{!search || search === '' ? children : <SearchEvents />}</>;
+};

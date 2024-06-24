@@ -1,13 +1,12 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ContainerInput = styled.div`
   position: relative;
-  padding: ${({ theme }) => theme.spacing(1.25)}
-    ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(1.25)} ${({ theme }) => theme.spacing(2)};
   padding-bottom: 2px;
-  background-color: ${({ theme }) => "#f6f6f6"};
+  background-color: ${({ theme }) => '#f6f6f6'};
   border-radius: 8px 8px 0px 0px;
-  border-bottom: 2px solid ${({ theme }) => "#E3E3E3"};
+  border-bottom: 2px solid ${({ theme }) => '#E3E3E3'};
   display: flex;
   height: 56px;
   transition: 400ms;
@@ -21,7 +20,7 @@ export const ContainerInput = styled.div`
     width: 110px;
     white-space: nowrap;
     position: absolute;
-    font-size: ${({ theme }) => ".75rem"};
+    font-size: ${({ theme }) => '.75rem'};
     font-weight: 400;
     top: ${({ theme }) => theme.spacing(0.75)};
     left: ${({ theme }) => theme.spacing(2)};
@@ -44,9 +43,9 @@ export const ContainerInput = styled.div`
     background: transparent;
     width: 100%;
     border: none;
-    font-size: ${({ theme }) => "1rem"};
+    font-size: ${({ theme }) => '1rem'};
     font-weight: 400;
-    color: ${({ theme }) => "#39474F"};
+    color: ${({ theme }) => '#39474F'};
     margin-bottom: -2px;
     &:focus {
       outline: none;
@@ -58,20 +57,20 @@ export const ContainerInput = styled.div`
     margin-top: -8px;
   }
   &.disabled {
-    background-color: ${({ theme }) => "#E3E3E3"};
+    background-color: ${({ theme }) => '#E3E3E3'};
   }
   &.error {
-    border-color: ${({ theme }) => "#F65252"};
+    border-color: ${({ theme }) => '#F65252'};
     label {
-      color: ${({ theme }) => "#F65252"};
+      color: ${({ theme }) => '#F65252'};
     }
     p.text-dark {
       position: absolute;
       bottom: -20px;
-      color: ${({ theme }) => "#F65252"} !important;
+      color: ${({ theme }) => '#F65252'} !important;
     }
   }
   p.text-dark {
-    font-size: ${({ theme }) => ".75rem"};
+    font-size: ${({ theme }) => '.75rem'};
   }
 `;

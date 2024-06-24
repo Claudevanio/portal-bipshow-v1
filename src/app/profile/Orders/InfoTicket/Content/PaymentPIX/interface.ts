@@ -1,3 +1,3 @@
 export interface PaymentPIXProps {
-    handleCloseModal: () => void;
+  handleCloseModal: () => void;
 }

@@ -127,15 +127,15 @@ export const ContainerContent = styled.div`
 `;
 
 export const ContainerContentInfoPurchase = styled.div`
+  width: 100%;
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(1)};
+  div {
     width: 100%;
-    margin-bottom: ${({ theme }) => theme.spacing(2)};
-    display: flex;
-    flex-direction: column;
     gap: ${({ theme }) => theme.spacing(1)};
-    div {
-        width: 100%;
-        gap: ${({ theme }) => theme.spacing(1)};
-        display: flex;
-        align-items: center;
-    }
+    display: flex;
+    align-items: center;
+  }
 `;

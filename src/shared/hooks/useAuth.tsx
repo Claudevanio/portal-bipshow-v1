@@ -1,11 +1,5 @@
-'use client'
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+'use client';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { IUser } from '@/types';
 import axios, { AxiosError, AxiosRequestConfig, HeadersDefaults } from 'axios';
 import { Cache } from '@/adapters';
@@ -23,7 +17,7 @@ import {
   VALIDACAO_EMAIL,
   CREATE_DISPOSITIVO,
   DELETE_USER,
-  UPDATE_EMAIL,
+  UPDATE_EMAIL
 } from '@/services';
 import { api, apiTokeUser } from '@/services';
 import { useRouter } from 'next/navigation';
@@ -32,7 +26,7 @@ import { states } from '../config/states';
 import { format, parseISO } from 'date-fns';
 import { useRegister } from './useRegister';
 import { TypeEnum, useError } from './useDialog';
-import { baseUrl } from '@/constants'; 
+import { baseUrl } from '@/constants';
 
 interface CommonHeaderProperties extends HeadersDefaults {
   Authorization: string;
@@ -46,11 +40,7 @@ export interface IAuth {
   isLoading: boolean;
   userNotExist: boolean;
   setUserNotExist: (state: boolean) => void;
-  handleNextStepRegister: (
-    data: IUser,
-    onClickPurchase?: () => void,
-    finish?: boolean
-  ) => void;
+  handleNextStepRegister: (data: IUser, onClickPurchase?: () => void, finish?: boolean) => void;
   handleUpdateEmail: (data: string, uzerId: number) => void;
   handleCheckCPF: (cpf: string) => void;
   handleInfoCpf: (cpf: string) => any;
@@ -117,9 +107,7 @@ export interface IAuth {
 
 const AuthContext = createContext({} as IAuth);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isStepper, setIsStepper] = useState<number>(0);
   const {
     isInfosAuthorization,
@@ -131,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     onFindUser,
     setIsUserNotExistsCPF,
     setUserEmail,
-    setDefaultValues,
+    setDefaultValues
   } = useRegister();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userNotExist, setUserNotExist] = useState(false);
@@ -163,21 +151,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       nomePais: 'Brasil',
       imagem: undefined,
       codigoIso: 'BR',
-      codigoArea: 55,
-    },
+      codigoArea: 55
+    }
   ]);
   const [isSelectCountry, setIsSelectCountry] = useState<CountriesProps>({
     id: 76,
     nomePais: 'Brasil',
     imagem: undefined,
     codigoIso: 'BR',
-    codigoArea: 55,
+    codigoArea: 55
   });
   const [isTypesDoc, setIsTypesDoc] = useState<ITypeDoc[]>([
     {
       id: 4,
-      nomeTipoDocumento: 'CPF',
-    },
+      nomeTipoDocumento: 'CPF'
+    }
   ]);
   const [isLoadingCountry, setIsLoadingCountry] = useState<boolean>(false);
   const [isPhotoAvatar, setIsPhotoAvatar] = useState<string>();
@@ -206,17 +194,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return data.existente;
   }, []);
 
-  const checkEmailExistente = useCallback(async (email: string) => {
-    if (email != '') {
-      const existe = await handleCheckEMAIL(email);
+  const checkEmailExistente = useCallback(
+    async (email: string) => {
+      if (email != '') {
+        const existe = await handleCheckEMAIL(email);
 
-      if (existe) {
-        callErrorDialogComponent('Email ja cadastrado no sistema.', TypeEnum.ERROR);
+        if (existe) {
+          callErrorDialogComponent('Email ja cadastrado no sistema.', TypeEnum.ERROR);
+        }
+        return existe;
       }
-      return existe;
-    }
-    return false;
-  }, [callErrorDialogComponent, handleCheckEMAIL]);
+      return false;
+    },
+    [callErrorDialogComponent, handleCheckEMAIL]
+  );
 
   const handleForgotPassword = useCallback(
     async (cpf: string) => {
@@ -230,7 +221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return data;
     },
 
-    [setIsDataForgotPassword, setIsForgotPassword, isDataForgotPassword],
+    [setIsDataForgotPassword, setIsForgotPassword, isDataForgotPassword]
   );
 
   const handleForgotPasswordBack = useCallback(() => {
@@ -243,7 +234,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleCheckCPF = useCallback(async (cpf: string) => {
     const { data } = (await api.post(GET_CPF, {
-      cpf: Number(cpf),
+      cpf: Number(cpf)
     })) as { data: { existe: boolean } };
 
     return data.existe;
@@ -253,71 +244,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return await handleCheckCountExistV2(cpf.replace(/[^\d]/g, ''));
   }, []);
 
-
   const handleUpdateEmail = async (email: string, uzerId: number) => {
     const emailChange = {
       uzerId,
-      email,
+      email
     };
 
     await api.put(`${UPDATE_EMAIL}`, emailChange);
   };
 
-  const handleCheckCountExist = useCallback(
-    async (
-      documento: string,
-      email?: string,
-      idPais?: number,
-      idTipo?: number,
-    ) => {
-      let path = `${CHECK_COUNT_EXIST}`;
+  const handleCheckCountExist = useCallback(async (documento: string, email?: string, idPais?: number, idTipo?: number) => {
+    let path = `${CHECK_COUNT_EXIST}`;
 
-      if (!email) {
-        path += `?documento=${documento}`;
-      } else {
-        path += `?email=${email}`;
-      }
+    if (!email) {
+      path += `?documento=${documento}`;
+    } else {
+      path += `?email=${email}`;
+    }
 
-      if (idPais) {
-        path += `&idPais=${idPais}`;
-      }
-      if (idTipo) {
-        path += `&idTipoDocumento=${idTipo}`;
-      }
-      const { data } = (await api.get(path)) as {
-        data: { existente: boolean };
-      };
+    if (idPais) {
+      path += `&idPais=${idPais}`;
+    }
+    if (idTipo) {
+      path += `&idTipoDocumento=${idTipo}`;
+    }
+    const { data } = (await api.get(path)) as {
+      data: { existente: boolean };
+    };
 
-      return data.existente;
-    },
-    [],
-  );
+    return data.existente;
+  }, []);
 
   const handleDeleteUser = useCallback(async () => {
     // const { data }: any = await handleCheckCountExistV3("114.238.639-25");
 
-    const { data } = await axios(
-      `${baseUrl}${GENARATE_TOKEN}`,
-      {
-        method: 'POST',
-        data: {
-          grant_type: 'password',
-          username: '11423863925',
-          password: '123456',
-        },
-        headers: {
-          Authorization: `Basic ${isInfosAuthorization.base64}`,
-          Accept: '*/*',
-        },
+    const { data } = await axios(`${baseUrl}${GENARATE_TOKEN}`, {
+      method: 'POST',
+      data: {
+        grant_type: 'password',
+        username: '11423863925',
+        password: '123456'
       },
-    );
+      headers: {
+        Authorization: `Basic ${isInfosAuthorization.base64}`,
+        Accept: '*/*'
+      }
+    });
 
     const api2 = axios.create({
       baseURL: process.env.baseUrl,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${data.access_token}`,
-      },
+        Authorization: `Bearer ${data.access_token}`
+      }
     });
 
     const dados = (await api2.get(`${CREATE_USER}`)) as any;
@@ -330,8 +309,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       baseURL: 'https://notificacoes-api.uzerpass.com.br',
       headers: {
         'Content-Type': 'application/json',
-        apiKey: '59d7547b-cc92-48b9-98a1-fdad9603ef2a',
-      },
+        apiKey: '59d7547b-cc92-48b9-98a1-fdad9603ef2a'
+      }
     });
 
     const dispositivo = {
@@ -339,20 +318,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       token: 'string',
       idPessoa: null,
       idPessoaLegada: 0,
-      idPais: 71,
+      idPais: 71
     };
 
-    const { data } = (await api2.post(
-      `${CREATE_DISPOSITIVO}`,
-      dispositivo,
-    )) as any;
+    const { data } = (await api2.post(`${CREATE_DISPOSITIVO}`, dispositivo)) as any;
 
     const { id } = data;
 
     const sendSms = {
       idDispositivo: id,
       agenteNotificador: 2,
-      destinatario: phone,
+      destinatario: phone
     };
 
     const dados = (await api2.post(`${VALIDACAO_EMAIL}`, sendSms)) as any;
@@ -365,8 +341,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       baseURL: 'https://notificacoes-api.uzerpass.com.br',
       headers: {
         'Content-Type': 'application/json',
-        apiKey: '59d7547b-cc92-48b9-98a1-fdad9603ef2a',
-      },
+        apiKey: '59d7547b-cc92-48b9-98a1-fdad9603ef2a'
+      }
     });
 
     const dispositivo = {
@@ -374,20 +350,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       token: 'string',
       idPessoa: null,
       idPessoaLegada: 0,
-      idPais: 71,
+      idPais: 71
     };
 
-    const { data } = (await api2.post(
-      `${CREATE_DISPOSITIVO}`,
-      dispositivo,
-    )) as any;
+    const { data } = (await api2.post(`${CREATE_DISPOSITIVO}`, dispositivo)) as any;
 
     const { id } = data;
 
     const sendEmail = {
       idDispositivo: id,
       agenteNotificador: 1,
-      destinatario: email,
+      destinatario: email
     };
 
     const dados = (await api2.post(`${VALIDACAO_EMAIL}`, sendEmail)) as any;
@@ -395,91 +368,71 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return dados.data.codigo;
   }, []);
 
-  const handleCheckCountExistV2 = useCallback(
-    async (
-      documento: string,
-      email?: string,
-      idPais?: number,
-      idTipo?: number,
-    ) => {
-      let path = `${CHECK_COUNT_EXIST}`;
+  const handleCheckCountExistV2 = useCallback(async (documento: string, email?: string, idPais?: number, idTipo?: number) => {
+    let path = `${CHECK_COUNT_EXIST}`;
 
-      if (!email) {
-        path += `?documento=${documento}`;
-      } else {
-        path += `?email=${email}`;
-      }
+    if (!email) {
+      path += `?documento=${documento}`;
+    } else {
+      path += `?email=${email}`;
+    }
 
-      if (idPais) {
-        path += `&idPais=${idPais}`;
-      }
-      if (idTipo) {
-        path += `&idTipoDocumento=${idTipo}`;
-      }
-      const { data } = (await api.get(path)) as {
-        data: any;
-      };
+    if (idPais) {
+      path += `&idPais=${idPais}`;
+    }
+    if (idTipo) {
+      path += `&idTipoDocumento=${idTipo}`;
+    }
+    const { data } = (await api.get(path)) as {
+      data: any;
+    };
 
-      return data;
-    },
-    [],
-  );
+    return data;
+  }, []);
 
   const handleSubmit = useCallback(
-    async (
-      user: IUser,
-      register?: boolean,
-      type = 'cpf',
-      onClickPurchase?: () => void,
-    ) => {
+    async (user: IUser, register?: boolean, type = 'cpf', onClickPurchase?: () => void) => {
       try {
-        
         setIsLoading(true);
         let isFormattedCPFOrEmail = '';
-        if (type === 'cpf' && user.cpf) { isFormattedCPFOrEmail = user.cpf.replace(/[^\d]/g, ''); }
+        if (type === 'cpf' && user.cpf) {
+          isFormattedCPFOrEmail = user.cpf.replace(/[^\d]/g, '');
+        }
         if (type === 'email' && user.cpf) isFormattedCPFOrEmail = user.cpf;
-        const { data } = await api(
-          `${GENARATE_TOKEN}`,
-          {
-            method: 'POST',
-            data: {
-              grant_type: 'password',
-              username: isFormattedCPFOrEmail,
-              password: user.senha,
-            },
-            headers: {
-              Authorization: `Basic ${isInfosAuthorization.base64}`,
-              Accept: '*/*',
-            },
+        const { data } = await api(`${GENARATE_TOKEN}`, {
+          method: 'POST',
+          data: {
+            grant_type: 'password',
+            username: isFormattedCPFOrEmail,
+            password: user.senha
           },
-        );
+          headers: {
+            Authorization: `Basic ${isInfosAuthorization.base64}`,
+            Accept: '*/*'
+          }
+        });
 
         if (data.access_token) {
-          (
-              apiTokeUser.defaults.headers 
-          ).Authorization = `Bearer ${data.access_token}`;
+          apiTokeUser.defaults.headers.Authorization = `Bearer ${data.access_token}`;
           const isUser = await handleGetUser(data.access_token);
           setIsUser(isUser);
           if (!isUser.imagem) {
             setIsToken(data.access_token);
             Cache.set({
               key: '@tokenUser',
-              value: data.access_token,
+              value: data.access_token
             });
             // cookies().set('@tokenUser', data.access_token);
           } else {
             Cache.set({
               key: '@tokenUser',
-              value: data.access_token,
+              value: data.access_token
             });
             // cookies().set('@tokenUser', data.access_token);
-            (
-              apiTokeUser.defaults.headers
-            ).Authorization = `Bearer ${data.access_token}`;
+            apiTokeUser.defaults.headers.Authorization = `Bearer ${data.access_token}`;
           }
 
-          if(onClickPurchase)
-            onClickPurchase();
+          if (onClickPurchase) onClickPurchase();
 
           if (register || isStepper == 0) {
             if (onClickPurchase) {
@@ -490,14 +443,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         }
 
-
         setIsLoading(false);
       } catch (err: any) {
         setIsLoading(false);
         callErrorDialogComponent('Senha inválida. Verifique', TypeEnum.ERROR);
       }
     },
-    [isInfosAuthorization, handleLoadUser, showErrorDialog, push, handleGetUser],
+    [isInfosAuthorization, handleLoadUser, showErrorDialog, push, handleGetUser]
   );
 
   const handleSendEmailForgotPassword = useCallback(
@@ -505,9 +457,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         let tokenCerto = token;
         if (!token) {
-          const { data } = (await api.get(
-            `${GET_TOKEN_RESET_PASSWORD}${email}`,
-          )) as {
+          const { data } = (await api.get(`${GET_TOKEN_RESET_PASSWORD}${email}`)) as {
             data: {
               usuarios: {
                 cpf: string;
@@ -523,37 +473,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         setIsLoading(true);
         const { data } = (await api.post(SEND_EMAIL_RESET_PASSWORD, {
-          token: tokenCerto,
+          token: tokenCerto
         })) as { data: { sucesso: boolean; mensagem?: string } };
 
         if (data) {
           if (data.sucesso) {
             setIsSuccessSendEmail(data.sucesso);
           } else {
-            callErrorDialogComponent(
-              data.mensagem ?? 'Ocorreu um erro de comunicação.',
-            );
+            callErrorDialogComponent(data.mensagem ?? 'Ocorreu um erro de comunicação.');
           }
         }
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        callErrorDialogComponent(
-          'Ocorreu um erro de comunicação.',
-          TypeEnum.ERROR,
-        );
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
       }
     },
-    [showErrorDialog],
+    [showErrorDialog]
   );
 
   const handleDataForgotPassword = useCallback(
     async (email: string) => {
       try {
         setIsLoading(true);
-        const { data } = (await api.get(
-          `${GET_TOKEN_RESET_PASSWORD}${email}`,
-        )) as {
+        const { data } = (await api.get(`${GET_TOKEN_RESET_PASSWORD}${email}`)) as {
           data: {
             usuarios: {
               cpf: string;
@@ -570,85 +513,77 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             cpf: data?.usuarios[0]?.cpf,
             email: data.usuarios[0].email,
             nome: data.usuarios[0].nome,
-            token: data.usuarios[0].token,
+            token: data.usuarios[0].token
           });
         } else {
           setIsLoading(false);
-          callErrorDialogComponent(
-            'Usunário não existe. Verifique.',
-            TypeEnum.ERROR,
-          );
+          callErrorDialogComponent('Usunário não existe. Verifique.', TypeEnum.ERROR);
         }
       } catch (err) {
         setIsLoading(false);
-        callErrorDialogComponent(
-          'Ocorreu um erro de comunicação.',
-          TypeEnum.ERROR,
-        );
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
       }
     },
-    [showErrorDialog],
+    [showErrorDialog]
   );
-
 
   const api2 = axios.create({
     baseURL: baseUrl,
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   });
   const pendingRequests: Map<string, any> = new Map();
 
-// Função para gerar uma chave única para cada solicitação
-const generateRequestKey = (config: AxiosRequestConfig): string => {
-  return `${config.method}_${config.url}`;
-};
+  // Função para gerar uma chave única para cada solicitação
+  const generateRequestKey = (config: AxiosRequestConfig): string => {
+    return `${config.method}_${config.url}`;
+  };
 
-// Adicionando um interceptor de solicitação
-api2.interceptors.request.use(
-  (config) => {
-    // Gerando uma chave para a solicitação
-    const requestKey = generateRequestKey(config);
+  // Adicionando um interceptor de solicitação
+  api2.interceptors.request.use(
+    config => {
+      // Gerando uma chave para a solicitação
+      const requestKey = generateRequestKey(config);
 
-    // Verificando se já existe uma solicitação pendente com a mesma chave
-    if (pendingRequests.has(requestKey)) {
-      // Cancelando a solicitação anterior
-      pendingRequests.get(requestKey).cancel('Duplicate request detected');
+      // Verificando se já existe uma solicitação pendente com a mesma chave
+      if (pendingRequests.has(requestKey)) {
+        // Cancelando a solicitação anterior
+        pendingRequests.get(requestKey).cancel('Duplicate request detected');
+      }
+
+      // Armazenando a nova solicitação
+      config.cancelToken = new axios.CancelToken(cancel => {
+        pendingRequests.set(requestKey, { cancel });
+      });
+
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
     }
+  );
 
-    // Armazenando a nova solicitação
-    config.cancelToken = new axios.CancelToken((cancel) => {
-      pendingRequests.set(requestKey, { cancel });
-    });
+  // Adicionando um interceptor de resposta para remover a solicitação da lista de pendentes
+  api2.interceptors.response.use(
+    response => {
+      // Removendo a solicitação da lista de pendentes
+      const requestKey = generateRequestKey(response.config);
+      pendingRequests.delete(requestKey);
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-}
-);
+      return response;
+    },
+    error => {
+      // Removendo a solicitação da lista de pendentes em caso de erro
+      const requestKey = generateRequestKey(error.config);
+      pendingRequests.delete(requestKey);
 
-// Adicionando um interceptor de resposta para remover a solicitação da lista de pendentes
-api2.interceptors.response.use(
-  (response) => {
-    // Removendo a solicitação da lista de pendentes
-    const requestKey = generateRequestKey(response.config);
-    pendingRequests.delete(requestKey);
+      return Promise.reject(error);
+    }
+  );
 
-    return response;
-  },
-  (error) => {
-    // Removendo a solicitação da lista de pendentes em caso de erro
-    const requestKey = generateRequestKey(error.config);
-    pendingRequests.delete(requestKey);
-
-    return Promise.reject(error);
-  }
-);
-  
   const handleCheckCountExistV3 = useCallback(async (token: string) => {
     api2.defaults.headers.Authorization = `Bearer ${token}`;
-    
 
     const data = (await api2.get(`${CREATE_USER}`)) as any;
 
@@ -656,57 +591,49 @@ api2.interceptors.response.use(
   }, []);
 
   const sleep = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   };
 
   const handleSubmitRegister = useCallback(
     async (data: IUser, onClickPurchase?: () => void, finish?: boolean) => {
-      debugger
-      try { 
+      debugger;
+      try {
         if (onClickPurchase && finish) {
           handleSubmit(
             {
               cpf: data.email,
-              senha: data.senha || '',
+              senha: data.senha || ''
             },
             false,
             'email',
-            onClickPurchase,
-          );
-          return;
-        } if (!onClickPurchase && finish) {
-          handleSubmit(
-            {
-              cpf: data.email,
-              senha: data.senha || '',
-            },
-            true,
-            'email',
+            onClickPurchase
           );
           return;
         }
-        
-        const responseIbge = data?.endereco?.codigoIbge && (await api.get(
-          `${GET_CITY_CODE_IBGE}/${data?.endereco?.codigoIbge}`,
-        )) as { data: CityCodeIBGEProps[] };
+        if (!onClickPurchase && finish) {
+          handleSubmit(
+            {
+              cpf: data.email,
+              senha: data.senha || ''
+            },
+            true,
+            'email'
+          );
+          return;
+        }
+
+        const responseIbge =
+          data?.endereco?.codigoIbge && ((await api.get(`${GET_CITY_CODE_IBGE}/${data?.endereco?.codigoIbge}`)) as { data: CityCodeIBGEProps[] });
 
         const resultCodeIbge = responseIbge?.data;
 
         setIsLoading(true);
         const isFormattedUser: IUser = {
           nome: data.nome,
-          telefone:
-            data.telefone
-            && data.telefone
-              .replace('(', '')
-              .replace(')', '')
-              .replace(' ', '')
-              .replace('-', ''),
+          telefone: data.telefone && data.telefone.replace('(', '').replace(')', '').replace(' ', '').replace('-', ''),
           email: data.email,
           senha: data.senha,
-          dataNascimento:
-            data.dataNascimento
-            && data.dataNascimento.split('/').reverse().join('-'),
+          dataNascimento: data.dataNascimento && data.dataNascimento.split('/').reverse().join('-'),
           telefoneDDI: data.DD,
           endereco: {
             cep: data.endereco?.cep?.replace('-', ''),
@@ -717,12 +644,12 @@ api2.interceptors.response.use(
             cidade:
               resultCodeIbge && resultCodeIbge.length > 0
                 ? {
-                  id: resultCodeIbge[0].id,
-                  nome: resultCodeIbge[0].nome,
-                }
-                : undefined,
+                    id: resultCodeIbge[0].id,
+                    nome: resultCodeIbge[0].nome
+                  }
+                : undefined
           },
-          imagem: data.imagem,
+          imagem: data.imagem
         };
 
         if (isSelectCountry.nomePais === 'Brasil') {
@@ -731,7 +658,7 @@ api2.interceptors.response.use(
           isFormattedUser.documentoEstrangeiro = data.numeroDoc;
           isFormattedUser.idPais = data.idPais;
           isFormattedUser.idTipoDocumento = data.idTipoDocumento;
-          delete isFormattedUser.endereco
+          delete isFormattedUser.endereco;
         }
 
         let result = null;
@@ -750,85 +677,60 @@ api2.interceptors.response.use(
           setCreatedUser(true);
           await sleep(6000);
         }
-        
-        
+
         // const url = `${baseUrl}${GENARATE_TOKEN}`;
 
-        const token = await api(
-          `${GENARATE_TOKEN}`,
-          {
-            method: 'POST',
-            data: {
-              grant_type: 'password',
-              username: data?.CPF ? data?.CPF?.replace(/[^\d]/g, '') : data?.email,
-              password: data.senha,
-            },
-            headers: {
-              Authorization: `Basic ${isInfosAuthorization.base64}`,
-              Accept: '*/*',
-            },
+        const token = await api(`${GENARATE_TOKEN}`, {
+          method: 'POST',
+          data: {
+            grant_type: 'password',
+            username: data?.CPF ? data?.CPF?.replace(/[^\d]/g, '') : data?.email,
+            password: data.senha
           },
-        );
+          headers: {
+            Authorization: `Basic ${isInfosAuthorization.base64}`,
+            Accept: '*/*'
+          }
+        });
 
-        const dados: any = await handleCheckCountExistV3(
-          token.data.access_token,
-        );
+        const dados: any = await handleCheckCountExistV3(token.data.access_token);
         setIsLoading(false);
 
         setPhotoInvalida(dados?.data.statusSincronia);
         if (!isInvalidPicture) {
-          if (
-            dados?.data.statusSincronia !== 200
-            && dados?.data.statusSincronia !== 0
-          ) {
+          if (dados?.data.statusSincronia !== 200 && dados?.data.statusSincronia !== 0) {
             setIsInvalidPicture(true);
-            callErrorDialogComponent(
-              'Algo deu errado com sua foto, por favor, tente novamente seguindo as instruções.',
-              TypeEnum.ERROR,
-            );
+            callErrorDialogComponent('Algo deu errado com sua foto, por favor, tente novamente seguindo as instruções.', TypeEnum.ERROR);
             return;
           }
         }
 
         if (isInvalidPicture) {
-          let dados: any = await handleCheckCountExistV3(
-            token.data.access_token,
-          );
+          let dados: any = await handleCheckCountExistV3(token.data.access_token);
           setIsLoading(true);
 
           isFormattedUser.id = dados.data.id;
 
-          result = await axios.put(
-            `${baseUrl}/${UPDATED_USER}/${dados.data.id}`,
-            isFormattedUser,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token.data.access_token}`,
-              },
-            },
-          );
+          result = await axios.put(`${baseUrl}/${UPDATED_USER}/${dados.data.id}`, isFormattedUser, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token.data.access_token}`
+            }
+          });
 
           await sleep(6000);
 
           dados = await handleCheckCountExistV3(token.data.access_token);
 
           setPhotoInvalida(dados?.data.statusSincronia);
-          
 
-          setIsLoading(false)
+          setIsLoading(false);
 
-          if (
-            dados?.data.statusSincronia !== 200
-            && dados?.data.statusSincronia !== 0
-          ) {
+          if (dados?.data.statusSincronia !== 200 && dados?.data.statusSincronia !== 0) {
             setIsInvalidPicture(true);
-            callErrorDialogComponent(
-              'Algo deu errado com sua foto, por favor, tente novamente seguindo as instruções.',
-              TypeEnum.ERROR,
-            );
+            callErrorDialogComponent('Algo deu errado com sua foto, por favor, tente novamente seguindo as instruções.', TypeEnum.ERROR);
             return;
-          }  
+          }
 
           // result = (await api.post(CREATE_USER, isFormattedUser)) as {
           //     data: { mensagem: string; sucesso: boolean };
@@ -841,10 +743,7 @@ api2.interceptors.response.use(
         setIsLoading(false);
 
         if (result?.data?.sucesso) {
-          callErrorDialogComponent(
-            'Parabéns. Seu usuário foi criado com sucesso!',
-            TypeEnum.SUCCESS,
-          );
+          callErrorDialogComponent('Parabéns. Seu usuário foi criado com sucesso!', TypeEnum.SUCCESS);
           setCreatedUser(true);
         }
         if (!result?.data?.sucesso) {
@@ -855,30 +754,20 @@ api2.interceptors.response.use(
         setIsLoading(false);
 
         if (err instanceof AxiosError) {
-          callErrorDialogComponent(
-            `Ocorreu um erro de comunicação. (${err?.response?.status})`,
-            TypeEnum.ERROR,
-          );
+          callErrorDialogComponent(`Ocorreu um erro de comunicação. (${err?.response?.status})`, TypeEnum.ERROR);
         } else {
-          callErrorDialogComponent(
-            'Ocorreu um erro de comunicação.',
-            TypeEnum.ERROR,
-          );
+          callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
         }
       }
     },
-    [isPhotoAvatar, callErrorDialogComponent, handleCheckCountExistV3, handleSubmit, isInfosAuthorization, isInvalidPicture, isSelectCountry],
+    [isPhotoAvatar, callErrorDialogComponent, handleCheckCountExistV3, handleSubmit, isInfosAuthorization, isInvalidPicture, isSelectCountry]
   );
 
-  const handleSelectStepper = useCallback(
-    (stepper: number) => setIsStepperEditUser(stepper),
-    [],
-  );
+  const handleSelectStepper = useCallback((stepper: number) => setIsStepperEditUser(stepper), []);
 
   const handleNextStepRegister = useCallback(
     async (data: IUser, onClickPurchase?: () => void, finish?: boolean) => {
       try {
-        
         setIsLoadingCountry(true);
         const isVerifyForNextStep = isSelectCountry.nomePais === 'Brasil' ? data.CPF : data.numeroDoc;
         if (data.nome && isVerifyForNextStep && isStepper === 0) {
@@ -886,29 +775,14 @@ api2.interceptors.response.use(
           let exists = false;
           const existEmail = false;
           if (data.CPF) {
-            exists = await handleCheckCountExist(
-              data.CPF.replace(/[^\d]/g, ''),
-              undefined,
-              data.idPais,
-              data.idTipoDocumento,
-            );
+            exists = await handleCheckCountExist(data.CPF.replace(/[^\d]/g, ''), undefined, data.idPais, data.idTipoDocumento);
           } else {
-            exists = await handleCheckCountExist(
-              data.numeroDoc ?? '',
-              undefined,
-              data.idPais,
-              data.idTipoDocumento,
-            );
+            exists = await handleCheckCountExist(data.numeroDoc ?? '', undefined, data.idPais, data.idTipoDocumento);
           }
 
           setIsLoading(false);
           if (exists || existEmail) {
-            callErrorDialogComponent(
-              `Já existe um usuário utilizando esse ${
-                exists ? 'CPF' : 'E-mail'
-              }.`,
-              TypeEnum.ERROR,
-            );
+            callErrorDialogComponent(`Já existe um usuário utilizando esse ${exists ? 'CPF' : 'E-mail'}.`, TypeEnum.ERROR);
           } else {
             setIsStepper(1);
           }
@@ -917,14 +791,14 @@ api2.interceptors.response.use(
           setIsLoading(false);
           setIsStepper(2);
         }
-        if(data.idTipoDocumento && isTypesDoc.length > 0 && isStepper === 0){
+        if (data.idTipoDocumento && isTypesDoc.length > 0 && isStepper === 0) {
           setIsStepper(2);
-          return
+          return;
         }
         if (data.endereco && isStepper === 2) {
           setIsStepper(3);
         }
-        if(isStepper === 2 && data.idTipoDocumento && isTypesDoc.length > 0){
+        if (isStepper === 2 && data.idTipoDocumento && isTypesDoc.length > 0) {
           setIsStepper(3);
         }
         if (isStepper === 3) {
@@ -937,29 +811,16 @@ api2.interceptors.response.use(
         }
       } catch (err: any) {
         setIsLoading(false);
-        callErrorDialogComponent(
-          err?.response?.data?.erro ?? 'Já existe esse documento cadastrado.',
-          TypeEnum.ERROR,
-        );
+        callErrorDialogComponent(err?.response?.data?.erro ?? 'Já existe esse documento cadastrado.', TypeEnum.ERROR);
       }
     },
-    [
-      setIsStepper,
-      isStepper,
-      handleSubmitRegister,
-      isSelectCountry.nomePais,
-      handleCheckCountExist,
-      showErrorDialog,
-      handleCheckEMAIL,
-      isPhotoAvatar,
-    ],
+    [setIsStepper, isStepper, handleSubmitRegister, isSelectCountry.nomePais, handleCheckCountExist, showErrorDialog, handleCheckEMAIL, isPhotoAvatar]
   );
 
   const handleUpdatedUserPhoto = useCallback(
     async (userEdit: IUser) => {
       try {
-        
-        const isUserFormatted = { 
+        const isUserFormatted = {
           nome: userEdit.nome,
           email: userEdit.email,
           telefone: userEdit.telefone,
@@ -971,19 +832,13 @@ api2.interceptors.response.use(
             bairro: userEdit.endereco?.bairro,
             numero: userEdit.endereco?.numero,
             cidade: userEdit.endereco?.nomeCidade,
-            estado:
-              userEdit.endereco?.estado
-              ?? (userEdit?.endereco?.localidade
-                ? userEdit?.endereco?.localidade.split('/')[1]
-                : undefined),
+            estado: userEdit.endereco?.estado ?? (userEdit?.endereco?.localidade ? userEdit?.endereco?.localidade.split('/')[1] : undefined)
           },
           id: userEdit?.id,
           imagem: isPhotoAvatar,
           idPais: userEdit.idPais,
           idTipoDocumento: userEdit.idTipoDocumento,
-          dataNascimento: userEdit.dataNascimento
-            ? userEdit.dataNascimento.split(' ')[0]
-            : userEdit.dataNascimento,
+          dataNascimento: userEdit.dataNascimento ? userEdit.dataNascimento.split(' ')[0] : userEdit.dataNascimento
         } as any;
 
         if (userEdit.cpf) {
@@ -993,51 +848,40 @@ api2.interceptors.response.use(
           isUserFormatted.documentoEstrangeiro = userEdit.documentoEstrangeiro;
         }
 
-        const { data: resultData } = (await axios.put(
-          `${baseUrl}${UPDATED_USER}/${userEdit.id}`,
-          isUserFormatted,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${isToken}`,
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-          },
-        )) as { data: { sucesso: boolean; mensagem?: string } };
+        const { data: resultData } = (await axios.put(`${baseUrl}${UPDATED_USER}/${userEdit.id}`, isUserFormatted, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${isToken}`,
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })) as { data: { sucesso: boolean; mensagem?: string } };
 
         if (resultData.sucesso) {
           setIsNotUserPhoto(undefined);
           // cookies().set('@tokenUser', isToken);
           Cache.set({
             key: '@tokenUser',
-            value: isToken,
+            value: isToken
           });
           showErrorDialog('Foto adicionada com sucesso.', TypeEnum.SUCCESS);
-          setIsUser((current) => ({
+          setIsUser(current => ({
             ...current,
-            userEdit,
+            userEdit
           }));
           await handleLoadUser();
         } else {
-          callErrorDialogComponent(
-            resultData.mensagem ?? 'Ocorreu um erro de comunicação.',
-            TypeEnum.ERROR,
-          );
+          callErrorDialogComponent(resultData.mensagem ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
         }
       } catch (err: any) {
         setIsLoadingSubmitUpdatedUser(false);
-        callErrorDialogComponent(
-          'Ocorreu um erro na listagem dos países.',
-          TypeEnum.ERROR,
-        );
+        callErrorDialogComponent('Ocorreu um erro na listagem dos países.', TypeEnum.ERROR);
       }
     },
-    [showErrorDialog, isToken, handleLoadUser, isPhotoAvatar, setIsUser],
+    [showErrorDialog, isToken, handleLoadUser, isPhotoAvatar, setIsUser]
   );
 
   const handleUpdatedUser = useCallback(
     async (userEdit: IUser) => {
-      
       try {
         setIsLoadingSubmitUpdatedUser(true);
         if (user) {
@@ -1048,33 +892,23 @@ api2.interceptors.response.use(
               logradouro: userEdit.endereco?.logradouro,
               complemento: userEdit.endereco?.complemento,
               bairro: userEdit.endereco?.bairro,
-              numero: userEdit.endereco?.numero
-                ? userEdit.endereco?.numero
-                : 'S/N',
+              numero: userEdit.endereco?.numero ? userEdit.endereco?.numero : 'S/N',
               localidade: `${userEdit.endereco?.nomeCidade}/${
                 userEdit.endereco?.estado
-                  ? states.find(
-                    (state) => state.estado === userEdit.endereco?.estado,
-                  )?.uf ?? userEdit.endereco.estado
+                  ? states.find(state => state.estado === userEdit.endereco?.estado)?.uf ?? userEdit.endereco.estado
                   : userEdit.endereco?.estado
               }`,
               nomeCidade: userEdit.endereco?.nomeCidade,
               uf: userEdit.endereco?.estado
-                ? states.find(
-                  (state) => state.estado === userEdit.endereco?.estado,
-                )?.uf ?? userEdit.endereco.estado
+                ? states.find(state => state.estado === userEdit.endereco?.estado)?.uf ?? userEdit.endereco.estado
                 : userEdit.endereco?.estado,
-              codigoIbge: userEdit.endereco?.codigoIbge
-                ? Number(userEdit.endereco?.codigoIbge)
-                : userEdit.endereco?.codigoIbge,
-              uzerId: user.endereco?.uzerId,
+              codigoIbge: userEdit.endereco?.codigoIbge ? Number(userEdit.endereco?.codigoIbge) : userEdit.endereco?.codigoIbge,
+              uzerId: user.endereco?.uzerId
             },
             id: user?.id,
             idPais: user.idPais,
             idTipoDocumento: user.idTipoDocumento,
-            dataNascimento: userEdit.dataNascimento
-              ? userEdit.dataNascimento.split('/').reverse().join('-')
-              : user.dataNascimento,
+            dataNascimento: userEdit.dataNascimento ? userEdit.dataNascimento.split('/').reverse().join('-') : user.dataNascimento
           } as IUser;
 
           if (user.cpf) {
@@ -1084,10 +918,9 @@ api2.interceptors.response.use(
             isUserFormatted.documentoEstrangeiro = user.documentoEstrangeiro;
           }
 
-          const { data: resultData } = (await apiTokeUser.put(
-            `${UPDATED_USER}/${isUserFormatted.id}`,
-            isUserFormatted,
-          )) as { data: { sucesso: boolean; mensagem?: string } };
+          const { data: resultData } = (await apiTokeUser.put(`${UPDATED_USER}/${isUserFormatted.id}`, isUserFormatted)) as {
+            data: { sucesso: boolean; mensagem?: string };
+          };
 
           if (resultData.sucesso) {
             const isNewUser = await onFindUser();
@@ -1095,34 +928,25 @@ api2.interceptors.response.use(
             if (isNewUser) {
               setIsUser(isNewUser);
             } else {
-              setIsUser((current) => ({
+              setIsUser(current => ({
                 ...current,
-                ...isUserFormatted,
+                ...isUserFormatted
               }));
             }
-            callErrorDialogComponent(
-              'Dados atualizados com sucesso.',
-              TypeEnum.SUCCESS,
-            );
+            callErrorDialogComponent('Dados atualizados com sucesso.', TypeEnum.SUCCESS);
             handleCloseModalEditUser();
             handleSelectStepper(0);
           } else {
-            callErrorDialogComponent(
-              resultData.mensagem ?? 'Ocorreu um erro na listagem dos países.',
-              TypeEnum.ERROR,
-            );
+            callErrorDialogComponent(resultData.mensagem ?? 'Ocorreu um erro na listagem dos países.', TypeEnum.ERROR);
           }
         }
         setIsLoadingSubmitUpdatedUser(false);
       } catch (err: any) {
         setIsLoadingSubmitUpdatedUser(false);
-        callErrorDialogComponent(
-          'Ocorreu um erro na listagem dos países.',
-          TypeEnum.ERROR,
-        );
+        callErrorDialogComponent('Ocorreu um erro na listagem dos países.', TypeEnum.ERROR);
       }
     },
-    [showErrorDialog, user, setIsUser, handleSelectStepper, onFindUser],
+    [showErrorDialog, user, setIsUser, handleSelectStepper, onFindUser]
   );
 
   const handleNextStep = useCallback(
@@ -1132,32 +956,22 @@ api2.interceptors.response.use(
       try {
         if (data.cpf && data.type === 'cpf' && !toImageAvatar) {
           setIsLoading(true);
-          const exists = await handleCheckCountExist(
-            data.cpf.replace(/[^\d]/g, ''),
-          );
+          const exists = await handleCheckCountExist(data.cpf.replace(/[^\d]/g, ''));
 
-          const { usuario } = await handleCheckCountExistV2(
-            data.cpf.replace(/[^\d]/g, ''),
-          );
+          const { usuario } = await handleCheckCountExistV2(data.cpf.replace(/[^\d]/g, ''));
 
           defaultValues = {
             nome: usuario?.nome,
-            dataNascimentoCpf: format(
-              parseISO(usuario?.dataNascimento),
-              'dd/MM/yyyy',
-            ),
+            dataNascimentoCpf: format(parseISO(usuario?.dataNascimento), 'dd/MM/yyyy'),
             email: usuario?.email,
             CPF: data.cpf,
-            idPais: usuario?.idPais,
+            idPais: usuario?.idPais
           };
 
-          
-          if(!exists)
-            setDefaultValues(defaultValues);
-          else
-            setForgotPasswordDefaultValues(defaultValues);
-          
-            setIsLoading(false);
+          if (!exists) setDefaultValues(defaultValues);
+          else setForgotPasswordDefaultValues(defaultValues);
+
+          setIsLoading(false);
           if (exists) {
             setIsStepper(1);
           } else {
@@ -1167,7 +981,7 @@ api2.interceptors.response.use(
         if (data.email && data.type === 'email' && !toImageAvatar) {
           defaultValues = {
             ...defaultValues,
-            email: data.email,
+            email: data.email
           };
 
           setIsLoading(true);
@@ -1181,25 +995,24 @@ api2.interceptors.response.use(
           }
         }
 
-        if (
-          (data.senha || data.email)
-          && isStepper > 0
-          && !isForgotPassword
-          && !toImageAvatar
-        ) {
+        if ((data.senha || data.email) && isStepper > 0 && !isForgotPassword && !toImageAvatar) {
           await handleSubmit(
             {
               senha: data.senha,
-              cpf: data.type === 'email' && data.email ? data.email : data.cpf,
+              cpf: data.type === 'email' && data.email ? data.email : data.cpf
             },
             false,
             data.type,
-            onClickPurchase,
+            onClickPurchase
           );
         }
         if (isForgotPassword && !toImageAvatar) {
-          if (data.email && data.type === 'email') { handleDataForgotPassword(data.email); }
-          if (data.cpf && data.type === 'cpf') { handleDataForgotPassword(data.cpf.replace(/[^\d]/g, '')); }
+          if (data.email && data.type === 'email') {
+            handleDataForgotPassword(data.email);
+          }
+          if (data.cpf && data.type === 'cpf') {
+            handleDataForgotPassword(data.cpf.replace(/[^\d]/g, ''));
+          }
         }
         if (toImageAvatar) {
           setIsLoading(true);
@@ -1211,10 +1024,7 @@ api2.interceptors.response.use(
         }
       } catch (err: any) {
         setIsLoading(false);
-        showErrorDialog(
-          err?.response?.data?.erro ?? 'Já existe esse documento cadastrado.',
-          TypeEnum.ERROR,
-        );
+        showErrorDialog(err?.response?.data?.erro ?? 'Já existe esse documento cadastrado.', TypeEnum.ERROR);
       }
     },
     [
@@ -1227,8 +1037,8 @@ api2.interceptors.response.use(
       showErrorDialog,
       handleUpdatedUserPhoto,
       setIsUserNotExistsCPF,
-      setDefaultValues,
-    ],
+      setDefaultValues
+    ]
   );
 
   const handleSelectCountry = useCallback((country: CountriesProps) => {
@@ -1247,65 +1057,53 @@ api2.interceptors.response.use(
       }
     } catch (err: any) {
       setIsLoadingCountry(false);
-      showErrorDialog(
-        'Ocorreu um erro na listagem dos países.',
-        TypeEnum.ERROR,
-      );
+      showErrorDialog('Ocorreu um erro na listagem dos países.', TypeEnum.ERROR);
     }
   }, [showErrorDialog, authentication, isCountries]);
 
   const handleLoadTypeDocument = useCallback(
     async (country: string) => {
       try {
-          setIsLoadingCountry(true);
-          const { data } = (await api.get(
-            `${GET_TYPE_DOCUMENT}/${country}`,
-          )) as {
-            data: ITypeDoc[];
-          };
+        setIsLoadingCountry(true);
+        const { data } = (await api.get(`${GET_TYPE_DOCUMENT}/${country}`)) as {
+          data: ITypeDoc[];
+        };
 
-          setIsTypesDoc(data);
+        setIsTypesDoc(data);
         setIsLoadingCountry(false);
       } catch (err: any) {
         setIsLoadingCountry(false);
-        showErrorDialog(
-          err.message ?? 'Ocorreu um erro de comunicação.',
-          TypeEnum.ERROR,
-        );
+        showErrorDialog(err.message ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
       }
     },
-    [showErrorDialog, authentication],
+    [showErrorDialog, authentication]
   );
 
-  const handleAddPhoto = useCallback((photo?: string) => {
-    setIsPhotoAvatar(photo);
-    setPhoto(photo as any);
-  }, [isPhotoAvatar]);
+  const handleAddPhoto = useCallback(
+    (photo?: string) => {
+      setIsPhotoAvatar(photo);
+      setPhoto(photo as any);
+    },
+    [isPhotoAvatar]
+  );
 
   const handleSubmitUpdatedUser = useCallback(
     async (userEdit: IUser) => {
-      if (
-        userEdit.nome
-        && userEdit.email
-        && userEdit.telefoneDDI
-        && userEdit.telefone
-        && userEdit.dataNascimento
-        && isStepperEditUser === 0
-      ) {
+      if (userEdit.nome && userEdit.email && userEdit.telefoneDDI && userEdit.telefone && userEdit.dataNascimento && isStepperEditUser === 0) {
         handleSelectStepper(1);
       }
       if (
-        userEdit.endereco
-        && userEdit.endereco.cep
-        && userEdit.endereco.logradouro
-        && userEdit.endereco.bairro
-        && userEdit.endereco.nomeCidade
-        && isStepperEditUser === 1
+        userEdit.endereco &&
+        userEdit.endereco.cep &&
+        userEdit.endereco.logradouro &&
+        userEdit.endereco.bairro &&
+        userEdit.endereco.nomeCidade &&
+        isStepperEditUser === 1
       ) {
         await handleUpdatedUser(userEdit);
       }
     },
-    [handleSelectStepper, isStepperEditUser, handleUpdatedUser],
+    [handleSelectStepper, isStepperEditUser, handleUpdatedUser]
   );
 
   useEffect(() => {
@@ -1316,7 +1114,7 @@ api2.interceptors.response.use(
     const payload = JSON.stringify(data);
     const baseUrl = window ? window.location.origin : 'https://bipshow.com';
     return `${baseUrl}/registrar?payload=${payload}`;
-  }
+  };
 
   return (
     <AuthContext.Provider
@@ -1382,7 +1180,7 @@ api2.interceptors.response.use(
         getRegisterURLWithPayloadOnQuery,
         afterLogin,
         setAfterLogin,
-        setIsLoading,
+        setIsLoading
       }}
     >
       {children}

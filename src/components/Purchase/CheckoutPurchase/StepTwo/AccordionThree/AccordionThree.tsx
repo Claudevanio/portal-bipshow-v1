@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useMemo, useState,
-} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from '@/components/Form/Input';
 import { CARDMask, CVVMask, CartaoNameMask, VALIDATIONCARDMask } from '@/shared/config/mask';
@@ -28,8 +26,19 @@ import { RadioButtonChecked } from '@mui/icons-material';
 export const AccordionThree: React.FC = () => {
   const methods = useForm<IPurchase>();
   const {
-    loading, selectedPayment, handleQuantityinstallment, installments, loadinginstallment, setInstallment, amount, onChangePaymentCardType, optionCardPayment, handleSubmitIngressoCortesia,
-    guide, handleLoadPurchase, couponAppliep
+    loading,
+    selectedPayment,
+    handleQuantityinstallment,
+    installments,
+    loadinginstallment,
+    setInstallment,
+    amount,
+    onChangePaymentCardType,
+    optionCardPayment,
+    handleSubmitIngressoCortesia,
+    guide,
+    handleLoadPurchase,
+    couponAppliep
   } = useTicketPurchase();
   const cardNumber = methods.watch('cartao');
   const installment = methods.watch('parcelas');
@@ -54,13 +63,9 @@ export const AccordionThree: React.FC = () => {
 
     setIsDataPurchase(data);
 
-    
-    if(guide)
-      handleIsOpenModalPurchaseSummary();
-      // await handleLoadPurchase(guide.guide, guide.id, data)
-    
+    if (guide) handleIsOpenModalPurchaseSummary();
+    // await handleLoadPurchase(guide.guide, guide.id, data)
   };
-
 
   const isTypePayment = useMemo(() => {
     switch (selectedPayment?.formaPagamento) {
@@ -81,16 +86,16 @@ export const AccordionThree: React.FC = () => {
     }
   }, [installments]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (cardNumber && cardNumber.length >= 19) {
       handleQuantityinstallment(cardNumber);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cardNumber, setInstallment,couponAppliep]);
+  }, [cardNumber, setInstallment, couponAppliep]);
 
   useEffect(() => {
     if (installment) {
-      const isInstallment = installments?.find((item) => item.quantity === Number(installment));
+      const isInstallment = installments?.find(item => item.quantity === Number(installment));
 
       if (isInstallment) {
         setInstallment(isInstallment);
@@ -101,28 +106,37 @@ export const AccordionThree: React.FC = () => {
   const [isAddressOpen, setIsAddressOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if(!user.endereco){
+    if (!user.endereco) {
       setIsAddressOpen(true);
     }
   }, []);
 
   return (
     <ContainerAccordionThree>
-     <Modal open={isOpenModalEditAddress} onClose={handleIsCloseModalEditAddress} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description"> 
+      <Modal
+        open={isOpenModalEditAddress}
+        onClose={handleIsCloseModalEditAddress}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <ModalEditAddress onClose={handleIsCloseModalEditAddress} />
-    </Modal>
-      <Modal open={isPurchaseSummary} onClose={handleIsClsoeModalPurchaseSummary}
+      </Modal>
+      <Modal
+        open={isPurchaseSummary}
+        onClose={handleIsClsoeModalPurchaseSummary}
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
-      aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <ModalPurchaseSummary dataPurchase={isDataPurchase} onClose={handleIsClsoeModalPurchaseSummary} />
       </Modal>
-      
+
       {loading && <LoadingPayment open={loading} />}
-      
+
       <OptionsPayment />
       {selectedPayment && selectedPayment?.formaPagamento === 'Boleto' && (
         <div className="alert-container">
@@ -152,45 +166,31 @@ export const AccordionThree: React.FC = () => {
                 />
               </div>
               <div className="input-card">
-                <Accordion
-                  expanded={isAddressOpen}
-                  onChange={() => setIsAddressOpen(!isAddressOpen)}
-                  className='my-4'
-                >
+                <Accordion expanded={isAddressOpen} onChange={() => setIsAddressOpen(!isAddressOpen)} className="my-4">
                   <AccordionSummary
                     sx={{
                       '.MuiAccordionSummary-content': {
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between',
+                        justifyContent: 'space-between'
                       }
                     }}
                   >
                     <h6 className="title">Endereço da Cobrança</h6>
-                    {
-                      !isAddressOpen && ((user?.endereco && user?.endereco?.cep) || (endereco && endereco?.cep)) && (
-                        <Box
-                          className='flex items-center gap-4 pt-4 text-sm'
-                        >
-                          <RadioButtonChecked
-                            className='text-primary'
-                          />                          
-                          {
-                              !endereco && user?.endereco ? `${user.endereco.cep} - ${user.endereco.bairro}${user.endereco.complemento ? ` ${user.endereco.complemento}` : ''}, ${user.endereco.localidade ?? user.endereco.nomeCidade + '/' + user.endereco.estado}` : endereco ? `${endereco.cep} - ${endereco.bairro}${endereco.complemento ? ` ${endereco.complemento}` : ''}, ${endereco.localidade ?? endereco.nomeCidade + '/' + endereco.estado}` : 'Sem endereço selecionado'
-                          }
-                        </Box>
-                      )
-                    }
+                    {!isAddressOpen && ((user?.endereco && user?.endereco?.cep) || (endereco && endereco?.cep)) && (
+                      <Box className="flex items-center gap-4 pt-4 text-sm">
+                        <RadioButtonChecked className="text-primary" />
+                        {!endereco && user?.endereco
+                          ? `${user.endereco.cep} - ${user.endereco.bairro}${user.endereco.complemento ? ` ${user.endereco.complemento}` : ''}, ${user.endereco.localidade ?? user.endereco.nomeCidade + '/' + user.endereco.estado}`
+                          : endereco
+                            ? `${endereco.cep} - ${endereco.bairro}${endereco.complemento ? ` ${endereco.complemento}` : ''}, ${endereco.localidade ?? endereco.nomeCidade + '/' + endereco.estado}`
+                            : 'Sem endereço selecionado'}
+                      </Box>
+                    )}
                   </AccordionSummary>
-                  
+
                   <AccordionDetails>
-                    <FormAddress
-                      loading={false}
-                      defaultValue={
-                        user?.endereco
-                      }
-                      variant='register'
-                    />
+                    <FormAddress loading={false} defaultValue={user?.endereco} variant="register" />
                   </AccordionDetails>
                 </Accordion>
                 <h6 className="title">Dados do cartão</h6>
@@ -204,34 +204,34 @@ export const AccordionThree: React.FC = () => {
                       rules={{
                         required: {
                           value: true,
-                          message: 'Número do cartão inválido. Verifique',
+                          message: 'Número do cartão inválido. Verifique'
                         },
                         minLength: {
                           value: 19,
-                          message: 'Número do cartão inválido. Verifique',
+                          message: 'Número do cartão inválido. Verifique'
                         },
                         maxLength: {
                           value: 19,
-                          message: 'Número do cartão inválido. Verifique',
+                          message: 'Número do cartão inválido. Verifique'
                         },
                         max: {
                           value: 19,
-                          message: 'Número do cartão inválido. Verifique',
+                          message: 'Número do cartão inválido. Verifique'
                         },
                         min: {
                           value: 19,
-                          message: 'Número do cartão inválido. Verifique',
+                          message: 'Número do cartão inválido. Verifique'
                         },
                         validate: (number: string) => {
                           if (number) {
                             return Boolean(validationFlag(number));
                           }
                           return false;
-                        },
+                        }
                       }}
                       mask={CARDMask}
                       disabled={loading}
-                      errorText={methods.formState.errors.cartao && 'Número do cartão inválido. Verifique' as string}
+                      errorText={methods.formState.errors.cartao && ('Número do cartão inválido. Verifique' as string)}
                     />
                   </div>
                   <div className="validation">
@@ -243,23 +243,23 @@ export const AccordionThree: React.FC = () => {
                       rules={{
                         required: {
                           value: true,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         minLength: {
                           value: 5,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         maxLength: {
                           value: 5,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         max: {
                           value: 5,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         min: {
                           value: 5,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         pattern: /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/,
                         validate: (data: string) => {
@@ -267,12 +267,12 @@ export const AccordionThree: React.FC = () => {
                             return true;
                           }
                           return false;
-                        },
+                        }
                       }}
                       mask={VALIDATIONCARDMask}
                       disabled={loading}
                       disabledClean
-                      errorText={methods.formState.errors.validade && 'Inválido' as string}
+                      errorText={methods.formState.errors.validade && ('Inválido' as string)}
                     />
                   </div>
                   <div className="cvv">
@@ -284,21 +284,21 @@ export const AccordionThree: React.FC = () => {
                       rules={{
                         required: {
                           value: true,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         minLength: {
                           value: 3,
-                          message: 'Inválido',
+                          message: 'Inválido'
                         },
                         maxLength: {
                           value: 3,
-                          message: 'Inválido',
-                        },
+                          message: 'Inválido'
+                        }
                       }}
                       mask={CVVMask}
                       disabled={loading}
                       disabledClean
-                      errorText={methods.formState.errors.cvv && 'Inválido' as string}
+                      errorText={methods.formState.errors.cvv && ('Inválido' as string)}
                     />
                   </div>
                 </div>
@@ -314,13 +314,13 @@ export const AccordionThree: React.FC = () => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'Nome impresso no cartão inválido. Verifique',
+                        message: 'Nome impresso no cartão inválido. Verifique'
                       },
-                      pattern: /^[a-zA-Z]+(?:[\s.]+[a-zA-Z]+)*$/,
+                      pattern: /^[a-zA-Z]+(?:[\s.]+[a-zA-Z]+)*$/
                     }}
                     disabled={loading}
                     mask={CartaoNameMask}
-                    errorText={methods.formState.errors.nome && 'Nome impresso no cartão inválido. Verifique' as string}
+                    errorText={methods.formState.errors.nome && ('Nome impresso no cartão inválido. Verifique' as string)}
                   />
                 </div>
                 {/* {user && user.endereco && (
@@ -350,18 +350,19 @@ export const AccordionThree: React.FC = () => {
                 <div className="installment">
                   <h6 className="title">Parcelamento</h6>
                   <div className="name-holder-input">
-                    {installments && installments.length > 0 && optionCardPayment === 'CREDIT_CARD' && (
-                      installments.map((item) => (
+                    {installments &&
+                      installments.length > 0 &&
+                      optionCardPayment === 'CREDIT_CARD' &&
+                      installments.map(item => (
                         <Radio
                           remainColor
                           key={`key-${item.quantity}`}
                           id="parcelas"
-                          label={`${item.quantity}x de ${(item.installmentAmount).toLocaleString('pt-BR', {
+                          label={`${item.quantity}x de ${item.installmentAmount.toLocaleString('pt-BR', {
                             minimumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'BRL',
+                            currency: 'BRL'
                           })}`}
-                          
                           // - ${!item.interestFree ? `total de ${item.totalAmount.toLocaleString('pt-BR', {
                           //   minimumFractionDigits: 2,
                           //   style: 'currency',
@@ -376,17 +377,16 @@ export const AccordionThree: React.FC = () => {
                           value={item.quantity}
                           checked={Number(installment) === item.quantity}
                         />
-                      ))
-                    )}
+                      ))}
                   </div>
                   {((installments && installments.length <= 0) || optionCardPayment === 'DEBIT_CARD') && (
                     <Radio
                       key="key-1"
                       id="parcelas"
-                      label={`1x de ${(amount).toLocaleString('pt-BR', {
+                      label={`1x de ${amount.toLocaleString('pt-BR', {
                         minimumFractionDigits: 2,
                         style: 'currency',
-                        currency: 'BRL',
+                        currency: 'BRL'
                       })}`}
                       name="parcelas"
                       checked
@@ -404,9 +404,7 @@ export const AccordionThree: React.FC = () => {
             </FormProvider>
           </div>
         )}
-        {amount <= 0 && (
-          <Button type="submit" text="Confirmar" variant="medium" />
-        )}
+        {amount <= 0 && <Button type="submit" text="Confirmar" variant="medium" />}
       </form>
 
       {selectedPayment && selectedPayment.formaPagamento === 'PIX' && amount > 0 && (

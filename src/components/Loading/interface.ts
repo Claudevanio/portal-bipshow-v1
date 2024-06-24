@@ -1,3 +1,3 @@
 export interface ILoading {
-    open: boolean
+  open: boolean;
 }

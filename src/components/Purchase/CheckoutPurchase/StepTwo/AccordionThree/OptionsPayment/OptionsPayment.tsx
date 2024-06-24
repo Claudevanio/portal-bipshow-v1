@@ -8,21 +8,21 @@ export const OptionsPayment: React.FC = () => {
 
   return (
     <ContainerOptionsPayment>
-      {amount > 0  && (
-      <div>
-        <h6 className="title">Formas de pagamento</h6>
-        <ContainerOptionsPaymentList>
-          {selectedPayment && (
-          <Option key={0} formaPagamento="CartaoCredito" id={0} taxa={0} active={selectedPayment.formaPagamento === 'CartaoCredito'} />
-          )}
-          <Option key={1} formaPagamento="PIX" id={1} taxa={1} active={selectedPayment?.formaPagamento === 'PIX'} />
-          {/* {eventTicket && !eventTicket?.taxas?.find((item) => item.formaPagamento === 'Boleto') && dataOrder && dataOrder.pedido && dataOrder.pedido.pagarNoBoleto && selectedPayment && (
+      {amount > 0 && (
+        <div>
+          <h6 className="title">Formas de pagamento</h6>
+          <ContainerOptionsPaymentList>
+            {selectedPayment && (
+              <Option key={0} formaPagamento="CartaoCredito" id={0} taxa={0} active={selectedPayment.formaPagamento === 'CartaoCredito'} />
+            )}
+            <Option key={1} formaPagamento="PIX" id={1} taxa={1} active={selectedPayment?.formaPagamento === 'PIX'} />
+            {/* {eventTicket && !eventTicket?.taxas?.find((item) => item.formaPagamento === 'Boleto') && dataOrder && dataOrder.pedido && dataOrder.pedido.pagarNoBoleto && selectedPayment && (
           <Option key={1} formaPagamento="Boleto" id={1} taxa={0} active={selectedPayment.formaPagamento === 'Boleto'} />
           )} */}
-          {/* {eventTicket && !eventTicket?.taxas?.find((item) => item.formaPagamento === 'DebitoOnline') && dataOrder && dataOrder.pedido && dataOrder.pedido.pagarNoDebitoOnline && selectedPayment && (
+            {/* {eventTicket && !eventTicket?.taxas?.find((item) => item.formaPagamento === 'DebitoOnline') && dataOrder && dataOrder.pedido && dataOrder.pedido.pagarNoDebitoOnline && selectedPayment && (
           <Option key={2} formaPagamento="DebitoOnline" id={2} taxa={0} active={selectedPayment.formaPagamento === 'DebitoOnline'} />
           )} */}
-          {/* {eventTicket && eventTicket.taxas && eventTicket.taxas.map((item) => {
+            {/* {eventTicket && eventTicket.taxas && eventTicket.taxas.map((item) => {
             if (item.formaPagamento !== 'CartaoCreditoParcelado' && item.formaPagamento !== 'CartaoDebitoMaquina') {
               if (item.formaPagamento === 'Boleto' && dataOrder && dataOrder.pedido && dataOrder.pedido.pagarNoBoleto) {
                 return (
@@ -37,9 +37,8 @@ export const OptionsPayment: React.FC = () => {
             }
             return null;
           })} */}
-        
-        </ContainerOptionsPaymentList>
-      </div>
+          </ContainerOptionsPaymentList>
+        </div>
       )}
     </ContainerOptionsPayment>
   );

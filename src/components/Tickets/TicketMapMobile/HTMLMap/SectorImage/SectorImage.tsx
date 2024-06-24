@@ -1,7 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { useCallback, useEffect } from 'react';
 // import { LoadingSmall } from '@/components/LoadingSmall';
 import { useEventTicket } from '@/shared/hooks/useEventTicket';
 import 'react-multi-carousel/lib/styles.css';
@@ -12,22 +9,33 @@ import { CircularProgress } from '@mui/material';
 
 export const SectorImage: React.FC = () => {
   const {
-    eventTicket, rank, areas, hrefSector, loadingAreas, areasMobile, handleSelectSector, setIsShowOffcanvas, handleSelectTicketWithSelectedSectorInStadium,
+    eventTicket,
+    rank,
+    areas,
+    hrefSector,
+    loadingAreas,
+    areasMobile,
+    handleSelectSector,
+    setIsShowOffcanvas,
+    handleSelectTicketWithSelectedSectorInStadium
   } = useEventTicket();
 
-  const isFindNameSector = useCallback((idSector: number) => {
-    let isName = '';
+  const isFindNameSector = useCallback(
+    (idSector: number) => {
+      let isName = '';
 
-    if (eventTicket && eventTicket.tiposDeIngresso && eventTicket.tiposDeIngresso.length > 0) {
-      const isFindName = eventTicket.tiposDeIngresso.find((item) => Number(item?.setor?.id) === idSector);
+      if (eventTicket && eventTicket.tiposDeIngresso && eventTicket.tiposDeIngresso.length > 0) {
+        const isFindName = eventTicket.tiposDeIngresso.find(item => Number(item?.setor?.id) === idSector);
 
-      if (isFindName && isFindName.setor) {
-        isName += isFindName.setor.nome;
+        if (isFindName && isFindName.setor) {
+          isName += isFindName.setor.nome;
+        }
       }
-    }
 
-    return isName;
-  }, [eventTicket]);
+      return isName;
+    },
+    [eventTicket]
+  );
 
   useEffect(() => {
     if (rank && hrefSector && rank[hrefSector].fileiras.length > 0) {
@@ -43,10 +51,10 @@ export const SectorImage: React.FC = () => {
             src={String(eventTicket?.local?.mapa?.pequeno ? eventTicket?.local?.mapa?.pequeno.imagem : eventTicket?.local?.mapa?.imagem)}
             map={{
               name: 'map-area-chairs-mobile',
-              areas: areasMobile,
+              areas: areasMobile
             }}
-            fillColor={"#19D26E"}
-            onClick={(event) => {
+            fillColor={'#19D26E'}
+            onClick={event => {
               if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.href) {
                 handleSelectTicketWithSelectedSectorInStadium(event.href);
               } else {
@@ -56,8 +64,7 @@ export const SectorImage: React.FC = () => {
             }}
           />
         ) : (
-          <CircularProgress
-            size={24}/>
+          <CircularProgress size={24} />
         )}
       </div>
     </ContainerSectorImage>

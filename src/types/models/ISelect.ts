@@ -1,4 +1,4 @@
 export interface ISelect {
-    value: number | string;
-    innerText: string | React.ReactNode;
+  value: number | string;
+  innerText: string | React.ReactNode;
 }

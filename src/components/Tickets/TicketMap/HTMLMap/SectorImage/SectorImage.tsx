@@ -1,7 +1,4 @@
-import React, {
-  useCallback,
-  useEffect, useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useEventTicket } from '@/shared/hooks/useEventTicket';
 import 'react-multi-carousel/lib/styles.css';
 import { Modal } from 'react-bootstrap';
@@ -14,23 +11,35 @@ import { CircularProgress } from '@mui/material';
 
 export const SectorImage: React.FC = () => {
   const {
-    eventTicket, rank, loadingSector, areas, loadingAreas, selectChair, hrefSector, handleSelectSector, areasMobile, handleSelectTicketWithSelectedSectorInStadium,
+    eventTicket,
+    rank,
+    loadingSector,
+    areas,
+    loadingAreas,
+    selectChair,
+    hrefSector,
+    handleSelectSector,
+    areasMobile,
+    handleSelectTicketWithSelectedSectorInStadium
   } = useEventTicket();
   const [isShow, setIsShow] = useState<boolean>(false);
 
-  const isFindNameSector = useCallback((idSector: number) => {
-    let isName = '';
+  const isFindNameSector = useCallback(
+    (idSector: number) => {
+      let isName = '';
 
-    if (eventTicket && eventTicket.tiposDeIngresso && eventTicket.tiposDeIngresso.length > 0) {
-      const isFindName = eventTicket.tiposDeIngresso.find((item) => Number(item?.setor?.id) === idSector);
+      if (eventTicket && eventTicket.tiposDeIngresso && eventTicket.tiposDeIngresso.length > 0) {
+        const isFindName = eventTicket.tiposDeIngresso.find(item => Number(item?.setor?.id) === idSector);
 
-      if (isFindName && isFindName.setor) {
-        isName += isFindName.setor.nome;
+        if (isFindName && isFindName.setor) {
+          isName += isFindName.setor.nome;
+        }
       }
-    }
 
-    return isName;
-  }, [eventTicket]);
+      return isName;
+    },
+    [eventTicket]
+  );
 
   useEffect(() => {
     if (rank && hrefSector && rank[hrefSector].fileiras.length > 0) {
@@ -48,33 +57,23 @@ export const SectorImage: React.FC = () => {
 
   return (
     <ContainerSectorImage id="container-map-html">
-      {loadingSector && (
-          <CircularProgress
-            size={24}
-          />
-      )} 
+      {loadingSector && <CircularProgress size={24} />}
       {!loadingSector && (
         <>
-            {rank && (
-              Object.entries(rank).length <= 0 ? (
-                <p>Cadeiras Indisponiveis</p>
-              ) : (
-                <SectorRanks />
-              )
-            )}
-            {!rank && (
+          {rank && (Object.entries(rank).length <= 0 ? <p>Cadeiras Indisponiveis</p> : <SectorRanks />)}
+          {!rank && (
             <div className="container-html-map">
-              { areas.length > 0 && areasMobile.length > 0 && !loadingAreas ? (
+              {areas.length > 0 && areasMobile.length > 0 && !loadingAreas ? (
                 <React.Fragment>
                   <div className="desktop">
                     <ImageMapper
                       src={String(eventTicket?.local?.mapa?.grande ? eventTicket?.local?.mapa?.grande.imagem : eventTicket?.local?.mapa?.imagem)}
                       map={{
                         name: 'map-area-chairs',
-                        areas,
+                        areas
                       }}
-                      fillColor={"#19D26E"}
-                      onClick={(event) => {
+                      fillColor={'#19D26E'}
+                      onClick={event => {
                         if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.href) {
                           handleSelectTicketWithSelectedSectorInStadium(event.href);
                         } else {
@@ -88,10 +87,10 @@ export const SectorImage: React.FC = () => {
                       src={String(eventTicket?.local?.mapa?.pequeno ? eventTicket?.local?.mapa?.pequeno.imagem : eventTicket?.local?.mapa?.imagem)}
                       map={{
                         name: 'map-area-chairs-mobile',
-                        areas: areasMobile,
+                        areas: areasMobile
                       }}
-                      fillColor={"#19D26E"}
-                      onClick={(event) => {
+                      fillColor={'#19D26E'}
+                      onClick={event => {
                         if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.href) {
                           handleSelectTicketWithSelectedSectorInStadium(event.href);
                         } else {
@@ -102,12 +101,10 @@ export const SectorImage: React.FC = () => {
                   </div>
                 </React.Fragment>
               ) : (
-                <CircularProgress
-                  size={24}
-                />
+                <CircularProgress size={24} />
               )}
             </div>
-            )}
+          )}
         </>
       )}
 

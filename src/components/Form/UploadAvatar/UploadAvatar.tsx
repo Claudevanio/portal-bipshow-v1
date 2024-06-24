@@ -5,9 +5,7 @@ import { ContainerUploadAvatar } from './styles';
 import { IUploadAvatar } from './interface';
 import { Avatar } from '@/components';
 
-export const UploadAvatar: React.FC<IUploadAvatar> = ({
-  id, name, disabled, foto,
-}) => {
+export const UploadAvatar: React.FC<IUploadAvatar> = ({ id, name, disabled, foto }) => {
   return (
     <ContainerUploadAvatar>
       <label htmlFor={id}>

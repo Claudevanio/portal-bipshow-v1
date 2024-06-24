@@ -6,9 +6,7 @@ import { ContainerSelectSector } from './styles';
 import { Sector } from './Sector';
 
 export const SelectSector: React.FC = () => {
-  const {
-    eventTicket, selectSectorMobile, handleSelectSector, loadingSector, setIsShowOffcanvas,
-  } = useEventTicket();
+  const { eventTicket, selectSectorMobile, handleSelectSector, loadingSector, setIsShowOffcanvas } = useEventTicket();
 
   return (
     <ContainerSelectSector>
@@ -17,7 +15,7 @@ export const SelectSector: React.FC = () => {
       ) : (
         <React.Fragment>
           <div className="select-sector">
-            {eventTicket?.tiposDeIngresso?.map((item) => (
+            {eventTicket?.tiposDeIngresso?.map(item => (
               <Sector
                 key={item.id}
                 idTypeEvent={Number(item.id)}
@@ -31,7 +29,7 @@ export const SelectSector: React.FC = () => {
           </div>
           <div className="confirm">
             <Button
-              disabled={selectSectorMobile ? loadingSector ? true : false : true}
+              disabled={selectSectorMobile ? (loadingSector ? true : false) : true}
               onClick={() => {
                 if (selectSectorMobile) {
                   setIsShowOffcanvas(true);

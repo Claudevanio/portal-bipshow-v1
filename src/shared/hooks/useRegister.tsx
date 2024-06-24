@@ -1,11 +1,5 @@
-'use client'
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+'use client';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { GENARATE_TOKEN, GET_USER, UPDATED_USER, api, apiTokeUser } from '@/services';
 import axios, { HeadersDefaults } from 'axios';
 import { TypeEnum, useError } from './useDialog';
@@ -16,43 +10,41 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appToken, baseUrl } from '@/constants';
 
 export interface IRegister {
-    result: boolean;
-    handleGenerateToken: () => Promise<void>;
-    user: IUser | undefined;
-    setIsUser: React.Dispatch<React.SetStateAction<IUser | undefined>>;
-    isInfosAuthorization: {
-        base64: string;
-        deviceId: string;
-    };
-    handleLoadUser: () => Promise<void>;
-    isLoading: boolean;
-    isMenuOpen: boolean;
-    setIsMenuOpen: (state: boolean) => void;
-    handleLogoutUser: () => void;
-    handleUpdateUser: (user: IUser) => Promise<void>;
-    authentication: boolean;
-    onFindUser: () => Promise<IUser | undefined>;
-    authenticationUser: boolean;
-    handleGetUser: (accessToken: string) => Promise<IUser>;
-    setIsUserNotExistsCPF: (cpf: string) => void;
-    setUserEmail: (email: string) => void;
-    userEmail?: string;
-    defaultValues?: any;
-    clearDefaultValues: () => void;
-    setDefaultValues: (data: any) => void;  
-    isUserNotExistCPF?: string;
-    isLoadingUpdatedAddress: boolean;
+  result: boolean;
+  handleGenerateToken: () => Promise<void>;
+  user: IUser | undefined;
+  setIsUser: React.Dispatch<React.SetStateAction<IUser | undefined>>;
+  isInfosAuthorization: {
+    base64: string;
+    deviceId: string;
+  };
+  handleLoadUser: () => Promise<void>;
+  isLoading: boolean;
+  isMenuOpen: boolean;
+  setIsMenuOpen: (state: boolean) => void;
+  handleLogoutUser: () => void;
+  handleUpdateUser: (user: IUser) => Promise<void>;
+  authentication: boolean;
+  onFindUser: () => Promise<IUser | undefined>;
+  authenticationUser: boolean;
+  handleGetUser: (accessToken: string) => Promise<IUser>;
+  setIsUserNotExistsCPF: (cpf: string) => void;
+  setUserEmail: (email: string) => void;
+  userEmail?: string;
+  defaultValues?: any;
+  clearDefaultValues: () => void;
+  setDefaultValues: (data: any) => void;
+  isUserNotExistCPF?: string;
+  isLoadingUpdatedAddress: boolean;
 }
 
 export interface CommonHeaderProperties extends HeadersDefaults {
-    Authorization: string;
+  Authorization: string;
 }
 
 const RegisterContext = createContext({} as IRegister);
 
-export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { showErrorDialog } = useError();
   const callErrorDialogComponent = (message: string, type?: string) => {
     showErrorDialog(message, type ?? TypeEnum.INFO);
@@ -60,12 +52,12 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isResult, setIsResult] = useState(true);
   const [isUser, setIsUser] = useState<IUser>();
   const [isInfosAuthorization] = useState<{
-        base64: string;
-        deviceId: string;
-    }>({
-      base64: 'OTg1OGI1NGQyMDA1N2NmMjNmOTNkNzk4OWE0MzljYWY6NGYwNTU4YTE0YTUxMDkwNjk5YjgxMjczMzE5MDYxMjg=',
-      deviceId: '5149ae352035323b',
-    });
+    base64: string;
+    deviceId: string;
+  }>({
+    base64: 'OTg1OGI1NGQyMDA1N2NmMjNmOTNkNzk4OWE0MzljYWY6NGYwNTU4YTE0YTUxMDkwNjk5YjgxMjczMzE5MDYxMjg=',
+    deviceId: '5149ae352035323b'
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -79,11 +71,11 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoadingUpdatedAddress, setIsLoadingUpdatedAddress] = useState<boolean>(false);
 
   const handleFindUser = useCallback(async () => {
-    const tokenUser = Cache.get({key: '@tokenUser'}) as string;
+    const tokenUser = Cache.get({ key: '@tokenUser' }) as string;
 
     if (tokenUser) {
       const { data } = await apiTokeUser(`${GET_USER}`, {
-        method: 'GET',
+        method: 'GET'
       });
       return data;
     }
@@ -93,40 +85,32 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleGetUser = useCallback(async (accessToken: string) => {
     const { data } = await apiTokeUser(`${GET_USER}`, {
-      method: 'GET',
+      method: 'GET'
     });
     return data;
   }, []);
- 
 
   const handleLoadUser = useCallback(async () => {
     try {
       if (!isUser) {
         // setIsLoading(true);
-        const tokenUser = Cache.get({key: '@tokenUser'}) as string;
+        const tokenUser = Cache.get({ key: '@tokenUser' }) as string;
         const isTokenUrl = query.get('tokenUser');
-        if(isTokenUrl){
-          Cache.remove({key: '@tokenUser'});
+        if (isTokenUrl) {
+          Cache.remove({ key: '@tokenUser' });
         }
         const isTokenUser = isTokenUrl ?? tokenUser;
 
-
         if (isTokenUser) {
-          const { data } = await api(
-            `${GET_USER}`,
-            {
-              method: 'GET',
-              headers: {
-                Authorization: `Bearer ${isTokenUser}`,
-              },
-            },
-          );
+          const { data } = await api(`${GET_USER}`, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${isTokenUser}`
+            }
+          });
           if (data) {
             setIsUser(data);
-            (
-              apiTokeUser.defaults
-                .headers
-            ).Authorization = `Bearer ${isTokenUser}`;
+            apiTokeUser.defaults.headers.Authorization = `Bearer ${isTokenUser}`;
             setIsAuthenticationUser(true);
           }
         }
@@ -140,11 +124,9 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleGenerateToken = useCallback(async () => {
     // try {
     //   const token = appToken
-
     //   if (!token && !query.get('tokenUser')) {
     //     setIsLoading(true);
     //     const base64 = 'OTg1OGI1NGQyMDA1N2NmMjNmOTNkNzk4OWE0MzljYWY6NGYwNTU4YTE0YTUxMDkwNjk5YjgxMjczMzE5MDYxMjg=';
-
     //     const { data } = await axios(
     //       `${process.env.NODE_ENV === 'development'
     //         ? ''
@@ -161,9 +143,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
     //         },
     //       },
     //     );
-
     //     Cache.set({key: '@Token', value: data.access_token});
-
     //     (
     //       api.defaults.headers
     //     ).Authorization = `Bearer ${data.access_token}`;
@@ -180,22 +160,22 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
     // } catch (err) {
     //   setIsResult(false);
     //   setIsLoading(false);
-      // if (pathname === '/404') {
-      //   return;
-      // }
-      // router.push('/404');
+    // if (pathname === '/404') {
+    //   return;
+    // }
+    // router.push('/404');
     // }
   }, [pathname, handleLoadUser]);
 
   useEffect(() => {
-    if(!isUser){
+    if (!isUser) {
       handleLoadUser();
     }
   }, [pathname, isUser, handleLoadUser]);
 
   const handleLogoutUser = useCallback(() => {
     localStorage.setItem('shouldChangeText', 'true');
-    Cache.remove({key: '@tokenUser'})
+    Cache.remove({ key: '@tokenUser' });
     router.replace('/');
     setIsUser(undefined);
     apiTokeUser.defaults.headers.Authorization = '';
@@ -207,10 +187,9 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleUpdateUser = useCallback(
     async (user: IUser) => {
       try {
-        
         setIsLoadingUpdatedAddress(true);
         if (isUser) {
-          console.log('isUser', isUser)
+          console.log('isUser', isUser);
           const isUpdatedUser = {
             ...isUser,
             imagem: undefined,
@@ -219,40 +198,34 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
               cep: user.endereco?.cep,
               nomeCidade: user.endereco?.nomeCidade,
               logradouro: user.endereco?.logradouro,
-              localidade: `${user.endereco?.nomeCidade}/${user.endereco?.estado
-                ? states.find(
-                  (state) => state.estado
-                                        === user.endereco?.estado,
-                )?.uf ?? user.endereco.estado
-                : user.endereco?.estado
+              localidade: `${user.endereco?.nomeCidade}/${
+                user.endereco?.estado
+                  ? states.find(state => state.estado === user.endereco?.estado)?.uf ?? user.endereco.estado
+                  : user.endereco?.estado
               }`,
               codigoIbge: user.endereco?.codigoIbge,
               complemento: user.endereco?.complemento,
               numero: user.endereco?.numero ?? 'S/N',
               uf: user.endereco?.estado
-                ? states.find(
-                  (state) => state.estado === user.endereco?.estado,
-                )?.uf ?? user.endereco.estado
+                ? states.find(state => state.estado === user.endereco?.estado)?.uf ?? user.endereco.estado
                 : user.endereco?.estado,
-              uzerId: isUser.endereco?.uzerId,
-            },
+              uzerId: isUser.endereco?.uzerId
+            }
           } as IUser;
-          const { data: resultData } = (await apiTokeUser.put(
-            `${UPDATED_USER}/${isUser.id}`,
-            isUpdatedUser,
-          )) as { data: { sucesso: boolean; mensagem?: string } };
+          const { data: resultData } = (await apiTokeUser.put(`${UPDATED_USER}/${isUser.id}`, isUpdatedUser)) as {
+            data: { sucesso: boolean; mensagem?: string };
+          };
 
           if (resultData.sucesso) {
-            const formatedUser : IUser = {
+            const formatedUser: IUser = {
               ...isUser,
               endereco: isUpdatedUser.endereco,
-              telefone: isUpdatedUser.telefone,
-            }
+              telefone: isUpdatedUser.telefone
+            };
             setIsUser(formatedUser);
             callErrorDialogComponent('Dados atualizados com sucesso.', TypeEnum.SUCCESS);
           } else {
-            callErrorDialogComponent(resultData.mensagem
-                            ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+            callErrorDialogComponent(resultData.mensagem ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
           }
         }
         setIsLoadingUpdatedAddress(false);
@@ -261,7 +234,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
         callErrorDialogComponent(err.message ?? 'Ocorreu um erro de couminicação.', TypeEnum.ERROR);
       }
     },
-    [isUser, showErrorDialog],
+    [isUser, showErrorDialog]
   );
 
   useEffect(() => {
@@ -276,8 +249,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearDefaultValues = () => {
     setDefaultValues({});
-  }; 
-
+  };
 
   return (
     <RegisterContext.Provider
@@ -304,7 +276,7 @@ export const RegisterProvider: React.FC<{ children: React.ReactNode }> = ({
         userEmail,
         setUserEmail,
         isLoadingUpdatedAddress,
-        clearDefaultValues,
+        clearDefaultValues
       }}
     >
       {children}

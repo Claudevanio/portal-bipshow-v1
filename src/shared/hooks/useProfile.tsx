@@ -1,18 +1,14 @@
-'use client'
-import React, {
-  createContext, useCallback, useContext, useEffect, useMemo, useState,
-} from 'react';
+'use client';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ITicketPurchaseUser, ITicketSale } from '@/types';
-import {
-  GET_PURCHASE_USER, GET_BILHETE_VENDA, CANCELED_PAYMENT, PRINT_OUT_TICKETS, apiTokeUser
-} from '@/services';
+import { GET_PURCHASE_USER, GET_BILHETE_VENDA, CANCELED_PAYMENT, PRINT_OUT_TICKETS, apiTokeUser } from '@/services';
 import { useFetch } from './useFetch';
 import { TypeEnum, useError } from './useDialog';
 
 interface ITicketPurchaseUserFormatted {
   status: string;
-  items: ITicketPurchaseUser[]
+  items: ITicketPurchaseUser[];
 }
 
 interface IProfileProvider {
@@ -28,7 +24,7 @@ interface IProfileProvider {
   loadingCanceledPayment: boolean;
   infoCanceledPayment?: {
     motivo: string;
-    status: string
+    status: string;
   };
   handleShow: () => void;
   handleCloseModal: () => void;
@@ -48,12 +44,12 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isTicketsUser, setIsTicketsUser] = useState<ITicketPurchaseUserFormatted[]>([]);
   const [isInfoTicket, setIsInfoTicket] = useState<ITicketPurchaseUser | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { data, error } = useFetch<{ pedidos: ITicketPurchaseUser[]; total: number; }>(GET_PURCHASE_USER, 'user');
+  const { data, error } = useFetch<{ pedidos: ITicketPurchaseUser[]; total: number }>(GET_PURCHASE_USER, 'user');
   const [isTicketsSales, setIsTicketsSales] = useState<ITicketSale[]>([]);
   const [isLoadingCanceledPayment, setIsLoadingCanceledPayment] = useState<boolean>(false);
   const [isInfoCanceledPayment, setIsInfoCanceledPayment] = useState<{
     motivo: string;
-    status: string
+    status: string;
   }>();
   const [isShowAndCloseModalPayment, setIsShowAndCloseModalPayment] = useState<boolean>(false);
   const [isStepper, setIsStepper] = useState<number>(0);
@@ -69,23 +65,23 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const handleFormattedTicketsPerStatus = useCallback((purchases: ITicketPurchaseUser[]) => {
     const isFormattedPerStatus = [] as ITicketPurchaseUserFormatted[];
 
-    purchases.forEach((item) => {
-      const isFindIndex = isFormattedPerStatus.findIndex((i) => i.status === item.status);
+    purchases.forEach(item => {
+      const isFindIndex = isFormattedPerStatus.findIndex(i => i.status === item.status);
       if (isFindIndex !== -1) {
         isFormattedPerStatus[isFindIndex].items = [
           ...isFormattedPerStatus[isFindIndex].items,
           {
-            ...item,
-          },
+            ...item
+          }
         ];
       } else {
         isFormattedPerStatus.push({
           status: item.status,
           items: [
             {
-              ...item,
-            },
-          ],
+              ...item
+            }
+          ]
         });
       }
     });
@@ -96,80 +92,92 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const handleClearInfoTicket = useCallback(() => {
     setIsInfoTicket(undefined);
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("id", "")
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('id', '');
     router.push(pathName + '?' + params.toString());
   }, [router]);
 
-  const handleLoadTicketsSale = useCallback(async (id: number) => {
-    try {
-      const { data } = await apiTokeUser.get(`${GET_BILHETE_VENDA}?pid=${id}`) as {
-        data: {
-          bilhetes: ITicketSale[]
+  const handleLoadTicketsSale = useCallback(
+    async (id: number) => {
+      try {
+        const { data } = (await apiTokeUser.get(`${GET_BILHETE_VENDA}?pid=${id}`)) as {
+          data: {
+            bilhetes: ITicketSale[];
+          };
+        };
+
+        setIsTicketsSales(data.bilhetes);
+      } catch (err) {
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+      }
+    },
+    [showErrorDialog]
+  );
+
+  const handleSelectInfoTicket = useCallback(
+    async (idOrder: number, idEvento: number) => {
+      if (data && data.pedidos) {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('id', String(idEvento));
+        router.push(pathName + '?' + params.toString());
+        const findTicket = data.pedidos.find(i => i.id === idOrder);
+
+        if (findTicket) {
+          await handleLoadTicketsSale(findTicket.id);
+          setIsInfoTicket(findTicket);
         }
-      };
-
-      setIsTicketsSales(data.bilhetes);
-    } catch (err) {
-      callErrorDialogComponent("Ocorreu um erro de comunicação.", TypeEnum.ERROR)
-    }
-  }, [showErrorDialog]);
-
-  const handleSelectInfoTicket = useCallback(async (idOrder: number, idEvento: number) => {
-    if (data && data.pedidos) {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set("id", String(idEvento))
-      router.push(pathName + '?' + params.toString());
-      const findTicket = data.pedidos.find((i) => i.id === idOrder);
-
-      if (findTicket) {
-        await handleLoadTicketsSale(findTicket.id);
-        setIsInfoTicket(findTicket);
       }
-    }
-  }, [data, handleLoadTicketsSale, router]);
+    },
+    [data, handleLoadTicketsSale, router]
+  );
 
-  const handleCanceledPayment = useCallback(async (idPayment: string) => {
-    try {
-      setIsLoadingCanceledPayment(true);
-      const { data } = await apiTokeUser.post(`${CANCELED_PAYMENT}/${idPayment}`);
+  const handleCanceledPayment = useCallback(
+    async (idPayment: string) => {
+      try {
+        setIsLoadingCanceledPayment(true);
+        const { data } = await apiTokeUser.post(`${CANCELED_PAYMENT}/${idPayment}`);
 
-      setIsLoadingCanceledPayment(false);
-      if (data && data.motivo) {
-        setIsInfoCanceledPayment({
-          motivo: data.motivo,
-          status: data.status,
+        setIsLoadingCanceledPayment(false);
+        if (data && data.motivo) {
+          setIsInfoCanceledPayment({
+            motivo: data.motivo,
+            status: data.status
+          });
+        }
+      } catch (err) {
+        setIsLoadingCanceledPayment(false);
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+      }
+    },
+    [showErrorDialog]
+  );
+
+  const handleDownloadTicketSales = useCallback(
+    async (code: string, guid: string) => {
+      try {
+        setIsLoadingDownloadTicket(true);
+        const { data } = await apiTokeUser.post(PRINT_OUT_TICKETS, {
+          codigo: code,
+          guid
         });
-      }
-    } catch (err) {
-      setIsLoadingCanceledPayment(false);
-      callErrorDialogComponent("Ocorreu um erro de comunicação.", TypeEnum.ERROR)
-    }
-  }, [showErrorDialog]);
 
-  const handleDownloadTicketSales = useCallback(async (code: string, guid: string) => {
-    try {
-      setIsLoadingDownloadTicket(true);
-      const { data } = await apiTokeUser.post(PRINT_OUT_TICKETS, {
-        codigo: code,
-        guid,
-      });
-
-      if (data.link) {
-        window.open(data.link);
+        if (data.link) {
+          window.open(data.link);
+        }
+        setIsLoadingDownloadTicket(false);
+      } catch (err) {
+        setIsLoadingDownloadTicket(false);
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
       }
-      setIsLoadingDownloadTicket(false);
-    } catch (err) {
-      setIsLoadingDownloadTicket(false);
-      callErrorDialogComponent("Ocorreu um erro de comunicação.", TypeEnum.ERROR)
-    }
-  }, [showErrorDialog]);
+    },
+    [showErrorDialog]
+  );
 
   const quantityTicketsPerUser = useMemo((): number => {
     let quantity = 0 as number;
 
     if (isInfoTicket && isInfoTicket.ingressos.length > 0) {
-      isInfoTicket.ingressos.forEach((item) => {
+      isInfoTicket.ingressos.forEach(item => {
         quantity += item.qtde;
       });
     }
@@ -187,25 +195,26 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [data, handleFormattedTicketsPerStatus, showErrorDialog, error]);
 
   return (
-    <ContextProfile.Provider value={{
-      ticketsUser: isTicketsUser,
-      handleSelectInfoTicket,
-      infoTicket: isInfoTicket,
-      handleClearInfoTicket,
-      loading: isLoading,
-      quantityTicketsPerUser,
-      ticketsSales: isTicketsSales,
-      handleDownloadTicketSales,
-      handleCanceledPayment,
-      loadingCanceledPayment: isLoadingCanceledPayment,
-      infoCanceledPayment: isInfoCanceledPayment,
-      handleShow,
-      showAndCloseModalPayment: isShowAndCloseModalPayment,
-      handleCloseModal,
-      stepper: isStepper,
-      setIsStepper,
-      isLoadingDownloadTicket,
-    }}
+    <ContextProfile.Provider
+      value={{
+        ticketsUser: isTicketsUser,
+        handleSelectInfoTicket,
+        infoTicket: isInfoTicket,
+        handleClearInfoTicket,
+        loading: isLoading,
+        quantityTicketsPerUser,
+        ticketsSales: isTicketsSales,
+        handleDownloadTicketSales,
+        handleCanceledPayment,
+        loadingCanceledPayment: isLoadingCanceledPayment,
+        infoCanceledPayment: isInfoCanceledPayment,
+        handleShow,
+        showAndCloseModalPayment: isShowAndCloseModalPayment,
+        handleCloseModal,
+        stepper: isStepper,
+        setIsStepper,
+        isLoadingDownloadTicket
+      }}
     >
       {children}
     </ContextProfile.Provider>

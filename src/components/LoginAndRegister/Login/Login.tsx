@@ -21,10 +21,7 @@ import { ILogin } from './interface';
 import { ForgotPassowrd } from './ForgotPassword';
 import { ForgotPasswordSuccess } from './ForgotPasswordSuccess';
 
-export const Login: React.FC<ILogin> = ({
-  onClickPurchase,
-  handleChangeType,
-}) => {
+export const Login: React.FC<ILogin> = ({ onClickPurchase, handleChangeType }) => {
   const methods = useFormContext();
   const {
     handleNextStep,
@@ -45,16 +42,12 @@ export const Login: React.FC<ILogin> = ({
     toPhoto,
     photoAvatar,
     onAddPhoto,
-    handleDeleteUser,
+    handleDeleteUser
   } = useAuth();
 
-  const {
-    setDefaultValues,
-  } = useRegister();
+  const { setDefaultValues } = useRegister();
 
-  const [isTypePassordView, setIsTypePassoed] = useState<'password' | 'text'>(
-    'password',
-  );
+  const [isTypePassordView, setIsTypePassoed] = useState<'password' | 'text'>('password');
 
   /* useEffect(() => {
     handleDeleteUser();
@@ -93,8 +86,6 @@ export const Login: React.FC<ILogin> = ({
   };
 
   const onSubmit = (data: any) => {
-    
-    
     if (isCpf) {
       data.cpf = data.emailOrCpf;
       data.type = 'cpf';
@@ -146,15 +137,14 @@ export const Login: React.FC<ILogin> = ({
   };
 
   const cpfOrEmailValid = React.useCallback(() => {
-    if(!isWatchEmailOrCpf)
-      return
-    if(isWatchEmailOrCpf.length == 0) return false;
-    if(isWatchEmailOrCpf.length > 0 ){
+    if (!isWatchEmailOrCpf) return;
+    if (isWatchEmailOrCpf.length == 0) return false;
+    if (isWatchEmailOrCpf.length > 0) {
       // is 1st letter a number?
       const firstLetterNumberRegex = /^\d/;
-      if(firstLetterNumberRegex.test(isWatchEmailOrCpf)){
+      if (firstLetterNumberRegex.test(isWatchEmailOrCpf)) {
         setIsCpf(true);
-      } else{
+      } else {
         setIsCpf(false);
       }
     }
@@ -180,32 +170,32 @@ export const Login: React.FC<ILogin> = ({
       case 0:
         if (enter) {
           return {
-            text: 'Prosseguir',
+            text: 'Prosseguir'
           };
         }
         return {
           disabled: !cpfOrEmailValid() || isWatchEmailOrCpf?.length == 0,
-          text: 'Entrar',
+          text: 'Entrar'
         };
       case 1:
         if (beforePassword) {
           return {
-            text: 'Prosseguir',
+            text: 'Prosseguir'
           };
         }
         return {
           disabled: isLoading ? isLoading : !isWatchPASSWORD,
-          text: 'Confirmar',
+          text: 'Confirmar'
         };
       case 2:
         return {
           disabled: false,
-          text: 'Sim, continuar',
+          text: 'Sim, continuar'
         };
       default:
         return {
           disabled: !isWatchCPF,
-          text: 'Entrar',
+          text: 'Entrar'
         };
     }
   }, [isStepper, isWatchPASSWORD, isWatchCPF, isLoading]);
@@ -221,12 +211,9 @@ export const Login: React.FC<ILogin> = ({
   const LoginContainer = (
     <>
       {pathname === '/login' && (
-        <Link href="/"
-        legacyBehavior>
+        <Link href="/" legacyBehavior>
           <a className="home-back">
-            <ArrowLeft width={32} height={32} 
-              className='text-primary'
-            />
+            <ArrowLeft width={32} height={32} className="text-primary" />
           </a>
         </Link>
       )}
@@ -244,13 +231,7 @@ export const Login: React.FC<ILogin> = ({
               /> */}
             </div>
           )}
-          <div
-            className={
-              identificado() || hasForgotPassword() || informarSenha()
-                ? 'body-login'
-                : 'body-login'
-            }
-          >
+          <div className={identificado() || hasForgotPassword() || informarSenha() ? 'body-login' : 'body-login'}>
             {isStepper === 0 && enter && (
               <div style={{ textAlign: 'center' }}>
                 {/* <Image
@@ -260,8 +241,7 @@ export const Login: React.FC<ILogin> = ({
                   src="/assets/logo-SynPass-06.svg"
                 /> */}
                 <div className="text-pre-login">
-                  Bem vindo a plataforma de acesso único por reconhecimento
-                  facial
+                  Bem vindo a plataforma de acesso único por reconhecimento facial
                   <br />
                   <br />
                   Você é sua própria identidade!
@@ -270,59 +250,32 @@ export const Login: React.FC<ILogin> = ({
                   Você é o caminho!
                   <br />
                   <br />
-                  <p className="prosseguir">
-                    Clique em prosseguir para login ou cadastro!
-                  </p>
+                  <p className="prosseguir">Clique em prosseguir para login ou cadastro!</p>
                   <br />
                   <br />
                 </div>
               </div>
             )}
             {isStepper === 0 && !notUserPhoto && !enter && !userNotExist && (
-              <div
-                className='flex flex-col items-center justify-center gap-2'
-              >
+              <div className="flex flex-col items-center justify-center gap-2">
                 <p className="title-login">Entrar</p>
-                <div
-                  className='flex items-center justify-center gap-2'
-                >
+                <div className="flex items-center justify-center gap-2">
                   {/* <Avatar
                     size='small'
                     className=' !h-20 !w-20 border-none'
                     src='/person-2.svg'
                   /> */}
-                  <Image
-                    alt='avatar'
-                    src='/Entrar.svg'
-                    width={120}
-                    height={120}
-                  />
+                  <Image alt="avatar" src="/Entrar.svg" width={120} height={120} />
                 </div>
               </div>
             )}
             {(!userNotExist || notUserPhoto) && (
-              <form 
-                onSubmit={methods.handleSubmit(onSubmit)}
-                ref={formRef}
-              >
+              <form onSubmit={methods.handleSubmit(onSubmit)} ref={formRef}>
                 {identificado() && (
-                  <div
-                    className="body-before-login flex items-center"
-                    style={{ textAlign: 'center' }}
-                  >
+                  <div className="body-before-login flex items-center" style={{ textAlign: 'center' }}>
                     <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="70"
-                        viewBox="0 0 24 24"
-                        width="70"
-                        fill="#8779F8"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                          fill-rule="evenodd"
-                        />
+                      <svg xmlns="http://www.w3.org/2000/svg" height="70" viewBox="0 0 24 24" width="70" fill="#8779F8">
+                        <path d="M0 0h24v24H0z" fill="none" fill-rule="evenodd" />
                         <g fill-rule="evenodd">
                           <path d="M9 17l3-2.94c-.39-.04-.68-.06-1-.06-2.67 0-8 1.34-8 4v2h9l-3-3zm2-5c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4" />
                           <path d="M15.47 20.5L12 17l1.4-1.41 2.07 2.08 5.13-5.17 1.4 1.41z" />
@@ -331,10 +284,7 @@ export const Login: React.FC<ILogin> = ({
                     </div>
                     <div>Olá! É bom te ver novamente</div>
                     <div>
-                      <div className="text-password h-24">
-                        Bem-vindo(a) de volta. Para fazer o login, clique em
-                        prosseguir.
-                      </div>
+                      <div className="text-password h-24">Bem-vindo(a) de volta. Para fazer o login, clique em prosseguir.</div>
                     </div>
                     <div className="forgot-password">
                       {/* <Button
@@ -357,15 +307,7 @@ export const Login: React.FC<ILogin> = ({
                         text="Prosseguir"
                         variant="medium"
                         className="submit"
-                        disabled={
-                          !forgotPassword
-                            ? isTypeButton.disabled
-                            : isLoading
-                              ? isLoading
-                              : !isCpf
-                                ? !isWatchEmailOrCpf
-                                : !isWatchCPF
-                        }
+                        disabled={!forgotPassword ? isTypeButton.disabled : isLoading ? isLoading : !isCpf ? !isWatchEmailOrCpf : !isWatchCPF}
                         onClick={handleProsseguir}
                         loading={isLoading}
                       />
@@ -374,54 +316,45 @@ export const Login: React.FC<ILogin> = ({
                 )}
                 {informarSenha() && (
                   <div className="body-login">
-                    <div
-                      className='w-full text-center font-normal text-black text-lg '
-                    >Informe sua senha</div>
+                    <div className="w-full text-center font-normal text-black text-lg ">Informe sua senha</div>
                     <Input
                       type={isTypePassordView}
                       name="senha"
                       id="senha"
                       label="Senha"
                       password={{
-                        onClick: () => setIsTypePassoed(
-                          isTypePassordView === 'password'
-                            ? 'text'
-                            : 'password',
-                        ),
-                        value: isTypePassordView,
+                        onClick: () => setIsTypePassoed(isTypePassordView === 'password' ? 'text' : 'password'),
+                        value: isTypePassordView
                       }}
                       rules={{
                         required: {
                           value: true,
-                          message: 'Senha inválida. Verifique',
+                          message: 'Senha inválida. Verifique'
                         },
                         minLength: {
                           value: 6,
-                          message: 'Senha inválida. Verifique',
-                        },
+                          message: 'Senha inválida. Verifique'
+                        }
                       }}
                       // onChange={(event) => {
-                        // const isNumber = /^[0-9]+$/;
-                        // if (!isNumber.test(event.target.value) && event.target.value.length > 0) {
-                        //   return;
-                        // }
-                        // handleChangePassword(event.target.value);
+                      // const isNumber = /^[0-9]+$/;
+                      // if (!isNumber.test(event.target.value) && event.target.value.length > 0) {
+                      //   return;
+                      // }
+                      // handleChangePassword(event.target.value);
                       // }}
                       mask={senhaMask}
                       maxLength={6}
                       max={6}
                       disabled={isLoading}
-                      errorText={
-                        methods.formState.errors.senha
-                        && (methods.formState.errors.senha.message as string)
-                      }
+                      errorText={methods.formState.errors.senha && (methods.formState.errors.senha.message as string)}
                     />
                     <div className="forgot-password">
                       <Button
                         text="Esqueceu a senha?"
                         variant="outline-text"
                         onClick={handleForgotAccount}
-                        className='decoration-primary !text-primary text-underline'
+                        className="decoration-primary !text-primary text-underline"
                       />
                     </div>
                     <div className="flex items-center gap-2">
@@ -439,15 +372,7 @@ export const Login: React.FC<ILogin> = ({
                         type="submit"
                         variant="medium"
                         className="submit w-full"
-                        disabled={
-                          !forgotPassword
-                            ? isTypeButton.disabled
-                            : isLoading
-                              ? isLoading
-                              : !isCpf
-                                ? !isWatchEmailOrCpf
-                                : !isWatchCPF
-                        }
+                        disabled={!forgotPassword ? isTypeButton.disabled : isLoading ? isLoading : !isCpf ? !isWatchEmailOrCpf : !isWatchCPF}
                         loading={isLoading}
                       />
                     </div>
@@ -468,8 +393,7 @@ export const Login: React.FC<ILogin> = ({
                             id="emailOrCpf"
                             label="CPF ou Email"
                             //disable autocomplete
-                            autoComplete="off" 
-
+                            autoComplete="off"
                             // rules={
                             //     isCpf
                             //       ? {
@@ -506,28 +430,24 @@ export const Login: React.FC<ILogin> = ({
                             disabled={isLoading}
                             mask={isCpf ? CPFMask : undefined}
                             errorText={
-                                isCpf
-                                  ? methods.formState.errors.cpf
-                                    && (methods.formState.errors.cpf
-                                      .message as string)
-                                  : methods.formState.errors.email
-                                    && (methods.formState.errors.email
-                                      .message as string)
-                              }
+                              isCpf
+                                ? methods.formState.errors.cpf && (methods.formState.errors.cpf.message as string)
+                                : methods.formState.errors.email && (methods.formState.errors.email.message as string)
+                            }
                           />
                         )}
 
                         <p>
-                            Ainda não possuo conta. <span
-                            className='!text-primary cursor-pointer'
+                          Ainda não possuo conta.{' '}
+                          <span
+                            className="!text-primary cursor-pointer"
                             onClick={() => {
                               handleChangeType && handleChangeType('register');
                             }}
-                            >
-                              Criar conta
-                            </span>
+                          >
+                            Criar conta
+                          </span>
                         </p>
-
                       </>
                     )}
                     {isStepper === 2 && user && (
@@ -537,42 +457,33 @@ export const Login: React.FC<ILogin> = ({
                       </div>
                     )}
 
-                    {isStepper === 1 && hasForgotPassword() && (
-                      <ForgotPassowrd />
-                    )}
-                    <ContainerButton
-                      isStepper={isStepper}
-                      userNotExist={userNotExist}
-                    >
+                    {isStepper === 1 && hasForgotPassword() && <ForgotPassowrd />}
+                    <ContainerButton isStepper={isStepper} userNotExist={userNotExist}>
                       {isStepper === 0 && (
                         <div className="stepper-one-btn">
                           <Button
                             text={isTypeButton.text}
                             type="submit"
                             variant="medium"
-                            disabled={
-                              isLoading ? isLoading : isTypeButton.disabled
-                            }
+                            disabled={isLoading ? isLoading : isTypeButton.disabled}
                             loading={isLoading}
                           />
                         </div>
                       )}
-                      {isStepper === 2
-                        && (onClickPurchase ? (
+                      {isStepper === 2 &&
+                        (onClickPurchase ? (
                           <Button
                             // type="button"
                             onClick={onClickPurchase}
                           >
-                                  {isTypeButton.text}
+                            {isTypeButton.text}
                           </Button>
                         ) : (
                           <ButtonLink
                             // href="/home"
                             onClick={onClickPurchase}
                           >
-                            {
-                              isTypeButton.text
-                            }
+                            {isTypeButton.text}
                           </ButtonLink>
                         ))}
                       {isStepper === 2 && (
@@ -588,9 +499,7 @@ export const Login: React.FC<ILogin> = ({
                     </ContainerButton>
                   </React.Fragment>
                 ) : (
-                  <StepFive 
-                    handleChangeType={handleChangeType}
-                  />
+                  <StepFive handleChangeType={handleChangeType} />
                 )}
                 {notUserPhoto && !toPhoto && (
                   <ContainerButton isStepper={1} userNotExist={false}>
@@ -607,20 +516,14 @@ export const Login: React.FC<ILogin> = ({
                         }
                       }}
                     >
-                      <ArrowLeft
-                        width={24}
-                        height={24}
-                        className='text-primary'
-                      />
+                      <ArrowLeft width={24} height={24} className="text-primary" />
                     </button>
                     {photoAvatar ? (
                       <Button
                         text={`${photoAvatar ? 'Finalizar' : 'Tirar foto'}`}
                         type="submit"
                         variant="medium"
-                        className={`submit ${
-                          photoAvatar ? 'photo-avatar' : ''
-                        }`}
+                        className={`submit ${photoAvatar ? 'photo-avatar' : ''}`}
                         disabled={isLoading ? isLoading : isTypeButton.disabled}
                         loading={isLoading}
                       />
@@ -629,9 +532,7 @@ export const Login: React.FC<ILogin> = ({
                         text={`${photoAvatar ? 'Finalizar' : 'Tirar foto'}`}
                         type="button"
                         variant="medium"
-                        className={`submit ${
-                          photoAvatar ? 'photo-avatar' : ''
-                        }`}
+                        className={`submit ${photoAvatar ? 'photo-avatar' : ''}`}
                         disabled={isLoading ? isLoading : isTypeButton.disabled}
                         loading={isLoading}
                         onClick={() => onToPhoto(true)}
@@ -643,9 +544,7 @@ export const Login: React.FC<ILogin> = ({
             )}
             {userNotExist && (
               <div className="user-not-exists">
-                <h2
-                  className='text-textPrimary text-center font-medium'
-                >Você não possui cadastro</h2>
+                <h2 className="text-textPrimary text-center font-medium">Você não possui cadastro</h2>
                 <div className="flex items-center justify-center">
                   {/* <Avatar 
                   size='medium'
@@ -660,12 +559,7 @@ export const Login: React.FC<ILogin> = ({
                     />
                   </div> */}
 
-                  <Image
-                    alt='avatar'
-                    src={'/NaoCadastrado.svg'}
-                    width={120}
-                    height={120}
-                  />
+                  <Image alt="avatar" src={'/NaoCadastrado.svg'} width={120} height={120} />
                 </div>
                 <div className="infos">
                   {/* <span className="dark">
@@ -675,9 +569,7 @@ export const Login: React.FC<ILogin> = ({
                       ? CPFMask(methods.getValues('emailOrCpf'))
                       : methods.getValues('emailOrCpf')}
                   </span> */}
-                  <p className="text-textPrimary text-center px-8 md:px-12 max-w-[24rem]">
-                  Faça seu cadastro, leva apenas alguns minutinhos :{')'}
-                  </p>
+                  <p className="text-textPrimary text-center px-8 md:px-12 max-w-[24rem]">Faça seu cadastro, leva apenas alguns minutinhos :{')'}</p>
                   {/* <p className="text">
                     Ao criar sua conta você concorda com os
                     {' '}
@@ -705,14 +597,11 @@ export const Login: React.FC<ILogin> = ({
                     </p>
                   </div> */}
                 </div>
-                <ContainerButton
-                  isStepper={isStepper}
-                  userNotExist={userNotExist}
-                >
+                <ContainerButton isStepper={isStepper} userNotExist={userNotExist}>
                   <ButtonBack
                     onClick={() => {
                       setUserNotExist(false);
-                      
+
                       setIsStepper(0);
                     }}
                   />
@@ -723,17 +612,15 @@ export const Login: React.FC<ILogin> = ({
                     className="submit"
                     // disabled={isLoading ? isLoading : isTypeButton.disabled}
                     // loading={isLoading}
-                    onClick={
-                      () => {
-                        const isEmail = methods.getValues('emailOrCpf').includes('@');
-                        if(isEmail){
-                          methods.setValue('email', methods.getValues('emailOrCpf'));
-                        }else {
-                          methods.setValue('cpf', methods.getValues('emailOrCpf'));
-                        }
-                        handleChangeType && handleChangeType('register')
+                    onClick={() => {
+                      const isEmail = methods.getValues('emailOrCpf').includes('@');
+                      if (isEmail) {
+                        methods.setValue('email', methods.getValues('emailOrCpf'));
+                      } else {
+                        methods.setValue('cpf', methods.getValues('emailOrCpf'));
                       }
-                    }
+                      handleChangeType && handleChangeType('register');
+                    }}
                   />
                   {/* <button
                     type="button"
@@ -767,9 +654,5 @@ export const Login: React.FC<ILogin> = ({
     </>
   );
 
-  return !isBeforeLogin() ? (
-    <ContainerLogin>{LoginContainer}</ContainerLogin>
-  ) : (
-    <ContainerLogin>{LoginContainer}</ContainerLogin>
-  );
+  return !isBeforeLogin() ? <ContainerLogin>{LoginContainer}</ContainerLogin> : <ContainerLogin>{LoginContainer}</ContainerLogin>;
 };

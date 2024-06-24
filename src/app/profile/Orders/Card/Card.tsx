@@ -1,15 +1,11 @@
 import React from 'react';
 import { format } from 'date-fns';
 import ptBr from 'date-fns/locale/pt-BR';
-import { Arrow } from '@/components/icons/Arrow'; 
+import { Arrow } from '@/components/icons/Arrow';
 import { ContainerCard, Image } from './styles';
 import { ICard } from './interface';
 
-export const Card: React.FC<ICard> = ({
-  tickets: {
-    date, address, foto, name,
-  }, active = false, onClick,
-}) => {
+export const Card: React.FC<ICard> = ({ tickets: { date, address, foto, name }, active = false, onClick }) => {
   return (
     <ContainerCard
       active={active}
@@ -23,7 +19,7 @@ export const Card: React.FC<ICard> = ({
       <div className="infos">
         <p className="text-light date">
           {format(new Date(date), 'ccc, dd/MM · kk:mm', {
-            locale: ptBr as any,
+            locale: ptBr as any
           })}
         </p>
         <p className="text-dark name">{name}</p>

@@ -1,8 +1,8 @@
-import { useState, useEffect, createContext, ReactNode } from "react";
-import { api } from "../services/api";
-import { Cache, Cryptography } from "../adapters";
-import { useRouter } from "next/navigation";
-import { userService } from "@/services";
+import { useState, useEffect, createContext, ReactNode } from 'react';
+import { api } from '../services/api';
+import { Cache, Cryptography } from '../adapters';
+import { useRouter } from 'next/navigation';
+import { userService } from '@/services';
 
 interface SignInProps {
   email: string;
@@ -31,12 +31,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { push: navigate } = useRouter();
   const [user, setUser] = useState(null);
 
-  const isAuthenticated = Cache.get({ key: "accessToken" });
+  const isAuthenticated = Cache.get({ key: 'accessToken' });
 
   async function logout() {
     setUser(null);
-    Cache.remove({ key: "accessToken" });
-    navigate("/login");
+    Cache.remove({ key: 'accessToken' });
+    navigate('/login');
   }
 
   async function verifyToken() {
@@ -54,12 +54,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (response.status === 200) {
       const { accessToken } = response.data;
       saveAccessToken(accessToken);
-      navigate("/");
+      navigate('/');
     }
   }
   const getAccessToken = () => {
     const accessToken = Cache.get({
-      key: "accessToken",
+      key: 'accessToken'
     });
     return accessToken;
   };
@@ -67,8 +67,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [accessToken, setAccessToken] = useState<string>(getAccessToken());
   const saveAccessToken = (accessToken: string) => {
     Cache.set({
-      key: "accessToken",
-      value: accessToken,
+      key: 'accessToken',
+      value: accessToken
     });
     setAccessToken(accessToken);
     setUser(Cryptography.decodeToken(accessToken));
@@ -87,7 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         saveAccessToken,
         isSignUpOpen,
         setIsSignUpOpen,
-        accessToken,
+        accessToken
       }}
     >
       {children}

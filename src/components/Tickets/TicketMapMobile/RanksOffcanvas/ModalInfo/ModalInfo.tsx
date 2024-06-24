@@ -5,19 +5,13 @@ import { ContainerModalInfo } from './styles';
 import { IModalInfo } from './interface';
 import { ArrowBack } from '@mui/icons-material';
 
-export const ModalInfo: React.FC<IModalInfo> = ({
-  chair, onClose,
-}) => {
+export const ModalInfo: React.FC<IModalInfo> = ({ chair, onClose }) => {
   const { handleConfirmSelectedChair } = useEventTicket();
 
   return (
     <ContainerModalInfo>
       <header>
-        <h6 className="title">
-          Assento
-          {' '}
-          {chair.identifierChair.split(' -')[0]}
-        </h6>
+        <h6 className="title">Assento {chair.identifierChair.split(' -')[0]}</h6>
       </header>
       <div className="content-chair">
         <button
@@ -33,19 +27,17 @@ export const ModalInfo: React.FC<IModalInfo> = ({
               {chair.valor.toLocaleString('pt-BR', {
                 minimumFractionDigits: 2,
                 style: 'currency',
-                currency: 'BRL',
-              })}
-              {' '}
-              {chair.taxa > 0 && (
+                currency: 'BRL'
+              })}{' '}
+              {chair.taxa > 0 &&
                 `(+ taxa de ${chair.taxa.toLocaleString('pt-BR', {
                   minimumFractionDigits: 2,
                   style: 'currency',
-                  currency: 'BRL',
-                })})`
-              )}
+                  currency: 'BRL'
+                })})`}
             </span>
           </div>
-          <ArrowBack width={32} height={32} className={"text-gray"} />
+          <ArrowBack width={32} height={32} className={'text-gray'} />
         </button>
       </div>
       <div className="btn">

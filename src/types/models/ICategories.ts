@@ -1,4 +1,4 @@
 export enum ICategories {
-    Shows = 'Shows',
-    Jogos = 'Jogos'
+  Shows = 'Shows',
+  Jogos = 'Jogos'
 }

@@ -1,4 +1,4 @@
 export interface IAuth {
-    cpf: string;
-    password: string;
+  cpf: string;
+  password: string;
 }

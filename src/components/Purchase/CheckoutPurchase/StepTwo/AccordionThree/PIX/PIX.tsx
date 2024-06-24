@@ -15,24 +15,21 @@ export const PIX: React.FC<PIXProps> = ({ handleIsOpenModalPurchaseSummary }) =>
       <div className="title">
         <p className="normal">PIX</p>
         <PIXIcon />
-        <p className="badges">
-          Aprovação em minutos
-        </p>
+        <p className="badges">Aprovação em minutos</p>
       </div>
-      <Coupon/>
+      <Coupon />
       <p className="total">
-        Total -
-        {' '}
+        Total -{' '}
         {amount.toLocaleString('pt-BR', {
           minimumFractionDigits: 2,
           style: 'currency',
-          currency: 'BRL',
+          currency: 'BRL'
         })}
       </p>
       <div className="btn-submit">
         <Button type="button" text="Confirmar" variant="medium" onClick={handleIsOpenModalPurchaseSummary} />
         <div className="logo-pagseguro">
-            <img src="/pagseguro-logo.png" alt="Logo do Pagseguro" />
+          <img src="/pagseguro-logo.png" alt="Logo do Pagseguro" />
         </div>
       </div>
     </ContainerPIX>

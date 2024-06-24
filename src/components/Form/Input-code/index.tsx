@@ -1,1 +1,1 @@
-export { InputCode } from "./InputCode";
+export { InputCode } from './InputCode';

@@ -1,5 +1,4 @@
-'use client'
+'use client';
 export default function Login() {
-  return ( <h1>TEste</h1>
-  )
+  return <h1>TEste</h1>;
 }

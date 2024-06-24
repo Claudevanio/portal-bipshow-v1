@@ -18,9 +18,7 @@ const COUNT_INITIAL_TIME_IN_SECONDS = 15 * 60; // 15 MINUTOS
 
 export const CheckoutPurchase: React.FC<ICheckoutPurchase> = ({ handleClickCheckoutNotPurchase }) => {
   const pathname = usePathname();
-  const {
-    stepper, purchaseSuccess, setIsStepper, dataOrder, handleLoadPurchaseFlowTicket, webView,
-  } = useTicketPurchase();
+  const { stepper, purchaseSuccess, setIsStepper, dataOrder, handleLoadPurchaseFlowTicket, webView } = useTicketPurchase();
   const { ticketsPurchase, guidePurchase } = useEventTicket();
   const [isSecondsAmount, setIsSecondsAmount] = useState(COUNT_INITIAL_TIME_IN_SECONDS);
 
@@ -29,9 +27,13 @@ export const CheckoutPurchase: React.FC<ICheckoutPurchase> = ({ handleClickCheck
       setIsSecondsAmount(0);
       return;
     }
-    if (((ticketsPurchase && ticketsPurchase.length > 0 && ticketsPurchase[0].cadeiras) || (dataOrder && dataOrder.pedido && dataOrder.pedido.prereserva)) && stepper > 1) {
+    if (
+      ((ticketsPurchase && ticketsPurchase.length > 0 && ticketsPurchase[0].cadeiras) ||
+        (dataOrder && dataOrder.pedido && dataOrder.pedido.prereserva)) &&
+      stepper > 1
+    ) {
       setTimeout(() => {
-        setIsSecondsAmount((state) => state - 1);
+        setIsSecondsAmount(state => state - 1);
       }, 1000);
     }
   }, [isSecondsAmount, ticketsPurchase, dataOrder, stepper]);
@@ -47,57 +49,53 @@ export const CheckoutPurchase: React.FC<ICheckoutPurchase> = ({ handleClickCheck
 
   return (
     <ContainerCheckoutPurchase>
-      {((ticketsPurchase && ticketsPurchase.length > 0 && ticketsPurchase[0].cadeiras) || (dataOrder && dataOrder.pedido && dataOrder.pedido.prereserva)) && stepper > 1 && (
-        <div className="time">
-          <p className="text-light">
-            Você tem
-            {' '}
-            <b>
-              {String(minutes).padStart(2, '0')}
-              :
-              {String(seconds).padStart(2, '0')}
-            </b>
-            {' '}
-            para confirmar o pagamento
-          </p>
-        </div>
-      )}
+      {((ticketsPurchase && ticketsPurchase.length > 0 && ticketsPurchase[0].cadeiras) ||
+        (dataOrder && dataOrder.pedido && dataOrder.pedido.prereserva)) &&
+        stepper > 1 && (
+          <div className="time">
+            <p className="text-light">
+              Você tem{' '}
+              <b>
+                {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              </b>{' '}
+              para confirmar o pagamento
+            </p>
+          </div>
+        )}
       <div className="header">
-        {
-          false && 
-        <div className="header-checkout-purchase">
-          {!purchaseSuccess && !webView && stepperCheckoutPurchase[stepper].number > 1 && (
-            <IconButton onClick={() => {
-              if (stepper > 1) {
-                setIsStepper(1);
-              } else {
-                handleClickCheckoutNotPurchase();
-              }
-            }}
-            >
-              <ArrowLeft width={24} height={24} color={'#8779F8'} />
-            </IconButton>
-          )}
-          <h4 className="title">{purchaseSuccess ? 'Pronto!' : stepperCheckoutPurchase[stepper].stage}</h4>
-        </div>
-        }
+        {false && (
+          <div className="header-checkout-purchase">
+            {!purchaseSuccess && !webView && stepperCheckoutPurchase[stepper].number > 1 && (
+              <IconButton
+                onClick={() => {
+                  if (stepper > 1) {
+                    setIsStepper(1);
+                  } else {
+                    handleClickCheckoutNotPurchase();
+                  }
+                }}
+              >
+                <ArrowLeft width={24} height={24} color={'#8779F8'} />
+              </IconButton>
+            )}
+            <h4 className="title">{purchaseSuccess ? 'Pronto!' : stepperCheckoutPurchase[stepper].stage}</h4>
+          </div>
+        )}
         <Stepper
           steps={stepperCheckoutPurchase}
-          currentStep={purchaseSuccess ? {
-            number: 3,
-            stage: 'Pronto!',
-          } : stepperCheckoutPurchase[stepper]}
+          currentStep={
+            purchaseSuccess
+              ? {
+                  number: 3,
+                  stage: 'Pronto!'
+                }
+              : stepperCheckoutPurchase[stepper]
+          }
         />
       </div>
       <div className="content-steps">
-        {stepper === 1 && (
-        <StepOne />
-        )}
-        {stepper === 2 && (
-          purchaseSuccess ? (
-            <StepThree />
-          ) : <StepTwo />
-        )}
+        {stepper === 1 && <StepOne />}
+        {stepper === 2 && (purchaseSuccess ? <StepThree /> : <StepTwo />)}
       </div>
     </ContainerCheckoutPurchase>
   );

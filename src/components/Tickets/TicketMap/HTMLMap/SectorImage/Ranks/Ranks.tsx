@@ -1,8 +1,6 @@
-'use client'
+'use client';
 import React, { useEffect } from 'react';
-import {
-  TransformComponent, TransformWrapper,
-} from 'react-zoom-pan-pinch';
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { ISector } from '@/types';
 import { theme } from '@/shared';
 import { ContainerRanks } from './styles';
@@ -11,7 +9,6 @@ import { ZoomIn, ZoomOut } from '@mui/icons-material';
 import { GradientBorder } from '@/components';
 
 export const Ranks: React.FC<ISector> = ({ fileiras }) => {
-
   const contentRef = React.useRef<any>(null);
 
   const [scale, setScale] = React.useState<number>(1);
@@ -56,13 +53,13 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
     if (!hasOverflow) {
       return;
     }
-  
+
     if (contentRef.current) {
       contentRef.current.style.cursor = 'grabbing';
-  
+
       const start = e.touches[0].clientX;
       const scrollLeft = contentRef.current.scrollLeft;
-  
+
       const handleTouchMove = (e: TouchEvent) => {
         e.preventDefault(); // Evite a rolagem padrão durante o toque
         const x = e.touches[0].clientX - start;
@@ -70,16 +67,16 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
           contentRef.current.scrollLeft = scrollLeft - x;
         }
       };
-  
+
       const handleTouchEnd = () => {
         if (contentRef.current) {
           contentRef.current.style.cursor = 'grab';
         }
-  
+
         contentRef.current.removeEventListener('touchmove', handleTouchMove);
         contentRef.current.removeEventListener('touchend', handleTouchEnd);
       };
-  
+
       contentRef.current.addEventListener('touchmove', handleTouchMove, { passive: false }); // Use passive: false para garantir que preventDefault() funcione
       contentRef.current.addEventListener('touchend', handleTouchEnd);
     }
@@ -88,25 +85,25 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
     <ContainerRanks>
       <TransformWrapper
         initialScale={1}
-        onTransformed={(e) => {
-          
+        onTransformed={e => {
           e.state?.scale && setScale(e.state?.scale);
         }}
         wheel={{
-          step: 0.1,
+          step: 0.1
         }}
         pinch={{
-          step: 0.1,
+          step: 0.1
         }}
         doubleClick={{
-          step: 0.2,
+          step: 0.2
         }}
       >
-        {({ zoomIn, zoomOut, instance  }) => (
+        {({ zoomIn, zoomOut, instance }) => (
           <React.Fragment>
             <TransformComponent>
               <div className="ranks">
-                <div className="content-ranks"
+                <div
+                  className="content-ranks"
                   ref={contentRef}
                   //scrollX on drag
                   onMouseDown={handleDragStart}
@@ -114,23 +111,25 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
                 >
                   <div className="letters">
                     {fileiras.map((item: any, index: number) => (
-                      <h6 className="title" key={index}>{item.letra}</h6>
+                      <h6 className="title" key={index}>
+                        {item.letra}
+                      </h6>
                     ))}
                   </div>
-                  <div className={`${fileiras.find((item) => item.cadeiras.length >= 29) ? 'decreaseWidth' : ''}`}>
-                    {fileiras.map((item) => (
+                  <div className={`${fileiras.find(item => item.cadeiras.length >= 29) ? 'decreaseWidth' : ''}`}>
+                    {fileiras.map(item => (
                       <Chairs key={item.letra} chairs={item.cadeiras} id={item.id} letra={item.letra} />
                     ))}
                   </div>
                   <div className="letters">
-                    {fileiras.map((item) => (
+                    {fileiras.map(item => (
                       <h6 className="title">{item.letra}</h6>
                     ))}
                   </div>
                 </div>
               </div>
             </TransformComponent>
-            
+
             <div className="tools">
               <GradientBorder
                 borderStyle={{
@@ -142,32 +141,22 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
                   borderRadius: '1rem'
                 }}
               >
-                <div
-                  className='flex items-center gap-2'
-                >
-                  <button type="button" onClick={() => zoomOut()} className={`${(scale && scale && scale > 1) ? 'active' : ''}`}>
-                    <ZoomOut width={32} height={32} fillOpacity={(scale && scale && scale > 1) ? 1 : 0.25} />
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={() => zoomOut()} className={`${scale && scale && scale > 1 ? 'active' : ''}`}>
+                    <ZoomOut width={32} height={32} fillOpacity={scale && scale && scale > 1 ? 1 : 0.25} />
                   </button>
-                  <span className="dark">
-                    {Number((scale ?? 0) * 100).toFixed(0)}
-                    %
-                  </span>
-                  <button type="button" onClick={() => zoomIn()} className={`${(scale && scale && scale === 8 )? 'disabled' : ''}`}>
-                    <ZoomIn width={32} height={32} fillOpacity={(scale && scale && scale === 8 )? 0.25 : 1} />
-
+                  <span className="dark">{Number((scale ?? 0) * 100).toFixed(0)}%</span>
+                  <button type="button" onClick={() => zoomIn()} className={`${scale && scale && scale === 8 ? 'disabled' : ''}`}>
+                    <ZoomIn width={32} height={32} fillOpacity={scale && scale && scale === 8 ? 0.25 : 1} />
                   </button>
                 </div>
-
               </GradientBorder>
-
             </div>
           </React.Fragment>
         )}
       </TransformWrapper>
       <div>
-        <h5
-          className='text-textPrimary text-start pb-2 border-b-2 border-gray'
-        >Legenda</h5>
+        <h5 className="text-textPrimary text-start pb-2 border-b-2 border-gray">Legenda</h5>
         <div className="actions">
           <div className="legend">
             <div>
@@ -178,17 +167,16 @@ export const Ranks: React.FC<ISector> = ({ fileiras }) => {
               <div />
               <span>Selecionado</span>
             </div>
-            
+
             <div>
               <div />
               <span>Ocupado</span>
             </div>
-            
+
             <div>
               <div />
               <span>Cadeirante</span>
             </div>
-
           </div>
         </div>
       </div>

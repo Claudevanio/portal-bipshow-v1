@@ -1,5 +1,5 @@
 export interface ICardTicket {
-    index?: number;
-    valorVenda?: number[];
-    nome?: string;
+  index?: number;
+  valorVenda?: number[];
+  nome?: string;
 }

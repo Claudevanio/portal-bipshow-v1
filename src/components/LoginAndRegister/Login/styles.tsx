@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ContainerLogin = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -10,15 +10,13 @@ export const ContainerLogin = styled.div`
   }
 
   div.body-login-full {
-    margin-top: calc(
-      ${({ theme }) => theme.spacing(4)} + ${({ theme }) => theme.spacing(8)}
-    );
+    margin-top: calc(${({ theme }) => theme.spacing(4)} + ${({ theme }) => theme.spacing(8)});
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
       height: 100vh;
       background: white;
       position: absolute;
       top: 0;
-      border-radius: .5rem;
+      border-radius: 0.5rem;
       z-index: 5;
       padding: 20px;
       background: white;
@@ -89,7 +87,7 @@ export const ContainerLogin = styled.div`
     }
   }
 
-  .body-login form{
+  .body-login form {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -103,7 +101,7 @@ export const ContainerLogin = styled.div`
     margin-bottom: 8%;
     position: relative;
     padding: 0px !important;
-    border-radius: .5rem !important;
+    border-radius: 0.5rem !important;
     box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 16px;
     background: white;
     overflow-y: auto;
@@ -124,22 +122,22 @@ export const ContainerLogin = styled.div`
       text-align: center;
     }
     div.body-login {
-      border-radius: .5rem;
+      border-radius: 0.5rem;
       z-index: 5;
       padding: 20px;
       display: flex;
       flex-direction: column;
       background: white;
-    @media (max-width: 768px) {
-      background-color: transparent !important;
-    }
+      @media (max-width: 768px) {
+        background-color: transparent !important;
+      }
     }
   }
 
   div.card {
     position: relative;
     padding: 0px !important;
-    border-radius: .5rem !important;
+    border-radius: 0.5rem !important;
     overflow-y: auto;
     max-height: 87vh;
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -174,40 +172,40 @@ export const ContainerLogin = styled.div`
       font-size: 16px;
       text-align: center;
     }
-  
+
     div.body-login {
-      border-radius: .5rem;
+      border-radius: 0.5rem;
       z-index: 5;
       padding: 20px;
       display: flex;
       flex-direction: column;
       background: white;
-    @media (max-width: 768px) {
-      background-color: transparent !important;
-    }
+      @media (max-width: 768px) {
+        background-color: transparent !important;
+      }
     }
   }
 
   .error {
-    color: ${({ theme }) => "#F65252"} !important;
+    color: ${({ theme }) => '#F65252'} !important;
   }
 
   p.text {
     width: 100%;
-    font-size: ${({ theme }) => ".875rem"};
-    
+    font-size: ${({ theme }) => '.875rem'};
+
     font-style: normal;
     font-weight: 500;
-    color: ${({ theme }) => "#E3E3E3"};
+    color: ${({ theme }) => '#E3E3E3'};
     padding: 3%;
   }
 
   label.text {
-    font-size: ${({ theme }) => ".875rem"};
-    
+    font-size: ${({ theme }) => '.875rem'};
+
     font-style: normal;
     font-weight: 500;
-    color: ${({ theme }) => "#E3E3E3"};
+    color: ${({ theme }) => '#E3E3E3'};
   }
 
   p.bold {
@@ -282,7 +280,7 @@ export const ContainerLogin = styled.div`
         margin-bottom: ${({ theme }) => theme.spacing(6)};
         text-align: center;
         p.text-dark {
-          font-size: ${({ theme }) => "1rem"};
+          font-size: ${({ theme }) => '1rem'};
           font-weight: 700;
         }
         span.dark {
@@ -298,7 +296,7 @@ export const ContainerLogin = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${({ theme }) => "#FFFFFF"};
+    background-color: ${({ theme }) => '#FFFFFF'};
     border-radius: 50%;
     top: ${({ theme }) => theme.spacing(2)};
     left: ${({ theme }) => theme.spacing(2)};
@@ -326,13 +324,13 @@ export const ContainerButton = styled.div<{
   flex-direction: ${({ isStepper, userNotExist }) => {
     switch (isStepper) {
       case 0:
-        return "row";
+        return 'row';
       case 1:
-        return "row";
+        return 'row';
       case 2:
-        return userNotExist ? "row" : "column";
+        return userNotExist ? 'row' : 'column';
       default:
-        return "row";
+        return 'row';
     }
   }};
   gap: ${({ theme, isStepper }) => {
@@ -349,31 +347,27 @@ export const ContainerButton = styled.div<{
   }};
   height: 100%;
   button.back {
-    background-color: ${({ theme }) => "#f6f6f6"};
+    background-color: ${({ theme }) => '#f6f6f6'};
     padding: ${({ theme }) => theme.spacing(1.5)};
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     height: fit-content;
-    border: 1px solid ${({ theme }) => "#E3E3E3"};
+    border: 1px solid ${({ theme }) => '#E3E3E3'};
     transition: 400ms;
     &:hover {
       transition: 400ms;
-      background-color: ${({ theme }) => "#E3E3E3"};
+      background-color: ${({ theme }) => '#E3E3E3'};
     }
   }
   a {
     width: 100%;
     max-width: 100%;
-    font-size: ${({ theme }) => "1rem"};
+    font-size: ${({ theme }) => '1rem'};
     padding-top: ${({ theme }) => theme.spacing(1.5)};
     padding-bottom: ${({ theme }) => theme.spacing(1.5)};
   }
 `;
 
-
-
-
-export const ContainerLoginV2 = styled.div`
-`;
+export const ContainerLoginV2 = styled.div``;

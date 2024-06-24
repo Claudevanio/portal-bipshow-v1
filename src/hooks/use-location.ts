@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { Cache } from '@/adapters'
-import { getSiglaByEstado } from '@/utils'
-import { useEffect, useState } from 'react'
-import { useEffectOnce } from '.'
+import { Cache } from '@/adapters';
+import { getSiglaByEstado } from '@/utils';
+import { useEffect, useState } from 'react';
+import { useEffectOnce } from '.';
 
 // interface Geolocation {
 //   latitude: number
@@ -32,42 +32,38 @@ import { useEffectOnce } from '.'
 // }
 
 export const useGeoLocation = (): {
-  location: { city: string, uf: string },
-  setLocation: Function,
+  location: { city: string; uf: string };
+  setLocation: Function;
 } => {
-  const [location, setLocation] = useState<{ city: string, uf: string }>({
+  const [location, setLocation] = useState<{ city: string; uf: string }>({
     city: '',
-    uf: '',
-  })
+    uf: ''
+  });
 
-  const locationCache = Cache.get({ key: 'location' })
+  const locationCache = Cache.get({ key: 'location' });
 
-  async function getCityAndUf () {
+  async function getCityAndUf() {
     // const response = await fetch(`http://ip-api.com/json`)
     // const data = await response.json()
-
     // const state = getSiglaByEstado(data.regionName)
-
     // setLocation({
     //   city: data.city,
     //   uf: state,
     // })
     // Cache.set({ key: 'location', value: { city: data.city, uf: state } })
-
   }
 
   useEffectOnce(() => {
-    if (locationCache) return
+    if (locationCache) return;
 
-    getCityAndUf()
-  })
+    getCityAndUf();
+  });
 
   // if (locationCache)
   // setLocation(locationCache)
 
-
   return {
     location,
-    setLocation,
-  }
-}
+    setLocation
+  };
+};

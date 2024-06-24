@@ -1,6 +1,4 @@
-import React, {
-  createContext, useCallback, useContext, useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { api, SET_NEW_PASSWORD } from '@/services';
 import { TypeEnum, useError } from './useDialog';
@@ -31,37 +29,44 @@ export const ResetPasswordProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStepper, setIsStepper] = useState<number>(0);
 
-  const handleSubmitResetPassword = useCallback(async (data: IDataForm) => {
-    try {
-      setIsLoading(true);
-      if (data.confirmarSenha && data.senha && data.senha === data.confirmarSenha) {
-        const result = await api.post(SET_NEW_PASSWORD, {
-          token,
-          novaSenha: data.senha,
-        }) as { data: { sucesso: boolean } };
+  const handleSubmitResetPassword = useCallback(
+    async (data: IDataForm) => {
+      try {
+        setIsLoading(true);
+        if (data.confirmarSenha && data.senha && data.senha === data.confirmarSenha) {
+          const result = (await api.post(SET_NEW_PASSWORD, {
+            token,
+            novaSenha: data.senha
+          })) as { data: { sucesso: boolean } };
 
-        if (result.data.sucesso) {
-          callErrorDialogComponent("Senha atualizada com sucesso.", TypeEnum.SUCCESS)
-          setIsSuccess(result.data.sucesso);
-          setIsStepper(1);
+          if (result.data.sucesso) {
+            callErrorDialogComponent('Senha atualizada com sucesso.', TypeEnum.SUCCESS);
+            setIsSuccess(result.data.sucesso);
+            setIsStepper(1);
+          } else {
+            callErrorDialogComponent('Senha inválida. Verifique.', TypeEnum.ERROR);
+          }
         } else {
-          callErrorDialogComponent("Senha inválida. Verifique.", TypeEnum.ERROR)
+          callErrorDialogComponent('Senha inválida. Verifique.', TypeEnum.ERROR);
         }
-      } else {
-        callErrorDialogComponent("Senha inválida. Verifique.", TypeEnum.ERROR)
-      }
 
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      callErrorDialogComponent("Ocorreu um erro de comunicação.", TypeEnum.ERROR)
-    }
-  }, [showErrorDialog, token]);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        callErrorDialogComponent('Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+      }
+    },
+    [showErrorDialog, token]
+  );
 
   return (
-    <ResetPasswordContext.Provider value={{
-      handleSubmitResetPassword, loading: isLoading, success: isSuccess, stepper: isStepper,
-    }}
+    <ResetPasswordContext.Provider
+      value={{
+        handleSubmitResetPassword,
+        loading: isLoading,
+        success: isSuccess,
+        stepper: isStepper
+      }}
     >
       {children}
     </ResetPasswordContext.Provider>

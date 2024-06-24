@@ -5,15 +5,7 @@ import { SelectSector } from './SelectSector';
 import { SelectedSector } from './SelectedSector';
 
 export const ActionSectorOrChair: React.FC = () => {
-  const { rank } = useEventTicket();  
+  const { rank } = useEventTicket();
 
-  return (
-    <ContainerActionSectorOrChair>
-      {!rank ? (
-        <SelectSector />
-      ) : (
-        <SelectedSector />
-      )}
-    </ContainerActionSectorOrChair>
-  );
+  return <ContainerActionSectorOrChair>{!rank ? <SelectSector /> : <SelectedSector />}</ContainerActionSectorOrChair>;
 };

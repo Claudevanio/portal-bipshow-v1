@@ -1,18 +1,18 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Close } from '@/components/icons/Close';
-import { IconButton } from '@/components/IconButton'; 
+import { IconButton } from '@/components/IconButton';
 import { Input } from '@/components/Form/Input';
 import { cpf, email, telefone } from '@/shared/config/regex';
 import { CPFMask, INTERNATIONALNUMBERMask, TELEFONEMask } from '@/shared/config/mask';
 import { Button } from '@/components/Form/Button';
 import { Alert } from '@/components/Alert';
 import { CountriesProps, IAlert, ITypeDoc, IUser } from '@/types';
-import { useTickets } from '@/shared/hooks/useTickets'; 
-import { IModalTransfer } from './interface'; 
+import { useTickets } from '@/shared/hooks/useTickets';
+import { IModalTransfer } from './interface';
 import { useRegister } from '@/shared/hooks/useRegister';
-import { validateCPF } from '@/shared';  
+import { validateCPF } from '@/shared';
 import { ContainerModal } from './styles';
 import { useOrders } from '@/shared/hooks/useOrders';
 import { api, GET_TYPE_DOCUMENT, LIST_COUNTRIES } from '@/services';
@@ -20,12 +20,12 @@ import { TypeEnum, useError } from '@/shared/hooks/useDialog';
 import { Select } from '@/components/Form/Select';
 
 export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
-  const methods = useForm<IUser & {internationalPhone?: string}>();
+  const methods = useForm<IUser & { internationalPhone?: string }>();
   const { handleTranferTickets, loadingTransfer } = useOrders();
-  const { user } = useRegister()
+  const { user } = useRegister();
 
-  const [isForeign, setIsForeign] = useState(false)
-  
+  const [isForeign, setIsForeign] = useState(false);
+
   const [typesDoc, setIsTypesDoc] = useState<ITypeDoc[]>([]);
 
   const [countries, setCountries] = useState<CountriesProps[]>([]);
@@ -41,63 +41,51 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
   };
 
   const handleLoadTypeDocument = async (country: string | number) => {
-      try { 
-        setIsLoadingTypesDoc(true);
-          const { data } = (await api.get(
-            `${GET_TYPE_DOCUMENT}/${country}`,
-          )) as {
-            data: ITypeDoc[];
-          };
+    try {
+      setIsLoadingTypesDoc(true);
+      const { data } = (await api.get(`${GET_TYPE_DOCUMENT}/${country}`)) as {
+        data: ITypeDoc[];
+      };
 
-          setIsTypesDoc(data); 
-          if(data.length > 0)
-            methods.setValue('idTipoDocumento', data[0]?.id);
-      } catch (err: any) { 
-        showErrorDialog(
-          err.message ?? 'Ocorreu um erro de comunicação.',
-          TypeEnum.ERROR,
-        );
-      } finally {
-        setIsLoadingTypesDoc(false);
-      }
+      setIsTypesDoc(data);
+      if (data.length > 0) methods.setValue('idTipoDocumento', data[0]?.id);
+    } catch (err: any) {
+      showErrorDialog(err.message ?? 'Ocorreu um erro de comunicação.', TypeEnum.ERROR);
+    } finally {
+      setIsLoadingTypesDoc(false);
     }
+  };
 
-    const handleLoadCountries = async () => {
-      try {
-        setIsLoadingCountries(true);
-        if (!(countries.length > 2)) { 
-          const { data } = (await api.get(LIST_COUNTRIES)) as {
-            data: CountriesProps[];
-          };
-          setCountries(data); 
-        }
-      } catch (err: any) { 
-        showErrorDialog(
-          'Ocorreu um erro na listagem dos países.',
-          TypeEnum.ERROR,
-        );
+  const handleLoadCountries = async () => {
+    try {
+      setIsLoadingCountries(true);
+      if (!(countries.length > 2)) {
+        const { data } = (await api.get(LIST_COUNTRIES)) as {
+          data: CountriesProps[];
+        };
+        setCountries(data);
       }
-      finally {
-        setIsLoadingCountries(false);
-      }
+    } catch (err: any) {
+      showErrorDialog('Ocorreu um erro na listagem dos países.', TypeEnum.ERROR);
+    } finally {
+      setIsLoadingCountries(false);
     }
+  };
 
-    useEffect(() => {
-      handleLoadCountries();
-    }, []);
+  useEffect(() => {
+    handleLoadCountries();
+  }, []);
 
-    const handleChangeCountry = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const country = countries.find((country) => country.id === Number(e.target.value));
-      setSelectCountry(country);
-      methods.setValue('idPais', country?.id);
-      handleLoadTypeDocument(country?.id ?? '');
-    };
+  const handleChangeCountry = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const country = countries.find(country => country.id === Number(e.target.value));
+    setSelectCountry(country);
+    methods.setValue('idPais', country?.id);
+    handleLoadTypeDocument(country?.id ?? '');
+  };
 
-
-
-  const onHandleSubmit = async (data: any) => { 
-    if(data?.internationalPhone){
-      data.telefone = data.internationalPhone
+  const onHandleSubmit = async (data: any) => {
+    if (data?.internationalPhone) {
+      data.telefone = data.internationalPhone;
     }
     onHide();
     handleTranferTickets(data);
@@ -109,11 +97,9 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
       onClose={onHide}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      className='flex items-center justify-center'
+      className="flex items-center justify-center"
     >
-      <div
-        className='bg-white p-4 rounded-lg w-full md:max-w-[60%] h-full md:h-fit'
-      >
+      <div className="bg-white p-4 rounded-lg w-full md:max-w-[60%] h-full md:h-fit">
         <div className="header flex !w-full !justify-between !items-center">
           <h6 className="title">Dados do titular</h6>
           <IconButton onClick={onHide} className="close">
@@ -124,23 +110,17 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
           <Alert
             variant={IAlert.WARNING}
             html={
-              <p 
-              >
-                Cadastre os dados da pessoa que deseja transferir a titularidade corretamente. <br/> Após a transferência somente esse titular poderá acessar o ingresso através do app BipShow
-                <span
-                  className='  !text-warning block'
-                >
-                Após confirmação, essa operação é irreversível
-                </span>
+              <p>
+                Cadastre os dados da pessoa que deseja transferir a titularidade corretamente. <br /> Após a transferência somente esse titular poderá
+                acessar o ingresso através do app BipShow
+                <span className="  !text-warning block">Após confirmação, essa operação é irreversível</span>
               </p>
             }
-          /> 
-          <form onSubmit={methods.handleSubmit(onHandleSubmit)}
-            className='md:grid md:grid-cols-2 gap-2'
-          >
+          />
+          <form onSubmit={methods.handleSubmit(onHandleSubmit)} className="md:grid md:grid-cols-2 gap-2">
             <FormProvider {...methods}>
-              {
-                !isForeign ? <>
+              {!isForeign ? (
+                <>
                   <Input
                     disabledClean
                     name="nome"
@@ -150,11 +130,11 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'Nome inválido. Verifique',
-                      },
+                        message: 'Nome inválido. Verifique'
+                      }
                     }}
                     disabled={loadingTransfer}
-                    errorText={methods.formState.errors.nome && methods.formState.errors.nome.message as string}
+                    errorText={methods.formState.errors.nome && (methods.formState.errors.nome.message as string)}
                   />
                   <Input
                     disabledClean
@@ -165,24 +145,24 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'Telefone inválido. Verifique',
+                        message: 'Telefone inválido. Verifique'
                       },
                       minLength: {
                         value: 15,
-                        message: 'Telefone inválido. Verifique',
+                        message: 'Telefone inválido. Verifique'
                       },
                       maxLength: {
                         value: 15,
-                        message: 'Telefone inválido. Verifique',
+                        message: 'Telefone inválido. Verifique'
                       },
                       pattern: {
                         value: telefone,
-                        message: 'Telefone inválido. Verifique',
-                      },
+                        message: 'Telefone inválido. Verifique'
+                      }
                     }}
                     disabled={loadingTransfer}
                     mask={TELEFONEMask}
-                    errorText={methods.formState.errors.telefone && methods.formState.errors.telefone.message as string}
+                    errorText={methods.formState.errors.telefone && (methods.formState.errors.telefone.message as string)}
                   />
                   <Input
                     disabledClean
@@ -193,26 +173,26 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'Documento CPF inválido. Verifique',
+                        message: 'Documento CPF inválido. Verifique'
                       },
                       minLength: {
                         value: 14,
-                        message: 'CPF inválido. Verifique',
+                        message: 'CPF inválido. Verifique'
                       },
                       maxLength: {
                         value: 14,
-                        message: 'CPF inválido. Verifique',
+                        message: 'CPF inválido. Verifique'
                       },
                       pattern: {
                         value: cpf,
-                        message: 'CPF inválido. Verifique',
+                        message: 'CPF inválido. Verifique'
                       },
                       validate: async (value: string) => {
-                        if (!validateCPF(value)){
+                        if (!validateCPF(value)) {
                           return 'CPF inválido. Verifique';
                         }
-                        const formattedCPF = value?.replace(/\D/g, "");
-    
+                        const formattedCPF = value?.replace(/\D/g, '');
+
                         if (formattedCPF === user?.cpf) {
                           return 'CPF inválido. Deve ser diferente do CPF do usuário logado.';
                         }
@@ -221,7 +201,7 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     }}
                     disabled={loadingTransfer}
                     mask={CPFMask}
-                    errorText={methods.formState.errors.CPF && methods.formState.errors.CPF.message as string}
+                    errorText={methods.formState.errors.CPF && (methods.formState.errors.CPF.message as string)}
                   />
                   <Input
                     disabledClean
@@ -232,54 +212,58 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'E-mail inválido. Verifique',
+                        message: 'E-mail inválido. Verifique'
                       },
                       pattern: {
                         value: email,
-                        message: 'E-mail inválido. Verifique',
-                      },
+                        message: 'E-mail inválido. Verifique'
+                      }
                     }}
                     disabled={loadingTransfer}
-                    errorText={methods.formState.errors.email && methods.formState.errors.email.message as string}
+                    errorText={methods.formState.errors.email && (methods.formState.errors.email.message as string)}
                   />
-                </> : <>  
-                {countries.length > 2 && <Select
-                    name="idPais"
-                    id='idPais' 
-                    disabled={isLoadingCountries}
-                    loading={isLoadingCountries} 
-                    label="País"
-                    onChange={handleChangeCountry}
-                    options={
-                      countries?.map((country) => ({
+                </>
+              ) : (
+                <>
+                  {countries.length > 2 && (
+                    <Select
+                      name="idPais"
+                      id="idPais"
+                      disabled={isLoadingCountries}
+                      loading={isLoadingCountries}
+                      label="País"
+                      onChange={handleChangeCountry}
+                      options={countries?.map(country => ({
                         value: country.id,
-                        innerText: country.nomePais,
-                      }))
-                    }
-                    rules={{
-                      required: {
-                        value: true,
-                        message: 'País inválido. Verifique',
-                      },
-                    }}
-                  />}
-      
+                        innerText: country.nomePais
+                      }))}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'País inválido. Verifique'
+                        }
+                      }}
+                    />
+                  )}
+
                   <Select
                     name="idTipoDocumento"
                     id="idTipoDocumento"
                     defaultValue={typesDoc && typesDoc[0]?.id}
                     loading={isLoadingTypesDoc}
-                    label="Documento" 
+                    label="Documento"
                     disabled={isLoadingTypesDoc || !selectCountry}
                     options={
-                      typesDoc && typesDoc?.length > 0 && typesDoc?.map((typeDoc) => ({
-                      innerText: typeDoc.nomeTipoDocumento,
-                      value: typeDoc.id,
-                      })) 
+                      typesDoc &&
+                      typesDoc?.length > 0 &&
+                      typesDoc?.map(typeDoc => ({
+                        innerText: typeDoc.nomeTipoDocumento,
+                        value: typeDoc.id
+                      }))
                     }
-                  />  
+                  />
                   <Input
-                    disabledClean 
+                    disabledClean
                     id="numeroDoc"
                     disabled={false}
                     label="Nº do documento"
@@ -288,13 +272,10 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: "Nº do documento inválido. Verifique",
-                      },
+                        message: 'Nº do documento inválido. Verifique'
+                      }
                     }}
-                    errorText={
-                      methods.formState.errors.numeroDoc &&
-                      (methods.formState.errors.numeroDoc.message as string)
-                    }
+                    errorText={methods.formState.errors.numeroDoc && (methods.formState.errors.numeroDoc.message as string)}
                   />
                   <Input
                     disabledClean
@@ -305,31 +286,31 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'Nome inválido. Verifique',
-                      },
+                        message: 'Nome inválido. Verifique'
+                      }
                     }}
                     disabled={false}
-                    errorText={methods.formState.errors.nome && methods.formState.errors.nome.message as string}
+                    errorText={methods.formState.errors.nome && (methods.formState.errors.nome.message as string)}
                   />
-                  
+
                   <div>
                     <Input
                       disabledClean
-                        type="tel"
-                        name="internationalPhone"
-                        id="internationalPhone"
-                        label="Telefone"
-                        rules={{
-                            required: {
-                            value: true,
-                            message: 'Telefone inválido. Verifique',
-                            }, 
-                        }}
-                        disabled={false}
-                        mask={INTERNATIONALNUMBERMask}
-                        errorText={methods.formState.errors.internationalPhone && methods.formState.errors.internationalPhone.message as string}
-                        />
-                  </div> 
+                      type="tel"
+                      name="internationalPhone"
+                      id="internationalPhone"
+                      label="Telefone"
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'Telefone inválido. Verifique'
+                        }
+                      }}
+                      disabled={false}
+                      mask={INTERNATIONALNUMBERMask}
+                      errorText={methods.formState.errors.internationalPhone && (methods.formState.errors.internationalPhone.message as string)}
+                    />
+                  </div>
                   <Input
                     disabledClean
                     type="email"
@@ -340,41 +321,31 @@ export const ModalTransfer: React.FC<IModalTransfer> = ({ onHide, show }) => {
                     rules={{
                       required: {
                         value: true,
-                        message: 'E-mail inválido. Verifique',
+                        message: 'E-mail inválido. Verifique'
                       },
                       pattern: {
-                        value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?)*$/,
-                        message: 'E-mail inválido. Verifique',
-                      },
-                    }} 
-                    errorText={methods.formState.errors.email && methods.formState.errors.email.message as string}
+                        value:
+                          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?)*$/,
+                        message: 'E-mail inválido. Verifique'
+                      }
+                    }}
+                    errorText={methods.formState.errors.email && (methods.formState.errors.email.message as string)}
                   />
                 </>
-              }
-              
-            <span
-              className='text-primary cursor-pointer hover:underline mt-4'
-              onClick={() => setIsForeign(!isForeign)}
-            >
-              {
-                isForeign ? 'Transferir para brasileiro? Clique aqui' : 'Transferir para estrangeiro? Clique aqui'
-              }
-            </span>
+              )}
+
+              <span className="text-primary cursor-pointer hover:underline mt-4" onClick={() => setIsForeign(!isForeign)}>
+                {isForeign ? 'Transferir para brasileiro? Clique aqui' : 'Transferir para estrangeiro? Clique aqui'}
+              </span>
               <div className="md:col-span-2 flex flex-col-reverse md:flex-row md:justify-end gap-8">
-                <Button
-                  type="button"
-                  text="Cancelar"
-                  onClick={onHide}
-                  variant="outline"
-                  className='md:!w-40'
-                />
+                <Button type="button" text="Cancelar" onClick={onHide} variant="outline" className="md:!w-40" />
                 <Button
                   type="submit"
                   text="Confirmar"
                   variant="medium"
                   disabled={loadingTransfer}
                   loading={loadingTransfer}
-                  className='md:max-w-[30%]'
+                  className="md:max-w-[30%]"
                 />
               </div>
             </FormProvider>

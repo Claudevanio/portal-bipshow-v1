@@ -7,9 +7,7 @@ import { HTMLMap } from './HTMLMap';
 import { RanksOffcanvas } from './RanksOffcanvas';
 
 export const TicketMapMobile: React.FC = () => {
-  const {
-    handleClearSector, isShowOffcanvas, setIsShowOffcanvas,
-  } = useEventTicket();
+  const { handleClearSector, isShowOffcanvas, setIsShowOffcanvas } = useEventTicket();
 
   return (
     <div>

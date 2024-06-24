@@ -1,4 +1,4 @@
 export interface IPlace {
-    reservado: boolean;
-    numero: number;
+  reservado: boolean;
+  numero: number;
 }

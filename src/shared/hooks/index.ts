@@ -1,1 +1,1 @@
-export * from './useEventTicket'
+export * from './useEventTicket';

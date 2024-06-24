@@ -9,9 +9,10 @@ export const ButtonQTD: React.FC<IButtonQDT> = ({ current, max, onClick }) => {
   const isDisabled = useMemo(() => {
     let isMax = 0;
 
-    ticketsPurchase && ticketsPurchase.forEach((i) => {
-      isMax += i.qtde;
-    });
+    ticketsPurchase &&
+      ticketsPurchase.forEach(i => {
+        isMax += i.qtde;
+      });
 
     return isMax;
   }, [ticketsPurchase]);

@@ -10,7 +10,10 @@ const nextConfig = {
   images: {
     domains: ['uzerpass-imagens.s3.sa-east-1.amazonaws.com', 'uzerticket-imagens.s3.sa-east-1.amazonaws.com'],
   },
-  swcMinify: true
+  compiler:{
+    styledComponents: true,
+  }
+  // swcMinify: true
 }
 
 module.exports = nextConfig

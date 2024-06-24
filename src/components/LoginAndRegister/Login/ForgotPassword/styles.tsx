@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ContainerForgotPassword = styled.div`
   width: 100%;
@@ -31,9 +31,8 @@ export const ContainerForgotPassword = styled.div`
     }
   }
 
-
   .icon {
-    color: #8779F8;
+    color: #8779f8;
   }
 
   .box {
@@ -89,7 +88,7 @@ export const ContainerForgotPassword = styled.div`
     } */
   }
   h6 {
-    font-size: ${({ theme }) => "1rem"} !important;
+    font-size: ${({ theme }) => '1rem'} !important;
     font-weight: 500;
     margin-bottom: 50px;
     width: 70%;

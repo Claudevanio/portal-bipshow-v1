@@ -1,3 +1,3 @@
 export const PRIVATE_ROUTES = {
-  profile: '/profile',
+  profile: '/profile'
 };

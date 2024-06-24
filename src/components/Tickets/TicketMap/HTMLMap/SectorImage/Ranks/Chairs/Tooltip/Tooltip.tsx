@@ -7,9 +7,7 @@ export const Tooltip: React.FC<ITooltip> = ({ text, title }) => {
     <ContainerTooltip>
       <h6 className="title">{title}</h6>
       <p>
-        Cadeira:
-        {' '}
-        <strong>{text}</strong>
+        Cadeira: <strong>{text}</strong>
       </p>
     </ContainerTooltip>
   );

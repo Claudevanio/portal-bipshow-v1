@@ -1,4 +1,4 @@
 export interface ITooltip {
-    title: string;
-    text: string;
+  title: string;
+  text: string;
 }

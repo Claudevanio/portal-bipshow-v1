@@ -13,7 +13,8 @@ export const SelectSector: React.FC = () => {
       {eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio ? (
         <ActionTicket type="chairs" />
       ) : (
-        !loadingSector && eventTicket?.tiposDeIngresso?.map((item) => (
+        !loadingSector &&
+        eventTicket?.tiposDeIngresso?.map(item => (
           <Sector
             key={item.id}
             nome={item?.nome}
@@ -24,11 +25,7 @@ export const SelectSector: React.FC = () => {
           />
         ))
       )}
-      {loadingSector && (
-          <CircularProgress
-            size={24}
-          />
-      )}
+      {loadingSector && <CircularProgress size={24} />}
     </ContainerSelectSector>
   );
 };

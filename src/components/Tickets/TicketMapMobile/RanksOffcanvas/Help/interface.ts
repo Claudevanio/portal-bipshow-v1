@@ -1,3 +1,3 @@
 export interface IHelp {
-    onClose: () => void;
+  onClose: () => void;
 }

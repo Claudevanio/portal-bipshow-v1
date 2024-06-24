@@ -2,14 +2,10 @@ import Head from 'next/head';
 import React from 'react';
 import { ISEOEvent } from './interface';
 
-export const SEOEvent: React.FC<ISEOEvent> = ({
-  description, image, nome, id,
-}) => {
+export const SEOEvent: React.FC<ISEOEvent> = ({ description, image, nome, id }) => {
   return (
     <Head>
-      <title>
-        {nome}
-      </title>
+      <title>{nome}</title>
       <meta name="description" content={description} />
       <meta name="application-name" content="BipShow" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -20,10 +16,7 @@ export const SEOEvent: React.FC<ISEOEvent> = ({
       <meta name="msapplication-TileColor" content="#05B59D" />
       <meta name="msapplication-tap-highlight" content="no" />
       <meta name="theme-color" content="#05B59D" />
-      <meta
-        httpEquiv="Content-Type"
-        content="text/html; charset=utf-8"
-      />
+      <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={nome} />
       <meta property="og:description" content={description} />

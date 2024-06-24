@@ -1,2 +1,2 @@
-export * from './cidades-estados/cidade-estado'
-export * from './categories'
+export * from './cidades-estados/cidade-estado';
+export * from './categories';

@@ -1,1 +1,1 @@
-export type HumanizeDateTime = (date: string) => string | undefined
+export type HumanizeDateTime = (date: string) => string | undefined;

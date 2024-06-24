@@ -4,7 +4,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
+    "strictNullChecks": false,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -22,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "***/**/*.tsx", "**/*.tsx", ".next/types/**/*.ts", "src/shared/layout/themeProvider.tsz"],
+  "include": ["next-env.d.ts", "**/*.ts", "***/**/*.tsx", "**/*.tsx", ".next/types/**/*.ts", "src/shared/layout/themeProvider.tsz", "src/components/Pixel/Pixel.jsx"],
   "exclude": ["node_modules"]
 }

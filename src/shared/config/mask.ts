@@ -12,13 +12,13 @@ export const senhaMask = (v: string) => {
   let isValue = v;
   isValue = isValue.replace(/\D/g, '');
   return isValue.substring(0, 6);
-}
+};
 
 export const INTERNATIONALNUMBERMask = (v: string) => {
   let isValue = v;
   isValue = isValue.replace(/\D/g, '');
   return isValue;
-}
+};
 
 export const TELEFONEMask = (v: string) => {
   let isValue = v.toString();
@@ -32,9 +32,7 @@ export const TELEFONEMask = (v: string) => {
 
 export const TelefoneMaskWithoutDDD = (v: string) => {
   let isValue = v.toString();
-  isValue = isValue
-    .replace(/\D/g, '')
-    .replace(/(\d{5})(\d{4})/, '$1-$2');
+  isValue = isValue.replace(/\D/g, '').replace(/(\d{5})(\d{4})/, '$1-$2');
 
   return isValue.substring(0, 10);
 };
@@ -102,4 +100,4 @@ export const CVVMask = (v: string) => {
 
 export const CartaoNameMask = (v: string) => {
   return v.toUpperCase();
-}
+};

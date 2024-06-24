@@ -1,1 +1,1 @@
-export const appToken = process.env.NEXT_PUBLIC_APP_TOKEN
+export const appToken = process.env.NEXT_PUBLIC_APP_TOKEN;

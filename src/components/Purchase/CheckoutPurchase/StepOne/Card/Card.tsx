@@ -21,26 +21,21 @@ export const Card: React.FC<ICard> = ({ nome, index, user }) => {
       {user && user.filled && (
         <div className="action-button">
           <Button variant="outline-medium" text="Meu ingresso" onClick={() => selectedUser('mine', index, user.idTipo)} loading={loadingSelectUser} />
-          <Button
-            variant="outline-medium"
-            text="Definir utilizador"
-            onClick={handleShow}
-            disabled={loadingSelectUser}
-          />
+          <Button variant="outline-medium" text="Definir utilizador" onClick={handleShow} disabled={loadingSelectUser} />
         </div>
       )}
       {user && !user.filled && (
         <div className="info-user">
           <div className="avatar">
-            <Avatar size="small" src={undefined}
-            //  username={user.nome}
-             />
+            <Avatar
+              size="small"
+              src={undefined}
+              //  username={user.nome}
+            />
           </div>
           <div className="infos">
-            <p className="text-dark">{user.nome}</p> 
-            <p className="text-light">{
-              user?.pais ? user?.telefone : TELEFONEMask(user.telefone || '')
-            }</p>
+            <p className="text-dark">{user.nome}</p>
+            <p className="text-light">{user?.pais ? user?.telefone : TELEFONEMask(user.telefone || '')}</p>
             <p className="text-light">{user.email}</p>
             <p className="text-light">{CPFMask(user.cpf || '')}</p>
           </div>
@@ -56,9 +51,7 @@ export const Card: React.FC<ICard> = ({ nome, index, user }) => {
           />
         </div>
       )}
-      {user && user.idTipo && (
-        <Modal open={isShow} onClose={handleClose} index={index} nome={nome} idTipo={user?.idTipo} />
-      )}
+      {user && user.idTipo && <Modal open={isShow} onClose={handleClose} index={index} nome={nome} idTipo={user?.idTipo} />}
     </ContainerCard>
   );
 };

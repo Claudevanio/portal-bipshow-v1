@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/shared/hooks/useAuth';
 import { ContainerFaceDetection } from './styles';
@@ -9,24 +9,24 @@ import { Button } from '@/components/Button/Button';
 import { useFormContext } from 'react-hook-form';
 import { ButtonBack } from '@/components/ButtonBack';
 
-export const FaceDetectionComponent: React.FC<{handleChangeType: any}> = ({handleChangeType}) => {
+export const FaceDetectionComponent: React.FC<{ handleChangeType: any }> = ({ handleChangeType }) => {
   const { onToPhoto, onAddPhoto, getRegisterURLWithPayloadOnQuery, setIsStepper, isStepper } = useAuth();
 
   const { getValues } = useFormContext();
-  
+
   const [isImageSrc, setIsImageSrc] = useState<string>();
   const [isIdentification, setIsIdentification] = useState<boolean>(false);
 
   const [windowSize, setWindowSize] = useState(window && window.innerWidth);
   const handleWindowResize = () => {
-    if(!window) return;
+    if (!window) return;
 
     setWindowSize(window.innerWidth);
   };
 
   useEffect(() => {
-    if(!window) return;
-    
+    if (!window) return;
+
     window.addEventListener('resize', handleWindowResize);
     return () => {
       window.removeEventListener('resize', handleWindowResize);
@@ -35,123 +35,69 @@ export const FaceDetectionComponent: React.FC<{handleChangeType: any}> = ({handl
 
   window.addEventListener('resize', handleWindowResize);
 
-
   const isMobile = windowSize < 768;
 
   const [continueOnDesktop, setContinueOnDesktop] = useState<boolean>(false);
 
   const newUrl = getRegisterURLWithPayloadOnQuery(getValues());
 
-  if (!isMobile && !continueOnDesktop) 
+  if (!isMobile && !continueOnDesktop)
     return (
       <div>
-        <div/>
-        <div
-          className='flex flex-col items-center gap-4 w-full h-full py-2'
-        >
-          <p
-            className='text-sm'
-          >
+        <div />
+        <div className="flex flex-col items-center gap-4 w-full h-full py-2">
+          <p className="text-sm">
             Para uma melhor experiência, pedimos que acesse de seu aparelho celular.
-            <br/>
+            <br />
             Escaneie este QR Code para continuar no celular.
-          </p> 
-          <div
-            className='min-h-[300px]'
-          >
-            <QRCodeSVG
-              value={newUrl}
-              size={300}
-              bgColor='#ffffff'
-              fgColor='#000000'
-              level='Q'
-              />
+          </p>
+          <div className="min-h-[300px]">
+            <QRCodeSVG value={newUrl} size={300} bgColor="#ffffff" fgColor="#000000" level="Q" />
           </div>
 
-            <span
-              className='text-sm'
-            >
-              Se preferir, clique no botão abaixo para tirar a foto pelo desktop
-            </span>
-            <div
-              className='flex items-center gap-4 w-full justify-center'
-            >
-              <ButtonBack
-                onClick={() => onToPhoto(false)}
-              />
-              <Button
-                onClick={() => setContinueOnDesktop(true)}
-                variant='secondary'
-                className=''
-              >
-                Tirar foto pelo desktop
-              </Button>
+          <span className="text-sm">Se preferir, clique no botão abaixo para tirar a foto pelo desktop</span>
+          <div className="flex items-center gap-4 w-full justify-center">
+            <ButtonBack onClick={() => onToPhoto(false)} />
+            <Button onClick={() => setContinueOnDesktop(true)} variant="secondary" className="">
+              Tirar foto pelo desktop
+            </Button>
           </div>
-          
-          <span 
-              className='text-center w-full'
-              >
-                Terminou o cadastro no celular? 
-                <p
-                  className='text-primary cursor-pointer'
-                  onClick={() => handleChangeType('login')}
-                >
-                  Fazer login
-                </p>
-            </span>
-          <div
-            className='h-4 pt-4'
-          >&nbsp;</div>
+
+          <span className="text-center w-full">
+            Terminou o cadastro no celular?
+            <p className="text-primary cursor-pointer" onClick={() => handleChangeType('login')}>
+              Fazer login
+            </p>
+          </span>
+          <div className="h-4 pt-4">&nbsp;</div>
         </div>
       </div>
-    )
-  
+    );
 
   return (
     <ContainerFaceDetection>
       <div />
       {isImageSrc && (
-        <div
-          className='w-full flex items-center justify-center my-2'
-        >
+        <div className="w-full flex items-center justify-center my-2">
           <img src={isImageSrc} alt="Avatar" className="rounded-full !h-48 !w-48" />
         </div>
       )}
-      {!isImageSrc && (
-        <CameraDetection setIsIdentification={setIsIdentification} isIdentification={isIdentification} setIsImageSrc={setIsImageSrc} />
-      )}
-      
-      {
-        !isImageSrc && (
-          <div
-            className='w-full flex items-center justify-center gap-4 absolute bottom-[2.6rem] left-1'
-          >
-            <Button
-              onClick={() => setContinueOnDesktop(false)}
-              variant='secondary'
-              className='hidden md:flex w-[50%]'
-            >
-              <QrCode/> Continuar no Celular
-            </Button>
-          </div>
-
-        )
-      }
+      {!isImageSrc && <CameraDetection setIsIdentification={setIsIdentification} isIdentification={isIdentification} setIsImageSrc={setIsImageSrc} />}
 
       {!isImageSrc && (
-        <p className="help">
-          {isIdentification ? (
-            'Rosto identificado'
-          ) : (
-            'Alinhe sua face ao centro da tela'
-          )}
+        <div className="w-full flex items-center justify-center gap-4 absolute bottom-[2.6rem] left-1">
+          <Button onClick={() => setContinueOnDesktop(false)} variant="secondary" className="hidden md:flex w-[50%]">
+            <QrCode /> Continuar no Celular
+          </Button>
+        </div>
+      )}
+
+      {!isImageSrc && <p className="help">{isIdentification ? 'Rosto identificado' : 'Alinhe sua face ao centro da tela'}</p>}
+      {isImageSrc && (
+        <p className="text-center h-8 text-sm">
+          Tudo certo? <br /> Clique no check para confirmar ou no X para tirar outra foto
         </p>
       )}
-      {
-        isImageSrc && <p className='text-center h-8 text-sm'>
-          Tudo certo? <br/> Clique no check para confirmar ou no X para tirar outra foto
-        </p>
-      }
       {isImageSrc && (
         <div className={`actions ${!isImageSrc ? 'margin' : ''}`}>
           <button type="button" className="not-photo" onClick={() => setIsImageSrc(undefined)}>

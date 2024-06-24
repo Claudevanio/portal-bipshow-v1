@@ -1,17 +1,16 @@
-import { EventosResponse } from "@/types";
-import { api } from ".";
-import { appToken } from "@/constants";
+import { EventosResponse } from '@/types';
+import { api } from '.';
+import { appToken } from '@/constants';
 
 export const landingPageService = {
   getEventos: async () => {
-    const response = await api.get("/eventos", {
+    const response = await api.get('/eventos', {
       headers: {
         Authorization: appToken,
-        "X-App-Context": "bipshow",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers":
-          "Origin, X-Requested-With, Content-Type, Accept",
-      },
+        'X-App-Context': 'bipshow',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+      }
     });
     return response.data;
     // return {
@@ -859,5 +858,5 @@ export const landingPageService = {
     //   ],
     //   "total": 2
     // } as EventosResponse
-  },
+  }
 };

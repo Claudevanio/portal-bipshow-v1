@@ -59,7 +59,7 @@ export const CameraDetection: React.FC<CameraDetectionProps> = ({ setIsImageSrc 
 
   return (
     <React.Fragment>
-      <div className='wrapper'>
+      <div className="wrapper">
         <div className="filter">
           <Webcam
             ref={webcamRef}
@@ -69,15 +69,15 @@ export const CameraDetection: React.FC<CameraDetectionProps> = ({ setIsImageSrc 
               height: 400
             }}
             className="webcam"
-            onUserMediaError={(error) => {
+            onUserMediaError={error => {
               onToPhoto(false);
               callErrorDialogComponent(String(error) ?? 'Permita que consigamos acessar sua câmera para tirar a foto.', TypeEnum.INFO);
             }}
             audio={false}
             mirrored={isRotate}
             screenshotFormat="image/jpeg"
-            />
-      </div>
+          />
+        </div>
       </div>
       {/* {boundingBox.map((box, index) => (
         <div
@@ -85,20 +85,11 @@ export const CameraDetection: React.FC<CameraDetectionProps> = ({ setIsImageSrc 
           key={`${index + 1}`}
         />
       ))} */}
-      
-      <div
-            className='w-full flex items-center gap-4'
-          >
-            <ButtonBack
-              onClick={() => onToPhoto(false)}
-            />
-            <Button
-                text="Tirar foto"
-                variant="medium"
-                type="button"
-                onClick={capture}
-              />
-          </div>
+
+      <div className="w-full flex items-center gap-4">
+        <ButtonBack onClick={() => onToPhoto(false)} />
+        <Button text="Tirar foto" variant="medium" type="button" onClick={capture} />
+      </div>
       <div className="hidden">
         {/* <button type="button" className="not-photo" onClick={() => onToPhoto(false)}>
           <Close width={24} height={24} className='text-danger' />

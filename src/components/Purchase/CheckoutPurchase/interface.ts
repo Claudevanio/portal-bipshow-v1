@@ -1,3 +1,3 @@
 export interface ICheckoutPurchase {
-    handleClickCheckoutNotPurchase: () => void;
+  handleClickCheckoutNotPurchase: () => void;
 }

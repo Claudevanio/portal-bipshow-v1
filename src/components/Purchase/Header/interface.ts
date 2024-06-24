@@ -1,3 +1,3 @@
 export interface IHeader {
-    handleClose?: () => void;
+  handleClose?: () => void;
 }

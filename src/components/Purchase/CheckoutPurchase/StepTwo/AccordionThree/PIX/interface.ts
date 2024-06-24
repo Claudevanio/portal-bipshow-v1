@@ -1,3 +1,3 @@
 export interface PIXProps {
-    handleIsOpenModalPurchaseSummary: () => void;
+  handleIsOpenModalPurchaseSummary: () => void;
 }

@@ -1,3 +1,3 @@
 export interface IPurchase {
-    handleClose?: () => void;
+  handleClose?: () => void;
 }

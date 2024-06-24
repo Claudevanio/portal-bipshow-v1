@@ -59,7 +59,7 @@ export const categories = [
     id: 15,
     name: 'Outros'
   }
-]
+];
 
 export const tipos = [
   {
@@ -102,4 +102,4 @@ export const tipos = [
     id: 10,
     name: 'Outros'
   }
-]
+];

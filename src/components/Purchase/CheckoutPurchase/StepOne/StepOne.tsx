@@ -9,15 +9,15 @@ export const StepOne: React.FC = () => {
   const { ticketSelectedUser, setIsStepper, loadingOrder, handleLoadPurchaseFlowTicket } = useTicketPurchase();
 
   const disabledButtonNext = useMemo((): boolean => {
-    const findExistFilled = ticketSelectedUser?.find((item) => item.filled);
+    const findExistFilled = ticketSelectedUser?.find(item => item.filled);
 
     return !!findExistFilled;
   }, [ticketSelectedUser]);
 
   useEffect(() => {
-    console.log('ticketSelectedUser', ticketSelectedUser)
+    console.log('ticketSelectedUser', ticketSelectedUser);
     // handleLoadPurchaseFlowTicket()
-  }, [ticketSelectedUser])
+  }, [ticketSelectedUser]);
 
   return (
     <ContainerStepOne>
@@ -29,10 +29,9 @@ export const StepOne: React.FC = () => {
           <LoadingSmall />
         </div>
       ) : (
-        <ul>          
-          {ticketSelectedUser && ticketSelectedUser.map((item) => (
-            <Card key={item.index} nome={item.nomeEvento || ''} index={item.index} user={item} />
-          ))}
+        <ul>
+          {ticketSelectedUser &&
+            ticketSelectedUser.map(item => <Card key={item.index} nome={item.nomeEvento || ''} index={item.index} user={item} />)}
         </ul>
       )}
       <div className="btn-next">

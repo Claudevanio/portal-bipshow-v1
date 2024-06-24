@@ -17,7 +17,7 @@ export const ModalEditAddress: React.FC<IModalEditAddress> = ({ onClose }) => {
     if (user) {
       await handleUpdateUser({
         ...user,
-        ...data,
+        ...data
       });
       onClose();
     }

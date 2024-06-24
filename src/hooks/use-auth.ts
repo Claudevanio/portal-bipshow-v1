@@ -1,20 +1,10 @@
 import { useContext } from 'react';
 import { AuthContext } from '@/contexts';
 
-export function useAuth () {
+export function useAuth() {
   const context = useContext(AuthContext);
 
-  const {
-    isAuthenticated,
-    user,
-    signIn,
-    logout,
-    verifyToken,
-    saveAccessToken,
-    isSignUpOpen,
-    setIsSignUpOpen,
-    accessToken
-  } = context;
+  const { isAuthenticated, user, signIn, logout, verifyToken, saveAccessToken, isSignUpOpen, setIsSignUpOpen, accessToken } = context;
 
   return {
     isAuthenticated,
@@ -27,4 +17,4 @@ export function useAuth () {
     setIsSignUpOpen,
     accessToken
   };
-};
+}

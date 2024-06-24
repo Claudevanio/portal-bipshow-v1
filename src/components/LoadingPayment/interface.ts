@@ -1,3 +1,3 @@
 export interface LoadingPaymentProps {
-    open: boolean;
+  open: boolean;
 }

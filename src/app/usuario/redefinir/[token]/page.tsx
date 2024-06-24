@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 import { NextPage } from 'next';
 import { SEO } from '@/components/SEO';
@@ -24,5 +24,4 @@ export default function ResetPassword({ params }: { params: { token: string } })
       </ResetPasswordProvider>
     </React.Fragment>
   );
-};
- 
+}

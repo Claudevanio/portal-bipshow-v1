@@ -17,6 +17,7 @@ const config: Config = {
         'minmax': 'repeat(auto-fit, minmax(120px, 1fr))',
       },
       screens: {
+        'xs': '375px',
         'sm': '640px',
         // => @media (min-width: 640px) { ... }
 

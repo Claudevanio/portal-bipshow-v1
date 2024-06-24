@@ -8,9 +8,9 @@ export const Tickets: React.FC = () => {
 
   return (
     <ContainerTickets>
-      {ticketFormatted && ticketFormatted.length > 0 && ticketFormatted.map((item, index) => (
-        <CardTicket index={index} valorVenda={item.valores} nome={item.nome} key={item.nome} />
-      ))}
+      {ticketFormatted &&
+        ticketFormatted.length > 0 &&
+        ticketFormatted.map((item, index) => <CardTicket index={index} valorVenda={item.valores} nome={item.nome} key={item.nome} />)}
     </ContainerTickets>
   );
 };

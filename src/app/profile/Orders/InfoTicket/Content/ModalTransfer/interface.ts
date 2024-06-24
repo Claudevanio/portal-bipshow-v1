@@ -1,4 +1,4 @@
 export interface IModalTransfer {
-    show: boolean;
-    onHide: () => void;
+  show: boolean;
+  onHide: () => void;
 }

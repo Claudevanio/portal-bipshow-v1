@@ -1,6 +1,6 @@
 export interface IInstallment {
-    quantity: number;
-    totalAmount: number;
-    interestFree: boolean;
-    installmentAmount: number;
+  quantity: number;
+  totalAmount: number;
+  interestFree: boolean;
+  installmentAmount: number;
 }

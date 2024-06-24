@@ -1,110 +1,110 @@
 export const states = [
   {
     uf: 'RO',
-    estado: 'Rondônia',
+    estado: 'Rondônia'
   },
   {
     uf: 'AC',
-    estado: 'Acre',
+    estado: 'Acre'
   },
   {
     uf: 'AM',
-    estado: 'Amazonas',
+    estado: 'Amazonas'
   },
   {
     uf: 'RR',
-    estado: 'Roraima',
+    estado: 'Roraima'
   },
   {
     uf: 'PA',
-    estado: 'Pará',
+    estado: 'Pará'
   },
   {
     uf: 'AP',
-    estado: 'Amapá',
+    estado: 'Amapá'
   },
   {
     uf: 'TO',
-    estado: 'Tocantins',
+    estado: 'Tocantins'
   },
   {
     uf: 'MA',
-    estado: 'Maranhão',
+    estado: 'Maranhão'
   },
   {
     uf: 'PI',
-    estado: 'Piauí',
+    estado: 'Piauí'
   },
   {
     uf: 'CE',
-    estado: 'Ceará',
+    estado: 'Ceará'
   },
   {
     uf: 'RN',
-    estado: 'Rio Grande do Norte',
+    estado: 'Rio Grande do Norte'
   },
   {
     uf: 'PB',
-    estado: 'Paraíba',
+    estado: 'Paraíba'
   },
   {
     uf: 'PE',
-    estado: 'Pernambuco',
+    estado: 'Pernambuco'
   },
   {
     uf: 'AL',
-    estado: 'Alagoas',
+    estado: 'Alagoas'
   },
   {
     uf: 'SE',
-    estado: 'Sergipe',
+    estado: 'Sergipe'
   },
   {
     uf: 'BA',
-    estado: 'Bahia',
+    estado: 'Bahia'
   },
   {
     uf: 'MG',
-    estado: 'Minas Gerais',
+    estado: 'Minas Gerais'
   },
   {
     uf: 'ES',
-    estado: 'Espírito Santo',
+    estado: 'Espírito Santo'
   },
   {
     uf: 'RJ',
-    estado: 'Rio de Janeiro',
+    estado: 'Rio de Janeiro'
   },
   {
     uf: 'SP',
-    estado: 'São Paulo',
+    estado: 'São Paulo'
   },
   {
     uf: 'PR',
-    estado: 'Paraná',
+    estado: 'Paraná'
   },
   {
     uf: 'SC',
-    estado: 'Santa Catarina',
+    estado: 'Santa Catarina'
   },
   {
     uf: 'RS',
-    estado: 'Rio Grande do Sul',
+    estado: 'Rio Grande do Sul'
   },
   {
     uf: 'MS',
-    estado: 'Mato Grosso do Sul',
+    estado: 'Mato Grosso do Sul'
   },
   {
     uf: 'MT',
-    estado: 'Mato Grosso',
+    estado: 'Mato Grosso'
   },
   {
     uf: 'GO',
-    estado: 'Goiás',
+    estado: 'Goiás'
   },
   {
     uf: 'DF',
-    estado: 'Distrito Federal',
-  },
+    estado: 'Distrito Federal'
+  }
 ];

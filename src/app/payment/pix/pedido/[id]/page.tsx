@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import type { NextPage } from 'next';
@@ -7,7 +7,6 @@ import { Orders } from '@/app/profile/Orders';
 import { Order } from '@/components/Order';
 
 const Tickets: NextPage = () => {
-
   return (
     <React.Fragment>
       <SEO

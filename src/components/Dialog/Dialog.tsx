@@ -3,32 +3,24 @@ import { CheckRounded, ErrorOutlineRounded, InfoRounded } from '@mui/icons-mater
 import { Dialog as MuiDialog } from '@mui/material';
 import { Button } from '..';
 
-export const Dialog = ({messagem, type} : any ) => {
-  
+export const Dialog = ({ messagem, type }: any) => {
   const { errorMessage } = useError();
   const { isErrorDialogVisible, setIsErrorDialogVisible } = useError();
-
 
   const getIcon = () => {
     switch (type) {
       case TypeEnum.INFO:
-        return <InfoRounded 
-        className='text-blue'
-        fontSize="large" />;
+        return <InfoRounded className="text-blue" fontSize="large" />;
       case TypeEnum.ERROR:
-        return <ErrorOutlineRounded 
-        className='text-danger'
-        fontSize="large" />;
+        return <ErrorOutlineRounded className="text-danger" fontSize="large" />;
       case TypeEnum.SUCCESS:
-        return <CheckRounded
-        className='text-green'
-        fontSize="large" />;
+        return <CheckRounded className="text-green" fontSize="large" />;
       default:
         return null;
     }
   };
 
-  return(
+  return (
     <>
       {isErrorDialogVisible && (
         <MuiDialog
@@ -44,24 +36,21 @@ export const Dialog = ({messagem, type} : any ) => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '.875rem',
-            },
+              gap: '.875rem'
+            }
           }}
         >
-          <div className='flex flex-col items-center justify-center'>
+          <div className="flex flex-col items-center justify-center">
             {getIcon()}
-            <p className='text-center'>{errorMessage}</p>
+            <p className="text-center">{errorMessage}</p>
           </div>
-          <div className='flex justify-center w-full'>
-            <Button
-              onClick={() => setIsErrorDialogVisible(false)}
-              className='w-[50%] flex justify-center'
-            >
+          <div className="flex justify-center w-full">
+            <Button onClick={() => setIsErrorDialogVisible(false)} className="w-[50%] flex justify-center">
               OK
             </Button>
           </div>
         </MuiDialog>
       )}
     </>
-  )
-}
+  );
+};

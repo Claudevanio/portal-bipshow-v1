@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import { LoginAndRegister } from '@/components/LoginAndRegister';
 import { useRegister } from '@/shared/hooks/useRegister';
@@ -16,7 +16,7 @@ export const Purchase: React.FC<IPurchase> = ({ handleClose }) => {
   const [isType, setIsType] = useState<'login' | 'register'>('login');
 
   const tokenUser = Cache.get({
-    key: '@tokenUser',
+    key: '@tokenUser'
   });
 
   const handleClickCheckoutPurchase = useCallback(() => {
@@ -33,23 +33,19 @@ export const Purchase: React.FC<IPurchase> = ({ handleClose }) => {
 
   useEffect(() => {
     if (!user && !webView && !tokenUser) {
-       setIsCheckoutPurchase(false)
+      setIsCheckoutPurchase(false);
+    } else {
+      setIsCheckoutPurchase(true);
     }
-    else {
-      setIsCheckoutPurchase(true)
-    };
   }, [user, setIsCheckoutPurchase, webView]);
 
   return (
     <ContainerPurchase>
       <Header handleClose={handleClose} />
-      {!isCheckoutPurchase && !tokenUser &&(
+      {!isCheckoutPurchase && !tokenUser && (
         <LoginAndRegister type={isType} onClickPurchase={handleClickCheckoutPurchase} handleChangeType={handleChangeType} />
       )}
-      {isCheckoutPurchase && (
-        <CheckoutPurchase handleClickCheckoutNotPurchase={handleClickCheckoutNotPurchase} 
-        />
-      )}
+      {isCheckoutPurchase && <CheckoutPurchase handleClickCheckoutNotPurchase={handleClickCheckoutNotPurchase} />}
     </ContainerPurchase>
   );
 };

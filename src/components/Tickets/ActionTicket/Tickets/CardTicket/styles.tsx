@@ -5,7 +5,7 @@ export const ContainerCardTicket = styled.li`
     align-items: center;
     width: 100%;
     padding-bottom: ${({ theme }) => theme.spacing(1)};
-    border-bottom: 1px solid ${({ theme }) => "rgba(0, 0, 0, 0.87)"};
+    border-bottom: 1px solid ${({ theme }) => 'rgba(0, 0, 0, 0.87)'};
     cursor: pointer;
 
     div.date {
@@ -17,36 +17,36 @@ export const ContainerCardTicket = styled.li`
         align-items: center;
         gap: 4px;
         padding: ${({ theme }) => theme.spacing(2)};
-        border: 2px solid ${({ theme }) => "#F2F2F2"};
+        border: 2px solid ${({ theme }) => '#F2F2F2'};
         border-radius: 8px;
         h6 {
-            font-size: ${({ theme }) => "1.75rem"};
-            font-family: ${({ theme }) => "inherit"};
+            font-size: ${({ theme }) => '1.75rem'};
+            font-family: ${({ theme }) => 'inherit'};
             font-weight: 700;
-            color ${({ theme }) => "#049985"};
+            color ${({ theme }) => '#049985'};
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
 
             &.two {
                 white-space: normal;
-                font-size: ${({ theme }) => "1.25rem"};
+                font-size: ${({ theme }) => '1.25rem'};
             }
         }
         div.month {
             display: flex;
             flex-direction: column;
             span {
-                font-size: ${({ theme }) => ".75rem"};
-                font-family: ${({ theme }) => "inherit"};
+                font-size: ${({ theme }) => '.75rem'};
+                font-family: ${({ theme }) => 'inherit'};
                 font-weight: 400;
                 line-height: 100%;
                 text-transform: capitalize;
-                color: ${({ theme }) => "rgba(0, 0, 0, 0.87)"}
+                color: ${({ theme }) => 'rgba(0, 0, 0, 0.87)'}
             }
             span.month {
                 font-weight: 700;
-                color: ${({ theme }) => "#049985"};
+                color: ${({ theme }) => '#049985'};
             }
         }
     }

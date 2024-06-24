@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { GetStorage, RemoveStorage, SetStorage } from "../../types";
+import { GetStorage, RemoveStorage, SetStorage } from '../../types';
 
 export const get: GetStorage = ({ key }) => {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return;
   }
   const value = localStorage.getItem(key);
@@ -14,14 +14,14 @@ export const get: GetStorage = ({ key }) => {
 };
 
 export const set: SetStorage = ({ key, value }) => {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return;
   }
   localStorage.setItem(key, JSON.stringify(value));
 };
 
 export const remove: RemoveStorage = ({ key }) => {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return;
   }
   localStorage.removeItem(key);

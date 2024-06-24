@@ -1,4 +1,4 @@
-import { AxiosRequestHeaders, AxiosResponseHeaders, ResponseType } from 'axios'
+import { AxiosRequestHeaders, AxiosResponseHeaders, ResponseType } from 'axios';
 
 export enum HttpStatusCode {
   Ok = 200,
@@ -11,19 +11,19 @@ export enum HttpStatusCode {
   ServerError = 500
 }
 
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export type HttpClientInput<T> = {
-  url: string
-  method: HttpMethod
-  params?: any
-  body?: T
-  headers?: AxiosRequestHeaders
-  responseType?: ResponseType
-}
+  url: string;
+  method: HttpMethod;
+  params?: any;
+  body?: T;
+  headers?: AxiosRequestHeaders;
+  responseType?: ResponseType;
+};
 
 export type HttpClientOutput<T> = {
-  statusCode: HttpStatusCode
-  body: T
-  headers: AxiosResponseHeaders
-}
+  statusCode: HttpStatusCode;
+  body: T;
+  headers: AxiosResponseHeaders;
+};

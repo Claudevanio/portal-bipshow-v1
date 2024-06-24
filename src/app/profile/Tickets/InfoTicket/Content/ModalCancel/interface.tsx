@@ -1,4 +1,4 @@
 export interface IModalCancel {
-    show: boolean;
-    onHide: () => void;
+  show: boolean;
+  onHide: () => void;
 }

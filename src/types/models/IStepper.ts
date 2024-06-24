@@ -1,4 +1,4 @@
 export interface IStepper {
-    stage: string;
-    number: number;
+  stage: string;
+  number: number;
 }

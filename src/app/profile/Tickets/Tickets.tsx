@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Ticket } from '@/components/icons/Ticket'; 
+import { Ticket } from '@/components/icons/Ticket';
 import { Empty } from '@/components/Empty';
 import { EventTicketProvider } from '@/shared/hooks/useEventTicket';
 import { useTickets } from '@/shared/hooks/useTickets';
@@ -18,7 +18,6 @@ export const Tickets: React.FC = () => {
 
   const [currentTab, setCurrentTab] = React.useState(0);
 
-  
   const [transfers, setTransfers] = React.useState<ITicketPurchaseConfirmationUser[] | undefined>(undefined);
 
   useEffect(() => {
@@ -29,47 +28,33 @@ export const Tickets: React.FC = () => {
     getTransfers();
   }, []);
 
-
   return (
     <ContainerTickets>
       <div className="flex gap-4 items-center font-medium text-textPrimary">
         <Ticket width={24} height={24} color={'#8779F8'} fillOpacity />
         <h6 className="title text-xl font-bold">Meus ingressos</h6>
-      </div> 
-      {
-        !infoTicket && 
-        <div
-          className="flex gap-2 mt-8 items-center w-full border-b-2 border-gray pb-2 font-medium"
-        >
+      </div>
+      {!infoTicket && (
+        <div className="flex gap-2 mt-8 items-center w-full border-b-2 border-gray pb-2 font-medium">
           <p
-            className={`cursor-pointer border-r-2 border-gray pr-2 ${
-              currentTab === 0 ? "text-[#2EB518]" : "text-textPrimary"
-            }`}
+            className={`cursor-pointer border-r-2 border-gray pr-2 ${currentTab === 0 ? 'text-[#2EB518]' : 'text-textPrimary'}`}
             onClick={() => setCurrentTab(0)}
           >
             Ativos
           </p>
           <p
-            className={`cursor-pointer border-r-2 pl-2 border-gray pr-2 ${
-              currentTab === 1 ? "text-[#2EB518]" : "text-textPrimary"
-            }`}
-            onClick={() => setCurrentTab(1)}>
+            className={`cursor-pointer border-r-2 pl-2 border-gray pr-2 ${currentTab === 1 ? 'text-[#2EB518]' : 'text-textPrimary'}`}
+            onClick={() => setCurrentTab(1)}
+          >
             Encerrados
           </p>
-          <p
-            className={`cursor-pointer pl-2 ${
-              currentTab === 2 ? "text-[#2EB518]" : "text-textPrimary"
-            }`}
-            onClick={() => setCurrentTab(2)}
-          >
+          <p className={`cursor-pointer pl-2 ${currentTab === 2 ? 'text-[#2EB518]' : 'text-textPrimary'}`} onClick={() => setCurrentTab(2)}>
             Tranferidos
-  
           </p>
-  
         </div>
-      }
-      
-      {ticketsUser.length <= 0  && currentTab === 0 &&  (
+      )}
+
+      {ticketsUser.length <= 0 && currentTab === 0 && (
         <div className="empty">
           <Empty text="Você não possuí ingressos ativos." />
         </div>
@@ -79,39 +64,42 @@ export const Tickets: React.FC = () => {
           <Empty text="Você não possuí ingressos encerrados." />
         </div>
       )}
-      {
-        transfers && transfers.length <= 0 && currentTab === 2 && (
-          <div className="empty">
-            <Empty text="Você não possuí ingressos transferidos." />
-          </div>
-        )
-      }
+      {transfers && transfers.length <= 0 && currentTab === 2 && (
+        <div className="empty">
+          <Empty text="Você não possuí ingressos transferidos." />
+        </div>
+      )}
 
       {ticketsUser.length > 0 && currentTab === 0 && (
-        <React.Fragment> 
+        <React.Fragment>
           <ul className="list-tickets">
-            {ticketsUser && !infoTicket && ticketsUser.length > 0 && ticketsUser.map((item) => (
-              <Card
-                key={item.id}
-                onClick={() => handleSelectInfoTicket(item.id, item.evento.id)}
-                active 
-                tickets={{
-                  address: `${item.evento.endereco}`,
-                  date: item.evento.dataRealizacao || '',
-                  foto: `${process.env.URL_API}${item.evento.imagens[0].link}`,
-                  name: item.evento.nome || '',
-                }}
-                idEvento={item.evento.id}
-              />
-            ))}
+            {ticketsUser &&
+              !infoTicket &&
+              ticketsUser.length > 0 &&
+              ticketsUser.map(item => (
+                <Card
+                  key={item.id}
+                  onClick={() => handleSelectInfoTicket(item.id, item.evento.id)}
+                  active
+                  tickets={{
+                    address: `${item.evento.endereco}`,
+                    date: item.evento.dataRealizacao || '',
+                    foto: `${process.env.URL_API}${item.evento.imagens[0].link}`,
+                    name: item.evento.nome || ''
+                  }}
+                  idEvento={item.evento.id}
+                />
+              ))}
           </ul>
         </React.Fragment>
       )}
-      {
-        ticketsUserCanceled.length > 0 && currentTab === 1 && (
-          <React.Fragment>
-            <ul className="list-tickets">
-              {ticketsUserCanceled && !infoTicket && ticketsUserCanceled.length > 0 && ticketsUserCanceled.map((item) => (
+      {ticketsUserCanceled.length > 0 && currentTab === 1 && (
+        <React.Fragment>
+          <ul className="list-tickets">
+            {ticketsUserCanceled &&
+              !infoTicket &&
+              ticketsUserCanceled.length > 0 &&
+              ticketsUserCanceled.map(item => (
                 <Card
                   key={item.id}
                   canceled={true}
@@ -121,59 +109,36 @@ export const Tickets: React.FC = () => {
                     address: `${item.evento.endereco}`,
                     date: item.evento.dataRealizacao || '',
                     foto: `${process.env.URL_API}${item.evento.imagens[1].link}`,
-                    name: item.evento.nome || '',
+                    name: item.evento.nome || ''
                   }}
                   idEvento={item.evento.id}
                 />
               ))}
-            </ul>
-          </React.Fragment>
-        )
-      }
+          </ul>
+        </React.Fragment>
+      )}
       {
-            <div
-              className=' flex-col w-full gap-8 pt-4'
-              style={{
-                display: currentTab === 2 ? 'flex' : 'none'
-              }}
-            >
-            {
-              transfers ? (
-                transfers.length > 0 &&
-                transfers.map(
-                  (value: any, index: number) => {
-                    return (
-                      <div>
-                        
-                          {
-                          (
-                            <div
-                              className='flex flex-col gap-4 md:flex-row font-medium w-full border-l-2 border-gray pl-6 md:pl-2 '
-                            >
-                              <div
-                                className='flex md:hidden justify-between w-full text-textPrimary text-sm md:text-base'
-                              >
-                              {
-                                value.evento?.link
-                              }
-                              <p
-                                className='md:hidden'
-                              >
-                                {
-                                  dayjs(value.evento?.dataRealizacao).format('DD/MM/YYYY')
-                                }
-                                {
-                                  ' '
-                                }
-                                {
-                                  dayjs(value.evento?.dataRealizacao).format('HH:mm')
-                                }
-                              </p>
-                            </div>
-                              <div
-                                  className='flex gap-4 w-full items-center'
-                              >
-                              {/* {
+        <div
+          className=" flex-col w-full gap-8 pt-4"
+          style={{
+            display: currentTab === 2 ? 'flex' : 'none'
+          }}
+        >
+          {transfers ? (
+            transfers.length > 0 &&
+            transfers.map((value: any, index: number) => {
+              return (
+                <div>
+                  {
+                    <div className="flex flex-col gap-4 md:flex-row font-medium w-full border-l-2 border-gray pl-6 md:pl-2 ">
+                      <div className="flex md:hidden justify-between w-full text-textPrimary text-sm md:text-base">
+                        {value.evento?.link}
+                        <p className="md:hidden">
+                          {dayjs(value.evento?.dataRealizacao).format('DD/MM/YYYY')} {dayjs(value.evento?.dataRealizacao).format('HH:mm')}
+                        </p>
+                      </div>
+                      <div className="flex gap-4 w-full items-center">
+                        {/* {
                                 value.comValidacaoFacial ? 
                                 <svg width="120" height="120" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path fillRule="evenodd" clipRule="evenodd" d="M5.81815 5H10.679V6.64292H6.64347V10.7337H5V5.81815C5 5.37153 5.37098 5 5.81815 5ZM21.3215 5H26.1824C26.629 5 27.0005 5.37098 27.0005 5.81815V10.727H25.3576V6.64347H21.3149V5H21.3215ZM21.2663 25.3571H25.3571V21.3144H27V26.1752C27 26.629 26.629 26.9934 26.1818 26.9934H21.273V25.3571H21.2663ZM5 21.2663H6.64292V25.3571H10.6856V27H5.81815C5.37153 27 5 26.629 5 26.1819V21.2663Z" fill="#05B59D" />
@@ -182,75 +147,43 @@ export const Tickets: React.FC = () => {
                                   value={value}
                                 /> 
                                 } */}
-                                {
-                                  <div 
-                                    style={{
-                                      backgroundImage: `url(${value.evento.imagens[0].link})`,
-                                      backgroundSize: '100%',
-                                      backgroundPosition: 'center',
-                                      width: '96px',
-                                      height: '80px', 
-                                      borderRadius: '16px',
-                                      backgroundRepeat: 'no-repeat'
-                                    }}
-                                    />
-                                }
-                              <div
-                                className='flex flex-col gap-2 w-full justify-between text-sm'
-                              >
-                                <p
-                                  className='text-textPrimary hidden md:block'
-                                  >
-                                    {
-                                      value.evento?.nome ?? value.evento?.link
-                                    }
-                                </p>
-                                <p className='text-textPrimary flex items-center justify-between w-full'>
-                                  Transferido para:
-                                  <p
-                                    className='hidden md:block'
-                                  >
-                                    {
-                                      dayjs(value.dataTransferencia).format('DD/MM/YYYY')
-                                    }
-                                    {
-                                      ' '
-                                    }
-                                    {
-                                      dayjs(value.dataTransferencia).format('HH:mm')
-                                    }
-                                  </p>
-                                </p>
-                                <div
-                                  className='flex flex-col gap-3'
-                                >
-                                  <p
-                                    className='text-tertiary'
-                                  >
-                                    {value.destinatario.nome}
-                                  </p>
-                                  <p>
-                                    {
-                                      TELEFONEMask(
-                                        value.destinatario.telefone
-                                      )
-                                    }
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            </div>
-                          )}
+                        {
+                          <div
+                            style={{
+                              backgroundImage: `url(${value.evento.imagens[0].link})`,
+                              backgroundSize: '100%',
+                              backgroundPosition: 'center',
+                              width: '96px',
+                              height: '80px',
+                              borderRadius: '16px',
+                              backgroundRepeat: 'no-repeat'
+                            }}
+                          />
+                        }
+                        <div className="flex flex-col gap-2 w-full justify-between text-sm">
+                          <p className="text-textPrimary hidden md:block">{value.evento?.nome ?? value.evento?.link}</p>
+                          <p className="text-textPrimary flex items-center justify-between w-full">
+                            Transferido para:
+                            <p className="hidden md:block">
+                              {dayjs(value.dataTransferencia).format('DD/MM/YYYY')} {dayjs(value.dataTransferencia).format('HH:mm')}
+                            </p>
+                          </p>
+                          <div className="flex flex-col gap-3">
+                            <p className="text-tertiary">{value.destinatario.nome}</p>
+                            <p>{TELEFONEMask(value.destinatario.telefone)}</p>
+                          </div>
+                        </div>
                       </div>
-                    );
+                    </div>
                   }
-                )
-              ) : (
-                <p className="px-8 text-center">Falha ao carregar dados</p>
-              )
-            }
-            </div>
-          }
+                </div>
+              );
+            })
+          ) : (
+            <p className="px-8 text-center">Falha ao carregar dados</p>
+          )}
+        </div>
+      }
       {infoTicket && (
         <EventTicketProvider>
           <InfoTicket />

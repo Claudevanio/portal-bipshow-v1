@@ -6,22 +6,20 @@ import { IChairs } from './interface';
 import { WheelchairPickup } from '@mui/icons-material';
 
 export const Chairs: React.FC<IChairs> = ({ chairs, letra, isMaxChair }) => {
-  const {
-    idSector, handleSelectChair, selectedChairs, chairs: isChairs,
-  } = useEventTicket();
+  const { idSector, handleSelectChair, selectedChairs, chairs: isChairs } = useEventTicket();
 
   return (
     <ContainerChairs>
       <h6 className="title">{letra}</h6>
       <ul>
-        {chairs.map((item) => (
+        {chairs.map(item => (
           <Circle
             quantity={chairs.length}
             hover={item.numero}
             wheelChair={item.cadeirante}
             key={item.identificador}
             className={`${isChairs.find((i: any) => i.c.id === item.id)?.r || item.excluida ? 'excluded' : ''} ${
-              selectedChairs.find((i) => i.identifierChair === `${item.identificador} - ${idSector}`) ? 'seleted' : ''
+              selectedChairs.find(i => i.identifierChair === `${item.identificador} - ${idSector}`) ? 'seleted' : ''
             }`}
             onClick={() => {
               if (!isChairs.find((i: any) => i.c.id === item.id)?.r) {

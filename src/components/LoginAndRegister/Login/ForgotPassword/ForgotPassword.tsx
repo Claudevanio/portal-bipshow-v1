@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "@/shared/hooks/useAuth";
-import { ContainerForgotPassword } from "./styles";
-import { useFormContext } from "react-hook-form";
-import { CPFMask, DATEMaskStart } from "@/shared/config/mask";
-import { InputCode } from "@/components/Form/Input-code";
-import { ButtonBack } from "@/components/ButtonBack";
-import { cpf, data } from "@/shared/config/regex";
-import { Button } from "@/components/Form/Button";
-import { Input } from "@/components/Form/Input";
-import { format, isAfter, parseISO } from "date-fns";
-import { useRegister } from "@/shared/hooks/useRegister";
-import { theme } from "@/shared";
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '@/shared/hooks/useAuth';
+import { ContainerForgotPassword } from './styles';
+import { useFormContext } from 'react-hook-form';
+import { CPFMask, DATEMaskStart } from '@/shared/config/mask';
+import { InputCode } from '@/components/Form/Input-code';
+import { ButtonBack } from '@/components/ButtonBack';
+import { cpf, data } from '@/shared/config/regex';
+import { Button } from '@/components/Form/Button';
+import { Input } from '@/components/Form/Input';
+import { format, isAfter, parseISO } from 'date-fns';
+import { useRegister } from '@/shared/hooks/useRegister';
+import { theme } from '@/shared';
 import { useRouter } from 'next/navigation';
-import { validateCPF } from "@/shared/config/validateCPF";
+import { validateCPF } from '@/shared/config/validateCPF';
 import { ArrowRightOutlined, CheckCircle, SmartphoneOutlined } from '@mui/icons-material';
 import { CheckPassword } from '@/components/icons/CheckPassword';
 
@@ -37,22 +37,21 @@ export const ForgotPassowrd: React.FC = () => {
   const methods = useFormContext();
   const [validPhoneOrEmail, setValidPhoneOrEmail] = useState<boolean>(false);
   const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [dispositivoCheckado, setDispositivoCheckado] =
-    useState<boolean>(false);
+  const [dispositivoCheckado, setDispositivoCheckado] = useState<boolean>(false);
   const [dataInvalida, setDataInvalida] = useState<boolean>(true);
   const [insideStepper, setInsideStepper] = useState<number>(0);
-  const [cpf, setCpf] = useState<String>("");
-  const [nascimentoCpf, setNascimentoCpf] = useState<string>("");
-  const isDataNascimento = watch("dataNascimento")
+  const [cpf, setCpf] = useState<String>('');
+  const [nascimentoCpf, setNascimentoCpf] = useState<string>('');
+  const isDataNascimento = watch('dataNascimento');
   const { push } = useRouter();
 
-  const isCpf = watch("emailOrCpf");
+  const isCpf = watch('emailOrCpf');
 
   const handleClickBack = () => {
     if (insideStepper == 0) {
       setIsStepper(isStepper - 1);
       setIsForgotPassword(false);
-    } else if(insideStepper == 2) {
+    } else if (insideStepper == 2) {
       setInsideStepper(insideStepper - 2);
     } else {
       setInsideStepper(insideStepper - 1);
@@ -63,30 +62,26 @@ export const ForgotPassowrd: React.FC = () => {
     const fetchData = async () => {
       if (isCpf?.length === 14) {
         const { usuario } = await handleInfoCpf(isCpf);
-        setNascimentoCpf(
-          format(parseISO(usuario?.dataNascimento), "dd/MM/yyyy")
-        );
+        setNascimentoCpf(format(parseISO(usuario?.dataNascimento), 'dd/MM/yyyy'));
       }
     };
 
     fetchData();
   }, [isCpf]);
 
-
-  const handleGetEmail = () =>{
-    if(dataForgotPassword?.email) {
+  const handleGetEmail = () => {
+    if (dataForgotPassword?.email) {
       return dataForgotPassword?.email;
     }
 
-    return getValues("email")
-  }
+    return getValues('email');
+  };
 
   const handleChangeEmail = React.useCallback((e: any) => {
-    setValue("email", e.target.value);
+    setValue('email', e.target.value);
   }, []);
 
   const handleChoose = React.useCallback((data: boolean) => {
-   
     setIsEmail(data);
 
     setInsideStepper(2);
@@ -100,14 +95,14 @@ export const ForgotPassowrd: React.FC = () => {
 
   const handleClick = React.useCallback(async () => {
     if (insideStepper == 0) {
-      const  data : any = await handleForgotPassword(isCpf);
+      const data: any = await handleForgotPassword(isCpf);
       setCpf(isCpf);
 
-      if(dataForgotPassword?.email || data?.usuario?.email) {
+      if (dataForgotPassword?.email || data?.usuario?.email) {
         setIsEmail(true);
       } else {
-        if(!data?.usuario?.telefone) {
-          push("/register");
+        if (!data?.usuario?.telefone) {
+          push('/register');
           return;
         }
         setIsEmail(false);
@@ -117,26 +112,19 @@ export const ForgotPassowrd: React.FC = () => {
     }
 
     if (isEmail) {
-      if(!dataForgotPassword?.email) {
-        await handleUpdateEmail(
-          getValues("email"),
-          dataForgotPassword?.uzerId || 0
-        );
+      if (!dataForgotPassword?.email) {
+        await handleUpdateEmail(getValues('email'), dataForgotPassword?.uzerId || 0);
       }
-      handleSendEmailForgotPassword(
-        dataForgotPassword?.token || "",
-        dataForgotPassword?.email || getValues("email") || "  ",
-      );
+      handleSendEmailForgotPassword(dataForgotPassword?.token || '', dataForgotPassword?.email || getValues('email') || '  ');
 
       setInsideStepper(3);
       return;
     }
 
-
     if (dispositivoCheckado && !dataForgotPassword?.email) {
-      const existe = await checkEmailExistente(getValues("email"));
+      const existe = await checkEmailExistente(getValues('email'));
 
-      if(existe) {
+      if (existe) {
         return;
       }
 
@@ -146,11 +134,8 @@ export const ForgotPassowrd: React.FC = () => {
       return;
     }
 
-    if(dispositivoCheckado && dataForgotPassword?.email) {
-      handleSendEmailForgotPassword(
-        dataForgotPassword?.token || "",
-        dataForgotPassword.email
-      );
+    if (dispositivoCheckado && dataForgotPassword?.email) {
+      handleSendEmailForgotPassword(dataForgotPassword?.token || '', dataForgotPassword.email);
 
       setInsideStepper(3);
     }
@@ -159,26 +144,22 @@ export const ForgotPassowrd: React.FC = () => {
   }, [insideStepper, isCpf, dispositivoCheckado, setIsEmail, dataForgotPassword, setDispositivoCheckado]);
 
   const wrongDate = (value: string) => {
-    
-    const isFormat = value.split("/");
-    const isAfterDateNow = isAfter(
-      Date.now(),
-      new Date(isFormat.reverse().join("-"))
-    );
-    console.log(forgotPasswordDefaultValues)
+    const isFormat = value.split('/');
+    const isAfterDateNow = isAfter(Date.now(), new Date(isFormat.reverse().join('-')));
+    console.log(forgotPasswordDefaultValues);
     let sameDate = value === forgotPasswordDefaultValues?.dataNascimentoCpf;
 
-    if(!sameDate) {
-      setDataInvalida(true)
+    if (!sameDate) {
+      setDataInvalida(true);
     } else {
-      setDataInvalida(false)
+      setDataInvalida(false);
     }
 
-    if (nascimentoCpf != "") {
+    if (nascimentoCpf != '') {
       sameDate = value === nascimentoCpf;
     }
 
-    if (!forgotPasswordDefaultValues?.dataNascimentoCpf && nascimentoCpf == "") {
+    if (!forgotPasswordDefaultValues?.dataNascimentoCpf && nascimentoCpf == '') {
       sameDate = true;
     }
 
@@ -200,33 +181,30 @@ export const ForgotPassowrd: React.FC = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "Documento CPF inválido. Verifique",
+                    message: 'Documento CPF inválido. Verifique'
                   },
                   minLength: {
                     value: 14,
-                    message: "CPF inválido. Verifique",
+                    message: 'CPF inválido. Verifique'
                   },
                   maxLength: {
                     value: 14,
-                    message: "CPF inválido. Verifique",
+                    message: 'CPF inválido. Verifique'
                   },
                   pattern: {
                     value: cpf as any,
-                    message: "CPF inválido. Verifique",
+                    message: 'CPF inválido. Verifique'
                   },
                   validate: (value: string) => {
-                    if (!validateCPF(value)){
+                    if (!validateCPF(value)) {
                       return 'CPF inválido. Verifique';
                     }
                     return true;
                   }
-                }}                
+                }}
                 mask={CPFMask}
                 disabled={true}
-                errorText={
-                  methods.formState.errors.cpf &&
-                  (methods.formState.errors.cpf.message as string)
-                }
+                errorText={methods.formState.errors.cpf && (methods.formState.errors.cpf.message as string)}
               />
             </div>
             <div className="input-data">
@@ -238,27 +216,26 @@ export const ForgotPassowrd: React.FC = () => {
                 rules={{
                   max: {
                     value: 10,
-                    message: "Data de nascimento inválida. Verifique",
+                    message: 'Data de nascimento inválida. Verifique'
                   },
                   min: {
                     value: 10,
-                    message: "Data de nascimento inválida. Verifique",
+                    message: 'Data de nascimento inválida. Verifique'
                   },
                   minLength: {
                     value: 10,
-                    message: "Data de nascimento inválida. Verifique",
+                    message: 'Data de nascimento inválida. Verifique'
                   },
                   required: {
                     value: true,
-                    message: "Data de nascimento inválida. Verifique",
+                    message: 'Data de nascimento inválida. Verifique'
                   },
-                  validate: wrongDate,
+                  validate: wrongDate
                 }}
                 mask={DATEMaskStart}
                 errorText={
-                  formState.errors.dataNascimento && (
-                  dataInvalida ? ("Data não confere com o cpf." as string) : 
-                  ("Data de nascimento inválida. Verifique" as string))
+                  formState.errors.dataNascimento &&
+                  (dataInvalida ? ('Data não confere com o cpf.' as string) : ('Data de nascimento inválida. Verifique' as string))
                 }
                 disabled={false}
               />
@@ -269,48 +246,31 @@ export const ForgotPassowrd: React.FC = () => {
           <div>
             <h6 className="title">Redefinição de senha</h6>
             <p className="text-input">
-              Escolha um dos canais abaixo para receber um codigo de validação e
-              prosseguir com a troca da sua senha no Aplicativo SynPass
+              Escolha um dos canais abaixo para receber um codigo de validação e prosseguir com a troca da sua senha no Aplicativo SynPass
             </p>
             <div className="body-box">
               {dataForgotPassword?.telefone && (
                 <div className="box" onClick={() => handleChoose(false)}>
-                  <div>
-                    {<SmartphoneOutlined className="icon" width={24} height={24} />}
-                  </div>
+                  <div>{<SmartphoneOutlined className="icon" width={24} height={24} />}</div>
                   <div className="box-text">
                     <div className="telefone-title">Com seu telefone</div>
-                    <div className="telefone">
-                      {dataForgotPassword?.telefone}
-                    </div>
+                    <div className="telefone">{dataForgotPassword?.telefone}</div>
                   </div>
                   <div>
-                    <ArrowRightOutlined
-                      className="icon"
-                      width={24}
-                      height={24}
-                    />
+                    <ArrowRightOutlined className="icon" width={24} height={24} />
                   </div>
                 </div>
               )}
               <div className="body-box">
                 {dataForgotPassword?.email && (
                   <div className="box" onClick={() => handleChoose(true)}>
-                    <div>
-                      {<SmartphoneOutlined className="icon" width={24} height={24} />}
-                    </div>
+                    <div>{<SmartphoneOutlined className="icon" width={24} height={24} />}</div>
                     <div className="box-text">
                       <div className="telefone-title">Com seu email</div>
-                      <div className="telefone">
-                        {dataForgotPassword?.email}
-                      </div>
+                      <div className="telefone">{dataForgotPassword?.email}</div>
                     </div>
                     <div>
-                      <ArrowRightOutlined
-                        className="icon"
-                        width={24}
-                        height={24}
-                      />
+                      <ArrowRightOutlined className="icon" width={24} height={24} />
                     </div>
                   </div>
                 )}
@@ -320,26 +280,12 @@ export const ForgotPassowrd: React.FC = () => {
         )}
         {insideStepper == 2 && (
           <div>
-            {!dispositivoCheckado && (
-              <h6 className="title">Validação de dispositivo</h6>
-            )}
+            {!dispositivoCheckado && <h6 className="title">Validação de dispositivo</h6>}
 
             <p className="text">
-              {!isEmail && !dispositivoCheckado && (
-                <div>
-                  Enviamos um codigo para o seu telefone{" "}
-                  {dataForgotPassword?.telefone}
-                </div>
-              )}
-              {isEmail && !dispositivoCheckado && (
-                <div>
-                  Enviamos um codigo para o seu email{" "}
-                  {handleGetEmail()}
-                </div>
-              )}
-              {dispositivoCheckado && (
-                <h6 className="title">Redefinição de senha</h6>
-              )}
+              {!isEmail && !dispositivoCheckado && <div>Enviamos um codigo para o seu telefone {dataForgotPassword?.telefone}</div>}
+              {isEmail && !dispositivoCheckado && <div>Enviamos um codigo para o seu email {handleGetEmail()}</div>}
+              {dispositivoCheckado && <h6 className="title">Redefinição de senha</h6>}
               {dispositivoCheckado && (
                 <div className="email">
                   <Input
@@ -350,19 +296,16 @@ export const ForgotPassowrd: React.FC = () => {
                     rules={{
                       required: {
                         value: true,
-                        message: "E-mail inválido. Verifique",
+                        message: 'E-mail inválido. Verifique'
                       },
                       pattern: {
                         value:
                           /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?)*$/,
-                        message: "E-mail inválido. Verifique",
-                      },
+                        message: 'E-mail inválido. Verifique'
+                      }
                     }}
                     onChange={handleChangeEmail}
-                    errorText={
-                      formState.errors.email &&
-                      (formState.errors.email.message as string)
-                    }
+                    errorText={formState.errors.email && (formState.errors.email.message as string)}
                     disabled={false}
                   />
                 </div>
@@ -371,32 +314,24 @@ export const ForgotPassowrd: React.FC = () => {
             {!dispositivoCheckado && (
               <InputCode
                 setCodigoValido={setValidPhoneOrEmail}
-                getCode={
-                  isEmail ? handleValidationEmail : handleValidationPhone
-                }
-                dispositivo={
-                  isEmail
-                    ? dataForgotPassword?.email || getValues("email")
-                    : dataForgotPassword?.telefone || ""
-                }
+                getCode={isEmail ? handleValidationEmail : handleValidationPhone}
+                dispositivo={isEmail ? dataForgotPassword?.email || getValues('email') : dataForgotPassword?.telefone || ''}
               />
             )}
           </div>
         )}
         {insideStepper == 3 && (
           <div className="redefinicao-body">
-            <CheckCircle
-              className='text-primary !text-[4rem]'/>
+            <CheckCircle className="text-primary !text-[4rem]" />
             <h6 className="title">
-              O e-mail de redefinição de senha foi enviado para{" "}
-              <strong> {getValues("email") || dataForgotPassword?.email}</strong>
+              O e-mail de redefinição de senha foi enviado para <strong> {getValues('email') || dataForgotPassword?.email}</strong>
             </h6>
             <div className="body-button">
-              <ButtonBack              
-              onClick={() => {
-                setIsStepper(isStepper - 1);
-                setIsForgotPassword(false);
-              }}
+              <ButtonBack
+                onClick={() => {
+                  setIsStepper(isStepper - 1);
+                  setIsForgotPassword(false);
+                }}
               />
               {/* <Button
                 className="submit"
@@ -418,8 +353,8 @@ export const ForgotPassowrd: React.FC = () => {
               className="submit"
               type="button"
               variant="medium"
-              text={insideStepper == 0 ? "Confirmar" : "Enviar"}
-              disabled={insideStepper == 0 ? dataInvalida || !!formState.errors.dataNascimento  : !validPhoneOrEmail}
+              text={insideStepper == 0 ? 'Confirmar' : 'Enviar'}
+              disabled={insideStepper == 0 ? dataInvalida || !!formState.errors.dataNascimento : !validPhoneOrEmail}
               onClick={handleClick}
             />
           </div>

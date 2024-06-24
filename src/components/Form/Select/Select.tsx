@@ -6,9 +6,7 @@ import { ContainerSelect } from './styles';
 import { ISelect } from './interface';
 import { CircularProgress } from '@mui/material';
 
-export const Select: React.FC<ISelect> = ({
-  label, name, rules, errorText, options, loading, defaultValue, ...rest
-}) => {
+export const Select: React.FC<ISelect> = ({ label, name, rules, errorText, options, loading, defaultValue, ...rest }) => {
   const { control, getValues } = useFormContext();
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -31,25 +29,35 @@ export const Select: React.FC<ISelect> = ({
             {label}
             {!loading && <ArrowBottom width={24} height={24} />}
           </label>
-          <select className="form-select" aria-label="Default select example" {...field} onChange={field.onChange} {...rest} disabled={rest.disabled} name={name}>
-            {options && options?.length > 0 &&  options?.map((item) => (
-              getValues(name) === item.value ? (
-                <option value={item.value} key={item.value} selected>{item.innerText}</option>
-              ) : (
-                <option value={item.value} key={item.value}>{item.innerText}</option>
-              )
-            ))}
+          <select
+            className="form-select"
+            aria-label="Default select example"
+            {...field}
+            onChange={field.onChange}
+            {...rest}
+            disabled={rest.disabled}
+            name={name}
+          >
+            {options &&
+              options?.length > 0 &&
+              options?.map(item =>
+                getValues(name) === item.value ? (
+                  <option value={item.value} key={item.value} selected>
+                    {item.innerText}
+                  </option>
+                ) : (
+                  <option value={item.value} key={item.value}>
+                    {item.innerText}
+                  </option>
+                )
+              )}
           </select>
           {loading && (
             <div>
-              <CircularProgress size={24} 
-                className='text-primary'
-              />
+              <CircularProgress size={24} className="text-primary" />
             </div>
           )}
-          {errorText && errorText !== '' && (
-            <p className="text-dark">{errorText}</p>
-          )}
+          {errorText && errorText !== '' && <p className="text-dark">{errorText}</p>}
         </ContainerSelect>
       )}
     />

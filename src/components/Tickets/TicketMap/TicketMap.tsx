@@ -6,7 +6,7 @@ import { HTMLMap } from './HTMLMap';
 export const TicketMap: React.FC = () => {
   return (
     <ContainerTicketMap id="map">
-      <div className='container'>
+      <div className="container">
         <div className="select-sector">
           <h5 className="title">Selecione o seu lugar</h5>
           <div className="actions">
