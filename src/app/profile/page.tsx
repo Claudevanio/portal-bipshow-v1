@@ -32,7 +32,7 @@ export default function Profile() {
   const pathname = usePathname();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    debugger;
+    
     setActiveTab(newValue);
     if (newValue == 0) {
       router.replace('/profile?tab=meus-ingressos');

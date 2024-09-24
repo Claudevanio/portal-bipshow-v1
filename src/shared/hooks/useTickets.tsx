@@ -141,7 +141,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     async (userTransfer: IUser, hideDialog?: boolean) => {
       try {
         if (isInfoTicket) {
-          debugger;
+          
           setLoadingTransfer(true);
           await apiTokeUser.post(`${TRANSFER_TICKETS}/${isInfoTicket?.pedido.guid}/bilhete/utilizador`, {
             id: isInfoTicket.id,

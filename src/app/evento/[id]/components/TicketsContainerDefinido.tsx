@@ -11,7 +11,7 @@ import { HTMLMap } from '@/components/Tickets/TicketMap/HTMLMap';
 import { useEventTicket } from '@/shared/hooks';
 import { IAction } from '@/components/Tickets/ActionTicket/Ticket/Action/interface';
 import { SelectedSector } from '@/components/Tickets/TicketMap/ActionSectorOrChair/SelectedSector';
-import { Divider, Menu, MenuItem, Select } from '@mui/material';
+import { Box, Divider, Menu, MenuItem, Select } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 dayjs.locale(ptBr);
@@ -134,7 +134,8 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
     setIsQuantity,
     handleSelectSector,
     handleEditChair,
-    handleShowModal
+    handleShowModal,
+    handleSelectTicketWithSelectedSectorInStadium
   } = useEventTicket();
 
   const [quantityPerTicket, setQuantityPerTicket] = useState<number[]>();
@@ -207,7 +208,13 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
 
   return (
     <GradientBorder>
-      <div className="flex w-full gap-6 flex-col 2xl:flex-row ">
+      <Box className="flex w-full gap-6 flex-col overflow-hidden"
+        sx={{
+          '@media (min-width: 1820px)': {
+            flexDirection: 'row !important',
+          },
+        }}
+      >
         <div className="flex flex-col w-full gap-4 p-2">
           <h3 className="flex text-tertiary gap-3 font-semibold border-b-2 border-gray pb-4 ">
             <Image src={'/Ticket.svg'} alt="ingresso" height={20} width={20} /> Ingressos
@@ -289,7 +296,11 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
                         </div>
                       </div>
                       <KeyboardArrowRight
-                        onClick={() => {
+                        onClick={() => {  
+                          if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio ) {
+                            handleSelectTicketWithSelectedSectorInStadium(item.idSector);
+                            return;
+                          } 
                           if (!eventTicket?.local?.mapa || !eventTicket?.exibirCadeiras) {
                             handleSelectTicket(index);
                           }
@@ -474,6 +485,10 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
                       variant="primary"
                       className="pl-1"
                       onClick={() => {
+                        if(eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio){
+                          handleShowModal()
+                          return;
+                        }
                         handleSelectTicketWithChairs(selectedChairs);
                         handleShowModal();
                       }}
@@ -572,6 +587,10 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
                     className="pl-1"
                     disabled={ticketsPurchase && ticketsPurchase.length > 0 ? false : true}
                     onClick={() => {
+                      if(eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio){
+                        handleShowModal()
+                        return;
+                      }
                       handleSelectTicketWithChairs(selectedChairs);
                       handleShowModal();
                     }}
@@ -585,7 +604,8 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
           )}
         </div>
 
-        <div className="w-full flex flex-col gap-4 md:flex-row pb-8 md:p-0 items-center text-textPrimary">
+        <Box className="w-full flex flex-col gap-4 md:flex-row pb-8 md:p-0   text-textPrimary "
+        >
           {idSector && !emptySectorMap && (
             <div className="flex md:hidden flex-col gap-4 p-2 text-textPrimary">
               <div className="flex items-center justify-between gap-8">
@@ -607,7 +627,7 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
               <p className="text-softBlue text-sm">Selecione o seu lugar no mapa ao lado</p>
             </div>
           )} 
-          <div className="w-full lg:max-w-[75%] lg:w-3/4 md:scale-[.85]">
+          <div className="w-full md:scale-[.85] md:ml-[-40px] overflow-auto">
             <HTMLMap />
           </div>
 
@@ -731,6 +751,10 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
                 variant="primary"
                 className="w-fit"
                 onClick={() => {
+                  if(eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio){
+                    handleShowModal()
+                    return;
+                  }
                   handleSelectTicketWithChairs(selectedChairs);
                   //handleShowModal()
                 }}
@@ -740,7 +764,7 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
               </Button>
             </div>
           )}
-        </div>
+        </Box>
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} onClick={handleClose}>
           <MenuItem
             sx={{
@@ -792,7 +816,7 @@ export function TicketsContainerDefinido({ currentEvent }: { currentEvent?: Even
             </Select>
           </MenuItem>
         </Menu>
-      </div>
+      </Box>
     </GradientBorder>
   );
 }

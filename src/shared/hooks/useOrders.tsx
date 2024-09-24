@@ -213,7 +213,7 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const handleCanceledPayment = useCallback(
     async (idPayment: string) => {
       try {
-        debugger;
+        
         setIsLoadingCanceledPayment(true);
         const response = await apiTokeUser.post(`${CANCELED_PAYMENT}/${idPayment}`);
 
@@ -310,7 +310,7 @@ export const OrdersProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     async (userTransfer: IUser, hideDialog?: boolean) => {
       try {
         if (currentTransferTicketId && isInfoTicket) {
-          debugger;
+          
           setLoadingTransfer(true);
           await apiTokeUser.post(`${TRANSFER_TICKETS}/${isInfoTicket?.guid}/bilhete/utilizador`, {
             id: currentTransferTicketId,

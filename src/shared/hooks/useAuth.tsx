@@ -596,7 +596,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const handleSubmitRegister = useCallback(
     async (data: IUser, onClickPurchase?: () => void, finish?: boolean) => {
-      debugger;
+      
       try {
         if (onClickPurchase && finish) {
           handleSubmit(

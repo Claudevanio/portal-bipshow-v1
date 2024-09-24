@@ -169,7 +169,7 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
               ticketFormatted.length > 0 &&
               ticketFormatted.map((item, index, arr) => (
                 <li className={'flex items-center justify-between ' + (index + 1 !== arr.length ? 'border-b-2 border-gray pb-4' : '')} key={index}>
-                  {item.dates && item.dates.length > 1 && (
+                  {item.dates && item.dates.length == 1 ? (
                     <div className="flex items-center gap-1">
                       <p className="font-bold text-3xl flex items-center">
                         {item.dates &&
@@ -189,6 +189,14 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
                         </p>
                       </div>
                     </div>
+                  ) : (
+                    item.dates && (
+                      <>
+                        <p className="text-2xl">{dayjs(item.dates[0]).format('DD/MM')}</p>
+                        <span className=" mx-1">à</span>
+                        <p className="text-2xl">{dayjs(item.dates[item.dates.length - 1]).format('DD/MM')}</p>
+                      </>
+                    )
                   )}
                   {!item.dates && (
                     <div className="flex items-center gap-1">
@@ -233,22 +241,33 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
             {ticket.dates && ticket.dates.length > 1 && (
               <div className="flex items-center gap-1">
                 <p className="font-bold text-3xl flex items-center">
-                  {ticket.dates &&
-                    ticket.dates.map((date, index) => (
-                      <p>
-                        {dayjs(date).format('DD')}
-                        {index + 1 !== ticket.dates.length && <span className="text-3xl">/</span>}
-                      </p>
-                    ))}
+                  {ticket.dates && ticket.dates.length == 1
+                    ? ticket.dates.map((date, index) => (
+                        <>
+                          <p>
+                            {dayjs(date).format('DD')}
+                            {index + 1 !== ticket.dates.length && <span className="text-3xl">/</span>}
+                          </p>
+                          <div className="flex flex-col gap-0 ">
+                            <p>{ticket.data && dayjs(ticket.data).format('MMM').toUpperCase()}</p>
+                            <p className="text-[.6rem] first-letter:uppercase flex">
+                              {ticket.dates &&
+                                ticket.dates.length > 1 &&
+                                ticket.dates.map((date, index) => (
+                                  <p>{dayjs(date).format('ddd') + (index + 1 !== ticket.dates.length ? '/' : '')}</p>
+                                ))}
+                            </p>
+                          </div>
+                        </>
+                      ))
+                    : ticket.dates && (
+                        <>
+                          <p className="text-2xl">{dayjs(ticket.dates[0]).format('DD/MM')}</p>
+                          <span className="text-base mx-1">à</span>
+                          <p className="text-2xl">{dayjs(ticket.dates[ticket.dates.length - 1]).format('DD/MM')}</p>
+                        </>
+                      )}
                 </p>
-                <div className="flex flex-col gap-0 ">
-                  <p>{ticket.data && dayjs(ticket.data).format('MMM').toUpperCase()}</p>
-                  <p className="text-[.6rem] first-letter:uppercase flex">
-                    {ticket.dates &&
-                      ticket.dates.length > 1 &&
-                      ticket.dates.map((date, index) => <p>{dayjs(date).format('ddd') + (index + 1 !== ticket.dates.length ? '/' : '')}</p>)}
-                  </p>
-                </div>
               </div>
             )}
             {!ticket.dates && (

@@ -203,6 +203,7 @@ export const ModalTicketTypeMesa: React.FC<IModalTicketTypeMesa> = ({
               onMouseEnter={event => handleMouseEnter(event)}
               onMouseLeave={handleMouseOut}
               onClick={event => {
+                
                 // if (event.active) {
                 handleClickArea(event);
                 // } else {

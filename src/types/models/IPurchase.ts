@@ -5,6 +5,7 @@ export interface IPurchase {
   validade: string;
   cvv: number;
   nome: string;
+  cpf: string;
   parcelas: string;
   brand?: string;
   token?: string;

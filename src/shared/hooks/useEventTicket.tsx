@@ -113,7 +113,7 @@ interface IEventTicket {
   };
   setIsErrorGuidePurchase: (state: boolean) => void;
   isErrorGuidePurchase: boolean;
-  handleSelectTicketWithSelectedSectorInStadium: (category: string) => void;
+  handleSelectTicketWithSelectedSectorInStadium: (sectorId: number) => void;
   setIsDataOrder: React.Dispatch<React.SetStateAction<IOrder | undefined>>;
   isDataOrder?: IOrder;
   setIsTicketSelectedUser: React.Dispatch<React.SetStateAction<TicketSelectUserProps[] | undefined>>;
@@ -297,45 +297,6 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setIsLoadingEventTicket(false);
   }, [data]);
 
-  const handleSelectTicketWithSelectedSectorInStadium = useCallback(
-    (category: string) => {
-      if (isEventTicketFormatted) {
-        const findTicketSelected = isEventTicketFormatted.find(item => item.nome === category);
-
-        if (findTicketSelected) {
-          if (isTicketSelected && isTicketSelected?.nome === category) {
-            setIsTicketSelected(null);
-            setIsAreas(current =>
-              current.map(i => {
-                return {
-                  ...i,
-                  preFillColor: ''
-                };
-              })
-            );
-          } else {
-            setIsTicketSelected(findTicketSelected);
-            setIsAreas(current =>
-              current.map(i => {
-                if (i.href === category) {
-                  return {
-                    ...i,
-                    preFillColor: '#4B16C9'
-                  };
-                }
-                return {
-                  ...i,
-                  preFillColor: ''
-                };
-              })
-            );
-          }
-        }
-      }
-    },
-    [isEventTicketFormatted, isTicketSelected]
-  );
-
   const handleSelectTicket = useCallback(
     (index: number) => {
       if (isEventTicketFormatted && isEventTicketFormatted.length > 0) {
@@ -487,6 +448,8 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
       } catch (error) {
         setIsLoadingSector(false);
         toast.error('Ocorreu um erro de comunicação.');
+      } finally {
+        setIsLoadingSector(false);
       }
     },
     [toast, isEventTicket]
@@ -508,12 +471,23 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setIsIdSector(undefined);
     setIsNomeSector('');
     setIsColorSector('');
+    if(!!isAreas?.length){
+      const newAreas = isAreas.map(i => {
+        return {
+          ...i,
+          preFillColor: ''
+        };
+      });
+      setIsAreas(newAreas);
+    }
 
     if (isMobile) {
       setIsSeletedChairs([]);
       setIsSelectChair(undefined);
     }
-  }, []);
+  }, [
+    isAreas
+  ]);
 
   const handleSelectSectorRank = useCallback((nome: string) => {
     setIsHrefSector(nome);
@@ -568,6 +542,40 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     },
     [isSeletedChairs]
   );
+
+  
+  const handleSelectTicketWithSelectedSectorInStadium = useCallback(
+    (sectorId: number) => {
+      if (isEventTicketFormatted) {
+        const findTicketSelected = isEventTicketFormatted.find(item => +item.idSector == sectorId); 
+
+        if (findTicketSelected) {
+          if (isTicketSelected?.nome === findTicketSelected?.nome) {
+            handleClearSector();
+            setIsTicketSelected(null);
+          } else {
+            handleSelectSector(Number(findTicketSelected.idSector), findTicketSelected.nome);
+            setIsTicketSelected(findTicketSelected);
+            const newAreas = isAreas.map(i => {
+              if (+i.id == +findTicketSelected.idSector) {
+                return {
+                  ...i,
+                  preFillColor: '#19d26f6a'
+                };
+              }
+              return {
+                ...i,
+                preFillColor: ''
+              };
+            });
+            setIsAreas(newAreas); 
+          }
+        }
+      }
+    },
+    [isEventTicketFormatted, isTicketSelected, isAreas, handleClearSector, handleSelectSector]
+  );
+
 
   const handleSelectChair = useCallback(
     (idSector: number, chair: string, number: number, idChair: number) => {
@@ -631,46 +639,52 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, []);
 
   const handleLoadHtmlMap = useCallback(async () => {
-    setIsLoadingAreas(true);
-
-    const { data } = await axios.get(
-      `${process.env.URL_API}${isEventTicket?.local?.mapa?.grande ? isEventTicket?.local?.mapa?.grande.coordenadas : isEventTicket?.local?.mapa?.coordenadas}`
-    ); // html as text
-    const { data: dataMobile } = await axios.get(
-      `${process.env.URL_API}${isEventTicket?.local?.mapa?.pequeno ? isEventTicket?.local?.mapa?.pequeno.coordenadas : isEventTicket?.local?.mapa?.coordenadas}`
-    ); // html as text
-
-    const doc = new DOMParser().parseFromString(data, 'text/html');
-    const areas = [] as MapAreas[];
-
-    const docMobile = new DOMParser().parseFromString(dataMobile, 'text/html');
-    const areasMobile = [] as MapAreas[];
-
-    doc.body.querySelectorAll('area').forEach(item => {
-      areas.push({
-        shape: item.shape,
-        coords: String(item.coords)
-          .split(',')
-          .map(item => Number(item)) as number[],
-        id: String(item.getAttribute('setor')),
-        href: String(item.target).replace('#', '')
+    try{ 
+      setIsLoadingAreas(true);
+  
+      const { data } = await axios.get(
+        `${process.env.URL_API}${isEventTicket?.local?.mapa?.grande ? isEventTicket?.local?.mapa?.grande.coordenadas : isEventTicket?.local?.mapa?.coordenadas}`
+      ); // html as text
+      const { data: dataMobile } = await axios.get(
+        `${process.env.URL_API}${isEventTicket?.local?.mapa?.pequeno ? isEventTicket?.local?.mapa?.pequeno.coordenadas : isEventTicket?.local?.mapa?.coordenadas}`
+      ); // html as text
+  
+      const doc = new DOMParser().parseFromString(data, 'text/html');
+      const areas = [] as MapAreas[];
+  
+      const docMobile = new DOMParser().parseFromString(dataMobile, 'text/html');
+      const areasMobile = [] as MapAreas[];
+  
+      doc.body.querySelectorAll('area').forEach(item => {
+        areas.push({
+          shape: item.shape,
+          coords: String(item.coords)
+            .split(',')
+            .map(item => Number(item)) as number[],
+          id: String(item.getAttribute('setor')),
+          href: String(item.target).replace('#', '')
+        });
       });
-    });
-
-    docMobile.body.querySelectorAll('area').forEach(item => {
-      areasMobile.push({
-        shape: item.shape,
-        coords: String(item.coords)
-          .split(',')
-          .map(item => Number(item)) as number[],
-        id: String(item.getAttribute('setor')),
-        href: String(item.target).replace('#', '')
+  
+      docMobile.body.querySelectorAll('area').forEach(item => {
+        areasMobile.push({
+          shape: item.shape,
+          coords: String(item.coords)
+            .split(',')
+            .map(item => Number(item)) as number[],
+          id: String(item.getAttribute('setor')),
+          href: String(item.target).replace('#', '')
+        });
       });
-    });
-
-    setIsAreas(areas);
-    setIsAreasMobile(areasMobile);
-    setIsLoadingAreas(false);
+  
+      setIsAreas(areas);
+      setIsAreasMobile(areasMobile);
+      setIsLoadingAreas(false);
+    } catch (error) {
+      setIsLoadingAreas(false);
+    } finally{
+      setIsLoadingAreas(false);
+    }
   }, [isEventTicket]);
 
   function resetPurchaseAndSelected() {
@@ -835,10 +849,10 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [handleFormattedEventTicket, data, isLoading, push, id]);
 
   useEffect(() => {
-    if (isEventTicket && (isEventTicket.exibirCadeiras || isEventTicket.local)) {
+    if (isEventTicket && (isEventTicket.exibirCadeiras || isEventTicket.local) && !isShowPurchase) {
       handleLoadHtmlMap();
     }
-  }, [isEventTicket, handleLoadHtmlMap]);
+  }, [isEventTicket, handleLoadHtmlMap, isShowPurchase]);
 
   useEffect(() => {
     const guid = query.get('guid');

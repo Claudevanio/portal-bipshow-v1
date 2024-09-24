@@ -55,8 +55,9 @@ export const SectorImage: React.FC = () => {
             }}
             fillColor={'#19D26E'}
             onClick={event => {
-              if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.href) {
-                handleSelectTicketWithSelectedSectorInStadium(event.href);
+              
+              if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.id) {
+                handleSelectTicketWithSelectedSectorInStadium(+event.id);
               } else {
                 setIsShowOffcanvas(true);
                 handleSelectSector(Number(event.id), isFindNameSector(Number(event.id)), event.href);

@@ -58,13 +58,23 @@ export const ContainerAccordionThree = styled.div`
         }
       }
     }
+    div.info-client-holder {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      gap: 1rem;
+      @media (max-width: 767px) {
+        flex-direction: column;
+      }
+    }
+
     div.name-holder {
       display: flex;
       flex-direction: column;
       div.name-holder-input {
         display: flex;
         flex-direction: column;
-        width: 70%;
+        width: 100%;
         @media (max-width: 767px) {
           width: 100%;
         }
@@ -87,6 +97,11 @@ export const ContainerAccordionThree = styled.div`
         button {
           width: fit-content;
         }
+      }
+      .span-cpf {
+        display: flex;
+        justify-content: center;
+        color: #b06100;
       }
     }
     div.btn-submit {

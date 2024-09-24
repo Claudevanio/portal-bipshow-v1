@@ -138,11 +138,10 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const [isPaymentPerPix, setIsPaymentPerPix] = useState<PaymentPerPixProps>();
   const [isWebView] = useState(pathName.includes('/payment/webview') ? true : false);
   const [selectedBrand, setSelectedBrand] = useState<string>('');
-  const [TICKET_PURCHASE_FROM_API, setTICKET_PURCHASE_FROM_API] = useState<{ingressos: ITicketsPurchaseInfos[], valor: number}>();
+  const [TICKET_PURCHASE_FROM_API, setTICKET_PURCHASE_FROM_API] = useState<{ ingressos: ITicketsPurchaseInfos[]; valor: number }>();
 
   const amount = useMemo(() => {
-
-    if(TICKET_PURCHASE_FROM_API) {
+    if (TICKET_PURCHASE_FROM_API) {
       const valor = TICKET_PURCHASE_FROM_API.valor;
       if (isCouponAppliep) {
         return valor - isCouponAppliep.valorDesconto;
@@ -309,7 +308,6 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const handleSelectedUser = useCallback(
     async (type: 'mine' | 'transfer', single?: number, idTipo?: number, userTransfer?: IUser, isChecked?: boolean) => {
       try {
-        debugger;
         if (
           !isChecked &&
           isTicketSelectedUser &&
@@ -507,7 +505,6 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
           const installmentFirstPosition = isInstallments && isInstallments[0];
 
           const installmentToBody = installment ?? installmentFirstPosition;
-          debugger;
 
           const secondaryAddress = dataReservation.length > 0 ? dataReservation[0]?.enderecoCobranca ?? data?.endereco : data?.endereco;
 
@@ -671,13 +668,13 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
   const handleLoadPurchase = useCallback(
     async (guide: string, idPurchase: number, isDataPurchase?: IPurchase) => {
       try {
-        debugger;
         setIsLoading(true);
         if (isSessionPayment && user && isDataOrder && isDataOrder.sucesso && isDataOrder.pedido && isDataOrder.pedido.bilhetesPreencher) {
           const isFormattedDataCard: IPurchase = {
             cartao: isDataPurchase?.cartao || '',
             cvv: isDataPurchase?.cvv || 0,
             nome: isDataPurchase?.nome || '',
+            cpf: isDataPurchase?.cpf || '',
             parcelas: isDataPurchase?.parcelas || '',
             validade: isDataPurchase?.validade || '',
             brand: isDataPurchase?.brand || ''
@@ -702,7 +699,6 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                 nome: isFormattedDataCard.nome,
                 numero: isFormattedDataCard.cartao
               } as any;
-              debugger;
 
               const isInstallment = isOptionCardPayment === 'CREDIT_CARD' ? Number(isDataPurchase.parcelas) : 1;
               auth3Ds(
@@ -729,7 +725,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                         documento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.documento ?? '',
                         tipoDocumento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.tipoDocumento ?? '',
                         pais: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.pais ?? '',
-                        cpf: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.cpf ?? '',
+                        cpf: isDataPurchase.cpf ?? '',
                         email: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.email ?? '',
                         telefone: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.telefone?.replace(/\D/g, '') ?? '',
                         dependente: isTicketSelectedUser?.find(user => user.idTipo === i.idTipo)?.filled ?? false,
@@ -869,16 +865,12 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
     return result;
   }
 
-  useEffect(
-   ()=> {
-    if(isDataOrder && isDataOrder.pedido)
-    setTICKET_PURCHASE_FROM_API(isDataOrder.pedido as any)
-   }, [isDataOrder] 
-  )
+  useEffect(() => {
+    if (isDataOrder && isDataOrder.pedido) setTICKET_PURCHASE_FROM_API(isDataOrder.pedido as any);
+  }, [isDataOrder]);
 
   const handleSubmitPurchase = useCallback(async () => {
     try {
-      debugger;
       const tokenUser = Cache.get({ key: '@tokenUser' });
       console.log('tokenUser', tokenUser);
       if (ticketsPurchase && ticketsPurchase.length > 0 && eventTicket && tokenUser) {
@@ -960,10 +952,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
             ? transformTicketsMesas(ticketsPurchase[0])
             : isTicketsPurchase;
 
-        const uniqueElements =
-          isMesas || isCadeiras
-            ? arrayTickets
-            : arrayTickets
+        const uniqueElements = isMesas || isCadeiras ? arrayTickets : arrayTickets;
 
         const indication = pathName.includes('/indicacao') ? pathName.split('/indicacao/')[1] : undefined;
 
@@ -1014,11 +1003,9 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                 nomeEvento: string;
               }>;
               setIsTicketSelectedUser(ticketUser);
-              if(result.data.pedido){
-                debugger
-                setTICKET_PURCHASE_FROM_API(result.data.pedido as any)
+              if (result.data.pedido) {
+                setTICKET_PURCHASE_FROM_API(result.data.pedido as any);
               }
-
             }
           }
           setIsGuidePurchase({

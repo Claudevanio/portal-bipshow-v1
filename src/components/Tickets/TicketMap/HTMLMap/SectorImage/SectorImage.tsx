@@ -54,14 +54,15 @@ export const SectorImage: React.FC = () => {
       setIsShow(false);
     }
   }, [selectChair]);
+  
 
   return (
     <ContainerSectorImage id="container-map-html">
       {loadingSector && <CircularProgress size={24} />}
       {!loadingSector && (
         <>
-          {rank && (Object.entries(rank).length <= 0 ? <p>Cadeiras Indisponiveis</p> : <SectorRanks />)}
-          {!rank && (
+          {rank && !eventTicket.local.selecaoDeSetorNoEstadio && (Object.entries(rank).length <= 0 ? <p>Cadeiras Indisponiveis</p> : <SectorRanks />)}
+          {(!rank || eventTicket.local.selecaoDeSetorNoEstadio) && (
             <div className="container-html-map">
               {areas.length > 0 && areasMobile.length > 0 && !loadingAreas ? (
                 <React.Fragment>
@@ -72,10 +73,11 @@ export const SectorImage: React.FC = () => {
                         name: 'map-area-chairs',
                         areas
                       }}
-                      fillColor={'#19D26E'}
+                      fillColor={'#956afb53'}
                       onClick={event => {
-                        if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.href) {
-                          handleSelectTicketWithSelectedSectorInStadium(event.href);
+                        debugger;
+                        if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.id) {
+                          handleSelectTicketWithSelectedSectorInStadium(+event.id);
                         } else {
                           handleSelectSector(Number(event.id), isFindNameSector(Number(event.id)), event.href);
                         }
@@ -87,12 +89,13 @@ export const SectorImage: React.FC = () => {
                       src={String(eventTicket?.local?.mapa?.pequeno ? eventTicket?.local?.mapa?.pequeno.imagem : eventTicket?.local?.mapa?.imagem)}
                       map={{
                         name: 'map-area-chairs-mobile',
-                        areas: areasMobile
+                        areas: []
                       }}
-                      fillColor={'#19D26E'}
+                      fillColor={'#956afb53'}
                       onClick={event => {
-                        if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.href) {
-                          handleSelectTicketWithSelectedSectorInStadium(event.href);
+                        debugger;
+                        if (eventTicket && eventTicket.local && eventTicket.local.selecaoDeSetorNoEstadio && event.id) {
+                          handleSelectTicketWithSelectedSectorInStadium(+event.id);
                         } else {
                           handleSelectSector(Number(event.id), isFindNameSector(Number(event.id)), event.href);
                         }

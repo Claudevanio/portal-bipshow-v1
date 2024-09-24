@@ -13,7 +13,7 @@ export default function GtmImersao({ gtmId }: { gtmId?: string }) {
     if (!pathname.includes('/evento/')) return;
     if (!GTM_ID) return;
 
-    debugger;
+    
     const script = document.createElement('script');
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;

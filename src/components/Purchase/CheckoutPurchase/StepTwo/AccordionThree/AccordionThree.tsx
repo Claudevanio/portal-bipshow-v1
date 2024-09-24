@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from '@/components/Form/Input';
-import { CARDMask, CVVMask, CartaoNameMask, VALIDATIONCARDMask } from '@/shared/config/mask';
+import { CARDMask, CPFMask, CVVMask, CartaoNameMask, VALIDATIONCARDMask } from '@/shared/config/mask';
 import { Button } from '@/components/Form/Button';
 import { IPurchase } from '@/types';
 import { Radio } from '@/components/Form/Radio';
@@ -43,6 +43,7 @@ export const AccordionThree: React.FC = () => {
   const cardNumber = methods.watch('cartao');
   const installment = methods.watch('parcelas');
   const endereco = methods.watch('endereco');
+  const cpfClient = methods.watch('cpf');
 
   const { user } = useRegister();
   const [isOpenModalEditAddress, setIsOpenModalEditAddress] = useState<boolean>(false);
@@ -106,7 +107,7 @@ export const AccordionThree: React.FC = () => {
   const [isAddressOpen, setIsAddressOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!user.endereco) {
+    if (!user?.endereco) {
       setIsAddressOpen(true);
     }
   }, []);
@@ -305,40 +306,50 @@ export const AccordionThree: React.FC = () => {
               </div>
               <div className="name-holder">
                 <h6 className="title">Dados do titular do cartão</h6>
-                <div className="name-holder-input">
-                  <Input
-                    type="text"
-                    name="nome"
-                    id="nome"
-                    label="Nome impresso no cartão"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: 'Nome impresso no cartão inválido. Verifique'
-                      },
-                      pattern: /^[a-zA-Z]+(?:[\s.]+[a-zA-Z]+)*$/
-                    }}
-                    disabled={loading}
-                    mask={CartaoNameMask}
-                    errorText={methods.formState.errors.nome && ('Nome impresso no cartão inválido. Verifique' as string)}
-                  />
-                </div>
-                {/* {user && user.endereco && (
-                  <div className="address-holder">
-                    <h6 className="title">Endereço de cobrança</h6>
-                    <div>
-                      <Radio
-                        id="address"
-                        checked
-                        readonly
-                        label={`${user.endereco.cep} - ${user.endereco.bairro}${user.endereco.complemento ? ` ${user.endereco.complemento}` : ''}, ${user.endereco.localidade}`}
-                        name="parcelas"
-                        value="1"
-                      />
-                      <Button type="button" variant="outline-text" text="Alterar" onClick={handleIsOpenModalEditAddress} />
-                    </div>
+                <div className="info-client-holder">
+                  <div className="name-holder-input">
+                    <Input
+                      type="text"
+                      name="nome"
+                      id="nome"
+                      label="Nome impresso no cartão"
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'Nome impresso no cartão inválido. Verifique'
+                        },
+                        pattern: /^[a-zA-Z]+(?:[\s.]+[a-zA-Z]+)*$/
+                      }}
+                      disabled={loading}
+                      mask={CartaoNameMask}
+                      errorText={methods.formState.errors.nome && ('Nome impresso no cartão inválido. Verifique' as string)}
+                    />
                   </div>
-                )} */}
+                  <div className="name-holder-input">
+                    <Input
+                      type="text"
+                      name="cpf"
+                      id="cpf"
+                      label="cpf"
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'CPF é obrigatório.'
+                        },
+                        pattern: {
+                          value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+                          message: 'CPF inválido. Verifique se o formato está correto (XXX.XXX.XXX-XX).'
+                        }
+                      }}
+                      disabled={loading}
+                      mask={CPFMask}
+                      errorText={methods.formState.errors.cpf && ('CPF Invalido. Verifique' as string)}
+                    />
+                  </div>
+                </div>
+                {cpfClient?.length >= 14 && CPFMask(user.cpf) !== cpfClient && (
+                  <span className="span-cpf">cpf do cartão é diferente do cpf da conta</span>
+                )}
               </div>
               <Coupon />
               {loadinginstallment && (
@@ -379,6 +390,22 @@ export const AccordionThree: React.FC = () => {
                         />
                       ))}
                   </div>
+                  {/* {user && user.endereco && (
+                  <div className="address-holder">
+                    <h6 className="title">Endereço de cobrança</h6>
+                    <div>
+                      <Radio
+                        id="address"
+                        checked
+                        readonly
+                        label={`${user.endereco.cep} - ${user.endereco.bairro}${user.endereco.complemento ? ` ${user.endereco.complemento}` : ''}, ${user.endereco.localidade}`}
+                        name="parcelas"
+                        value="1"
+                      />
+                      <Button type="button" variant="outline-text" text="Alterar" onClick={handleIsOpenModalEditAddress} />
+                    </div>
+                  </div>
+                )} */}
                   {((installments && installments.length <= 0) || optionCardPayment === 'DEBIT_CARD') && (
                     <Radio
                       key="key-1"

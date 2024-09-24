@@ -14,10 +14,19 @@ import { Pixel } from '@/utils/pixel';
 
 export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurchase, onClose }) => {
   const { ticketsPurchase, eventTicket } = useEventTicket();
-  const { loading, selectedPayment, couponAppliep, handleLoadPurchase, guide, installment, amount, 
+  const {
+    loading,
+    selectedPayment,
+    couponAppliep,
+    handleLoadPurchase,
+    guide,
+    installment,
+    amount,
     // amountWithoutTaxa,
-     TICKET_PURCHASE_FROM_API } = useTicketPurchase();
+    TICKET_PURCHASE_FROM_API
+  } = useTicketPurchase();
 
+  console.log(dataPurchase);
   return (
     <ContainerModalPurchaseSummary>
       {selectedPayment && selectedPayment.formaPagamento === 'CartaoCredito' && <LoadingPayment open={loading} />}
@@ -32,35 +41,37 @@ export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurc
           <div className="tickets">
             <h6 className="title">Ingressos</h6>
             <ul>
-              {TICKET_PURCHASE_FROM_API && TICKET_PURCHASE_FROM_API?.ingressos &&  TICKET_PURCHASE_FROM_API.ingressos.map(item => (
-                <li key={item.index}>
-                  {/* <Avatar src={item.user?.imagem}
+              {TICKET_PURCHASE_FROM_API &&
+                TICKET_PURCHASE_FROM_API?.ingressos &&
+                TICKET_PURCHASE_FROM_API.ingressos.map(item => (
+                  <li key={item.index}>
+                    {/* <Avatar src={item.user?.imagem}
                 size='small' 
                 // username={item.user?.nome} 
                 // variant="small-two" 
                 /> */}
-                  <div className="info-one">
-                    <h6 className="title">{item.nome}</h6>
-                    <p className="text-light">
-                      {item.valorUnitario.toLocaleString('pt-BR', {
-                        minimumFractionDigits: 2,
-                        style: 'currency',
-                        currency: 'BRL'
-                      })}
-                    </p>
-                  </div>
-                  <div className="info-two">
-                    <h6 className="title">
-                      {(item.valorUnitario * item.qtde).toLocaleString('pt-BR', {
-                        minimumFractionDigits: 2,
-                        style: 'currency',
-                        currency: 'BRL'
-                      })}
-                    </h6>
-                    <p className="text-light">Qtd: {item.qtde}</p>
-                  </div>
-                </li>
-              ))}
+                    <div className="info-one">
+                      <h6 className="title">{item.nome}</h6>
+                      <p className="text-light">
+                        {item.valorUnitario.toLocaleString('pt-BR', {
+                          minimumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'BRL'
+                        })}
+                      </p>
+                    </div>
+                    <div className="info-two">
+                      <h6 className="title">
+                        {(item.valorUnitario * item.qtde).toLocaleString('pt-BR', {
+                          minimumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'BRL'
+                        })}
+                      </h6>
+                      <p className="text-light">Qtd: {item.qtde}</p>
+                    </div>
+                  </li>
+                ))}
             </ul>
           </div>
         )}
@@ -94,22 +105,19 @@ export const ModalPurchaseSummary: React.FC<IModalPurchaseSummary> = ({ dataPurc
             })}
           </p>
         </div> */}
-        {
-          couponAppliep && (
-            <div className="desconto subtotal">
-              <h6 className="title">Desconto</h6>
-              <p className="text-dark">
-                {(couponAppliep?.valorDesconto || 0).toLocaleString('pt-BR', {
-                  minimumFractionDigits: 2,
-                  style: 'currency',
-                  currency: 'BRL'
-                })}
-              </p>
-            </div>
-          )
+        {couponAppliep && (
+          <div className="desconto subtotal">
+            <h6 className="title">Desconto</h6>
+            <p className="text-dark">
+              {(couponAppliep?.valorDesconto || 0).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                style: 'currency',
+                currency: 'BRL'
+              })}
+            </p>
+          </div>
+        )}
 
-        }
- 
         {selectedPayment?.formaPagamento === 'CartaoCredito' && installment && installment.quantity > 1 && (
           <div className="desconto subtotal">
             <h6 className="title">Taxa de parcelamento</h6>

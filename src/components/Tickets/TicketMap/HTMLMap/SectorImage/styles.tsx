@@ -19,7 +19,32 @@ export const ContainerSectorImage = styled.div`
   }
   #img-mapper {
     margin: 0 auto;
-    width: fit-content !important;
+    height: auto !important;
+
+    min-width: 1000px !important;
+    max-width: 1000px !important;
+    @media (max-width: 767px) {
+      box-shadow: none;
+      min-width: 500px !important;
+      max-width: 500px !important;
+    }
+
+    @media (max-width: 600px) {
+      max-width: 400px !important;
+      min-width: 400px !important;
+    }
+    
+    @media (max-width: 400px) {
+      max-width: 300px !important;
+      min-width: 300px !important;
+    }
+
+    @media (max-width: 300px) {
+      max-width: 200px !important;
+      min-width: 200px !important;
+    }
+
+    /* width: fit-content !important; */
   }
   div.container-html-map {
     padding-bottom: ${({ theme }) => theme.spacing(8)};
@@ -31,7 +56,7 @@ export const ContainerSectorImage = styled.div`
     div.mobile {
       display: none;
     }
-    @media (max-width: 1024px) {
+    @media (max-width: 1020px) {
       div.desktop {
         display: none;
       }

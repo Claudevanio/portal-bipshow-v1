@@ -45,7 +45,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
   // }
 
   useEffectOnce(() => {
-    // debugger
+    // 
     // // @ts-ignore: Unreachable code error
     // console.log(Pagseguro)
     // fetchEvent()
