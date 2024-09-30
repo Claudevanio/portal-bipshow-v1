@@ -1,12 +1,11 @@
 'use client';
 import { Button, GradientBorder } from '@/components';
 import { Event } from '@/types';
-import { Add, KeyboardArrowLeft, KeyboardArrowRight, Remove } from '@mui/icons-material';
+import { Add, Remove } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import Image from 'next/image';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ptBr from 'dayjs/locale/pt-br';
-import { EventMockList } from '@/utils/event-mock';
 import { useEventTicket } from '@/shared/hooks';
 import { IAction } from '@/components/Tickets/ActionTicket/Ticket/Action/interface';
 import { Pixel } from '@/utils/pixel';
@@ -24,6 +23,7 @@ function SingleTicketCard(singleTicket: IAction) {
     limitePorUsuario = 0,
     totalDisponivel = 0,
     id,
+    tickName,
     index,
     tipo,
     mapa,
@@ -32,10 +32,8 @@ function SingleTicketCard(singleTicket: IAction) {
     exibirTaxaSomada
   } = singleTicket;
 
-  const isTaxa = useMemo(() => Boolean(taxaFixa || taxaServico || taxaConveniencia), [taxaServico, taxaFixa, taxaConveniencia]);
   const { eventTicket, handleSelectTicketQuantity, ticketsPurchase } = useEventTicket();
   const [isQuantity, setIsQuantity] = useState<number>(ticketsPurchase?.find(i => i.singleId === `${nome}${index}`)?.qtde || 0);
-  // const [isShowModalTypeTicket, setIsShowModalTypeTicket] = useState<boolean>(false);
 
   const quantityMax = useMemo((): number => {
     const max =
@@ -60,23 +58,16 @@ function SingleTicketCard(singleTicket: IAction) {
         if (idTable) {
           handleSelectTicketQuantity(id, isQuantity + 1, index, idTable);
         } else {
-          handleSelectTicketQuantity(id, isQuantity + 1, index);
+          handleSelectTicketQuantity(id, isQuantity + 1, index, null, tickName);
         }
       }
       if (type === 'prev' && isQuantity >= 0 && id) {
         setIsQuantity(isQuantity - 1);
-        handleSelectTicketQuantity(id, isQuantity - 1, index);
+        handleSelectTicketQuantity(id, isQuantity - 1, index, null, tickName);
       }
     },
     [isQuantity, setIsQuantity, quantityMax, id, handleSelectTicketQuantity, index]
   );
-
-  const quantityTables = useMemo(() => {
-    if (ticketsPurchase && tipo === 'mesa') {
-      return ticketsPurchase.find(i => i.id === id)?.qtde;
-    }
-    return 0;
-  }, [ticketsPurchase, tipo, id]);
 
   return (
     <li className="flex items-center justify-between w-full">
@@ -125,11 +116,7 @@ function SingleTicketCard(singleTicket: IAction) {
 }
 
 export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
-  const { ticket, eventTicket, ticketsPurchase, handleShowModal } = useEventTicket();
-
-  const { handleClearTicket, ticketFormatted, handleSelectTicket, quantity, quantityTickets, setIsQuantity } = useEventTicket();
-
-  const [quantityPerTicket, setQuantityPerTicket] = useState<number[]>();
+  const { ticket, eventTicket, ticketsPurchase, handleShowModal, handleClearTicket, ticketFormatted, handleSelectTicket } = useEventTicket();
 
   const totalPrice = useMemo(() => {
     let isTotalPrice = 0;
@@ -141,16 +128,8 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
     return isTotalPrice;
   }, [ticketsPurchase]);
 
-  // useEffect(() => {
-  //   if(selectedTicket){
-  //     const tickets = EventMockList.find(event => event.id === currentEvent?.id)?.tickets?.map(item => new Date(item.date).getDate() === new Date(selectedTicket.date).getDate() ? item : null) || [];
-  //     const ticketsFiltered = tickets.filter(item => item !== null).map(item => ({...item, quantity: 0}))
-  //     setCartItems(ticketsFiltered)
-  //   }
-  //   if(!selectedTicket){
-  //     setCartItems([])
-  //   }
-  //  }, [selectedTicket, currentEvent]);
+  /* console.log(ticket);
+  console.log(ticketFormatted); */
 
   return (
     <GradientBorder
@@ -158,7 +137,7 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
         minWidth: '250px'
       }}
     >
-      {!ticket && (
+      {/* {!ticket && (
         <div className="flex flex-col gap-4 p-2">
           <h3 className="flex text-tertiary gap-3 font-semibold border-b-2 border-gray pb-4 ">
             <Image src={'/Ticket.svg'} alt="ingresso" height={20} width={20} /> Ingressos
@@ -234,48 +213,47 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
               ))}
           </ul>
         </div>
-      )}
-      {ticket && (
+      )} */}
+
+      {ticketFormatted?.map((tick, ind) => (
         <div className="flex flex-col gap-4 p-2">
           <div className="flex items-center gap-1 text-textPrimary font-medium">
-            {ticket.dates && ticket.dates.length > 1 && (
+            {tick.dates && tick.dates.length > 1 && (
               <div className="flex items-center gap-1">
                 <p className="font-bold text-3xl flex items-center">
-                  {ticket.dates && ticket.dates.length == 1
-                    ? ticket.dates.map((date, index) => (
+                  {tick.dates && tick.dates.length == 1
+                    ? tick.dates.map((date, index) => (
                         <>
                           <p>
                             {dayjs(date).format('DD')}
-                            {index + 1 !== ticket.dates.length && <span className="text-3xl">/</span>}
+                            {index + 1 !== tick.dates.length && <span className="text-3xl">/</span>}
                           </p>
                           <div className="flex flex-col gap-0 ">
-                            <p>{ticket.data && dayjs(ticket.data).format('MMM').toUpperCase()}</p>
+                            <p>{tick.data && dayjs(tick.data).format('MMM').toUpperCase()}</p>
                             <p className="text-[.6rem] first-letter:uppercase flex">
-                              {ticket.dates &&
-                                ticket.dates.length > 1 &&
-                                ticket.dates.map((date, index) => (
-                                  <p>{dayjs(date).format('ddd') + (index + 1 !== ticket.dates.length ? '/' : '')}</p>
-                                ))}
+                              {tick.dates &&
+                                tick.dates.length > 1 &&
+                                tick.dates.map((date, index) => <p>{dayjs(date).format('ddd') + (index + 1 !== tick.dates.length ? '/' : '')}</p>)}
                             </p>
                           </div>
                         </>
                       ))
-                    : ticket.dates && (
+                    : tick.dates && (
                         <>
-                          <p className="text-2xl">{dayjs(ticket.dates[0]).format('DD/MM')}</p>
+                          <p className="text-2xl">{dayjs(tick.dates[0]).format('DD/MM')}</p>
                           <span className="text-base mx-1">à</span>
-                          <p className="text-2xl">{dayjs(ticket.dates[ticket.dates.length - 1]).format('DD/MM')}</p>
+                          <p className="text-2xl">{dayjs(tick.dates[tick.dates.length - 1]).format('DD/MM')}</p>
                         </>
                       )}
                 </p>
               </div>
             )}
-            {!ticket.dates && (
+            {!tick.dates && (
               <div className="flex items-center gap-1 text-textPrimary font-medium">
-                <p className="font-bold text-3xl">{ticket?.data && dayjs(ticket?.data).format('DD')}</p>
+                <p className="font-bold text-3xl">{tick?.data && dayjs(tick?.data).format('DD')}</p>
                 <div className="flex flex-col gap-0 ">
-                  <p>{ticket?.data && dayjs(ticket?.data).format('MMM').toUpperCase()}</p>
-                  <p className="text-[.6rem] first-letter:uppercase">{ticket?.data && dayjs(ticket?.data).format('dddd').replace('-feira', '')}</p>
+                  <p>{tick?.data && dayjs(tick?.data).format('MMM').toUpperCase()}</p>
+                  <p className="text-[.6rem] first-letter:uppercase">{tick?.data && dayjs(tick?.data).format('dddd').replace('-feira', '')}</p>
                 </div>
               </div>
             )}
@@ -295,47 +273,47 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
               Selecione as quantidades de cada ingresso desejado e clique no botão ‘Comprar ingressos’
             </p>
             <div className="font-medium text-sm">
-              {ticket.nome}
+              {tick.nome}
               <ul className="flex flex-col gap-4 items-center mt-1 justify-center ">
-                {ticket.tiposDeIngresso.map((item, indexArr) => (
-                  <SingleTicketCard index={indexArr} key={indexArr} valor={item.valorUnitario} taxaIncluso={eventTicket.taxaIncluso} {...item} />
+                {tick.tiposDeIngresso.map((item, indexArr) => (
+                  <SingleTicketCard
+                    tickName={tick.nome}
+                    index={indexArr}
+                    key={indexArr}
+                    valor={item.valorUnitario}
+                    taxaIncluso={eventTicket.taxaIncluso}
+                    {...item}
+                  />
                 ))}
               </ul>
             </div>
           </div>
-          <div>
-            {totalPrice > 0 && (
-              <div className="flex items-center justify-between pb-5">
-                <p className="text-sm font-semibold text-softBlue">Total</p>
-                <p className="text-sm font-semibold text-textPrimary">
-                  <span className="text-xs font-semibold">R$</span>{' '}
-                  {Number(totalPrice).toLocaleString('pt-br', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-            )}
-            <div className="flex items-center justify-between gap-4">
-              <KeyboardArrowLeft
-                className="text-textPrimary cursor-pointer"
-                onClick={() => {
-                  handleClearTicket();
-                  handleSelectTicket(null as any);
-                }}
-              />
-              <Button
-                variant="primary"
-                className="pl-1"
-                disabled={ticketsPurchase && ticketsPurchase.length > 0 ? false : true}
-                onClick={() => {
-                  handleShowModal();
-                }}
-              >
-                <Image src={'/moneyIcon-gray.svg'} alt="Logo" width={25} height={20} />
-                Comprar Ingressos
-              </Button>
-            </div>
-          </div>
         </div>
-      )}
+      ))}
+      <div>
+        {totalPrice > 0 && (
+          <div className="flex items-center justify-between pb-5">
+            <p className="text-sm font-semibold text-softBlue">Total</p>
+            <p className="text-sm font-semibold text-textPrimary">
+              <span className="text-xs font-semibold">R$</span>{' '}
+              {Number(totalPrice).toLocaleString('pt-br', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+          </div>
+        )}
+        <div className="flex items-center justify-end gap-4">
+          <Button
+            variant="primary"
+            className="pl-1"
+            disabled={ticketsPurchase && ticketsPurchase.length > 0 ? false : true}
+            onClick={() => {
+              handleShowModal();
+            }}
+          >
+            <Image src={'/moneyIcon-gray.svg'} alt="Logo" width={25} height={20} />
+            Comprar Ingressos
+          </Button>
+        </div>
+      </div>
     </GradientBorder>
   );
 }

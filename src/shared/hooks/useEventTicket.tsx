@@ -70,7 +70,7 @@ interface IEventTicket {
     | undefined;
   quantity: number;
   setIsQuantity: (state: number) => void;
-  handleSelectTicketQuantity: (id: number, quantity: number, index: number, idTable?: number) => void;
+  handleSelectTicketQuantity: (id: number, quantity: number, index: number, idTable?: number, tickName?: string) => void;
   ticketsPurchase: ITicketPurchase[] | undefined;
   setIsTickets: (state: ITicketPurchase[]) => void;
   handleCloseModal: () => void;
@@ -314,8 +314,14 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 
   const handleSelectTicketQuantity = useCallback(
-    (id: number, quantity: number, index: number, idTable?: number) => {
-      const ticket = isTicketSelected?.tiposDeIngresso.find((i, isIndex) => isIndex === index);
+    (id: number, quantity: number, index: number, idTable?: number, tickName?: string) => {
+      let ticket;
+
+      if (tickName) {
+        ticket = isEventTicketFormatted.find(x => x.nome === tickName).tiposDeIngresso.find((i, isIndex) => isIndex === index);
+      } else {
+        ticket = isTicketSelected?.tiposDeIngresso.find((i, isIndex) => isIndex === index);
+      }
 
       if (ticket) {
         const findTicket = isTickets.find(i => i.singleId === `${ticket.nome}${index}`);
@@ -464,30 +470,31 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
   }, []);
 
-  const handleClearSector = useCallback((isMobile?: boolean) => {
-    setIsRank(undefined);
-    setIsSeletedChairs([]);
-    setIsSelectChair(undefined);
-    setIsIdSector(undefined);
-    setIsNomeSector('');
-    setIsColorSector('');
-    if(!!isAreas?.length){
-      const newAreas = isAreas.map(i => {
-        return {
-          ...i,
-          preFillColor: ''
-        };
-      });
-      setIsAreas(newAreas);
-    }
-
-    if (isMobile) {
+  const handleClearSector = useCallback(
+    (isMobile?: boolean) => {
+      setIsRank(undefined);
       setIsSeletedChairs([]);
       setIsSelectChair(undefined);
-    }
-  }, [
-    isAreas
-  ]);
+      setIsIdSector(undefined);
+      setIsNomeSector('');
+      setIsColorSector('');
+      if (!!isAreas?.length) {
+        const newAreas = isAreas.map(i => {
+          return {
+            ...i,
+            preFillColor: ''
+          };
+        });
+        setIsAreas(newAreas);
+      }
+
+      if (isMobile) {
+        setIsSeletedChairs([]);
+        setIsSelectChair(undefined);
+      }
+    },
+    [isAreas]
+  );
 
   const handleSelectSectorRank = useCallback((nome: string) => {
     setIsHrefSector(nome);
@@ -543,11 +550,10 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
     [isSeletedChairs]
   );
 
-  
   const handleSelectTicketWithSelectedSectorInStadium = useCallback(
     (sectorId: number) => {
       if (isEventTicketFormatted) {
-        const findTicketSelected = isEventTicketFormatted.find(item => +item.idSector == sectorId); 
+        const findTicketSelected = isEventTicketFormatted.find(item => +item.idSector == sectorId);
 
         if (findTicketSelected) {
           if (isTicketSelected?.nome === findTicketSelected?.nome) {
@@ -568,14 +574,13 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
                 preFillColor: ''
               };
             });
-            setIsAreas(newAreas); 
+            setIsAreas(newAreas);
           }
         }
       }
     },
     [isEventTicketFormatted, isTicketSelected, isAreas, handleClearSector, handleSelectSector]
   );
-
 
   const handleSelectChair = useCallback(
     (idSector: number, chair: string, number: number, idChair: number) => {
@@ -639,22 +644,22 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, []);
 
   const handleLoadHtmlMap = useCallback(async () => {
-    try{ 
+    try {
       setIsLoadingAreas(true);
-  
+
       const { data } = await axios.get(
         `${process.env.URL_API}${isEventTicket?.local?.mapa?.grande ? isEventTicket?.local?.mapa?.grande.coordenadas : isEventTicket?.local?.mapa?.coordenadas}`
       ); // html as text
       const { data: dataMobile } = await axios.get(
         `${process.env.URL_API}${isEventTicket?.local?.mapa?.pequeno ? isEventTicket?.local?.mapa?.pequeno.coordenadas : isEventTicket?.local?.mapa?.coordenadas}`
       ); // html as text
-  
+
       const doc = new DOMParser().parseFromString(data, 'text/html');
       const areas = [] as MapAreas[];
-  
+
       const docMobile = new DOMParser().parseFromString(dataMobile, 'text/html');
       const areasMobile = [] as MapAreas[];
-  
+
       doc.body.querySelectorAll('area').forEach(item => {
         areas.push({
           shape: item.shape,
@@ -665,7 +670,7 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
           href: String(item.target).replace('#', '')
         });
       });
-  
+
       docMobile.body.querySelectorAll('area').forEach(item => {
         areasMobile.push({
           shape: item.shape,
@@ -676,13 +681,13 @@ export const EventTicketProvider: React.FC<{ children: React.ReactNode }> = ({ c
           href: String(item.target).replace('#', '')
         });
       });
-  
+
       setIsAreas(areas);
       setIsAreasMobile(areasMobile);
       setIsLoadingAreas(false);
     } catch (error) {
       setIsLoadingAreas(false);
-    } finally{
+    } finally {
       setIsLoadingAreas(false);
     }
   }, [isEventTicket]);

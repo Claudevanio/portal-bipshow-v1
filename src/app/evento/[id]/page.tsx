@@ -4,23 +4,18 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import ptBr from 'dayjs/locale/pt-br';
 import localizeFormat from 'dayjs/plugin/localizedFormat';
-import { Button, GradientBorder } from '@/components';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { Button } from '@/components';
+import { KeyboardArrowLeft } from '@mui/icons-material';
 import Link from 'next/link';
 import { TicketsContainer } from './components/TicketsContainer';
 import { useEffect, useState } from 'react';
 import { IEventProps } from '@/types';
-import { eventosService } from '@/services';
 import { useEffectOnce } from '@/hooks';
 import { baseUrlImages } from '@/constants';
 import { useEventTicket } from '@/shared/hooks';
-import { useEvent } from '@/shared/hooks/useEvents';
-import { ActionTicket, ActionTicketMap } from '@/components/Tickets';
 import { TicketsContainerDefinido } from './components/TicketsContainerDefinido';
-import { TicketPurchaseProvider, useTicketPurchase } from '@/shared/hooks/useTicketPurchase';
-import { Offcanvas } from 'react-bootstrap';
+import { TicketPurchaseProvider } from '@/shared/hooks/useTicketPurchase';
 import { Purchase } from '@/components/Purchase';
-import { HTMLMap } from '@/components/Tickets/TicketMap/HTMLMap';
 import { Pixel } from '@/utils/pixel';
 import FacebookPixel from '@/components/Pixel/Pixel';
 import { usePathname } from 'next/navigation';
@@ -45,7 +40,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
   // }
 
   useEffectOnce(() => {
-    // 
+    //
     // // @ts-ignore: Unreachable code error
     // console.log(Pagseguro)
     // fetchEvent()

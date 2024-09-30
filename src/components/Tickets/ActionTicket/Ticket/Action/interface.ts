@@ -9,6 +9,7 @@ export interface IAction {
   taxaServico?: number;
   taxaConveniencia?: number;
   qtd?: number;
+  tickName?: string;
   limitePorUsuario?: number;
   totalDisponivel?: number;
   taxaIncluso?: boolean;
