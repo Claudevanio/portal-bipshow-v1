@@ -94,7 +94,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
           <Purchase handleClose={handleCloseModal} />
         </TicketPurchaseProvider>
       ) : (
-        <div className="w-full flex flex-col gap-4 items-center justify-center p-8 md:px-24 xl:px-56 2xl:px-72 overflow-x-hidden">
+        <div className="w-full flex flex-col gap-4 items-center justify-center p-3 md:px-10 xl:px-60 2xl:px-72 overflow-x-hidden">
           <div className="w-full text-start text-textPrimary">
             <Link className="flex items-center gap-1 w-fit" href="/">
               <KeyboardArrowLeft /> Voltar
@@ -160,7 +160,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className={`md:flex w-full gap-6`}>
-            <div className={`${activeTab == 'info' ? 'block' : 'hidden'} md:w-3/4 md:!block `}>
+            <div className={`${activeTab == 'info' ? 'block' : 'hidden'} md:w-[65%] md:!block `}>
               <div className="flex md:gap-4 gap-2 mb-4 flex-wrap ">
                 <a
                   className="flex items-center gap-2 w-fit"
@@ -204,7 +204,7 @@ export default function EventoPage({ params }: { params: { id: string } }) {
               </div>
             </div>
             {!eventTicket?.exibirCadeiras && !eventTicket?.local?.mapa && (
-              <aside className={`md:w-[30%] flex-col md:min-w-[18rem] gap-4 ${activeTab == 'tickets' ? 'flex' : 'hidden'} md:flex`}>
+              <aside className={`md:w-[35%] flex-col md:min-w-[18rem] gap-4 ${activeTab == 'tickets' ? 'flex' : 'hidden'} md:flex`}>
                 <TicketsContainer currentEvent={currentEvent} />
               </aside>
             )}

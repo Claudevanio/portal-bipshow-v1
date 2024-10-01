@@ -30,4 +30,8 @@ export interface IAction {
   mesas?: IPlace[];
   valoresPorFormaPagamento?: IValuePerTypePayment;
   exibirTaxaSomada?: boolean;
+  dias?: {
+    dia: string;
+    id: string;
+  }[];
 }

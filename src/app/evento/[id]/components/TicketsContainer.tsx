@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useCallback, useMemo, useState } from 'react';
 import ptBr from 'dayjs/locale/pt-br';
 import { useEventTicket } from '@/shared/hooks';
+import DatePicker from 'react-datepicker';
 import { IAction } from '@/components/Tickets/ActionTicket/Ticket/Action/interface';
 import { Pixel } from '@/utils/pixel';
 
@@ -25,6 +26,7 @@ function SingleTicketCard(singleTicket: IAction) {
     id,
     tickName,
     index,
+    dias,
     tipo,
     mapa,
     description,
@@ -34,6 +36,8 @@ function SingleTicketCard(singleTicket: IAction) {
 
   const { eventTicket, handleSelectTicketQuantity, ticketsPurchase } = useEventTicket();
   const [isQuantity, setIsQuantity] = useState<number>(ticketsPurchase?.find(i => i.singleId === `${nome}${index}`)?.qtde || 0);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const quantityMax = useMemo((): number => {
     const max =
@@ -43,6 +47,8 @@ function SingleTicketCard(singleTicket: IAction) {
 
     return max;
   }, [totalDisponivel, limitePorUsuario, eventTicket]);
+  const highlightDates = dias.map(d => new Date(d.dia));
+  const earliestDate = highlightDates.length === 0 ? new Date(Date.now()) : new Date(Math.min(...highlightDates.map(date => date.getTime())));
 
   const handleChangeQTD = useCallback(
     (type: 'next' | 'prev', idTable?: number) => {
@@ -72,8 +78,26 @@ function SingleTicketCard(singleTicket: IAction) {
   return (
     <li className="flex items-center justify-between w-full">
       <div>
-        <p className="text-xs w-20 max-w-20 md:w-24 md:max-w-24  font-semibold text-softBlue">{nome}</p>
-        <p className="text-xs font-semibold text-textPrimary uppercase">{tipo}</p>
+        <p className="text-xs w-20 max-w-20 font-semibold text-softBlue">{nome}</p>
+        <button
+          onClick={() => {
+            setShowCalendar(!showCalendar);
+          }}
+          className="border-nones bg-transparent"
+        >
+          <Image className="grayscale-[100%]" src={'/Calendar.svg'} alt="Logo" width={20} height={20} />
+        </button>
+        {showCalendar && (
+          <div className="absolute z-50 mt-2 bg-white shadow-lg rounded">
+            <DatePicker
+              selected={earliestDate}
+              onChange={(date: Date) => setSelectedDate(date)}
+              inline
+              highlightDates={highlightDates}
+              dateFormat="dd/MM/yyyy"
+            />
+          </div>
+        )}
       </div>
       <div className=" min-w-[40%] md:min-w-[5.5rem]">
         <p className="text-xs md:text-sm font-bold text-textPrimary ">
@@ -134,147 +158,18 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
   return (
     <GradientBorder
       innerStyle={{
-        minWidth: '250px'
+        minWidth: '270px'
       }}
     >
-      {/* {!ticket && (
-        <div className="flex flex-col gap-4 p-2">
-          <h3 className="flex text-tertiary gap-3 font-semibold border-b-2 border-gray pb-4 ">
-            <Image src={'/Ticket.svg'} alt="ingresso" height={20} width={20} /> Ingressos
-          </h3>
-
-          <ul className="flex flex-col gap-4 text-textPrimary font-medium">
-            {ticketFormatted &&
-              ticketFormatted.length > 0 &&
-              ticketFormatted.map((item, index, arr) => (
-                <li className={'flex items-center justify-between ' + (index + 1 !== arr.length ? 'border-b-2 border-gray pb-4' : '')} key={index}>
-                  {item.dates && item.dates.length == 1 ? (
-                    <div className="flex items-center gap-1">
-                      <p className="font-bold text-3xl flex items-center">
-                        {item.dates &&
-                          item.dates.map((date, index) => (
-                            <p>
-                              {dayjs(date).format('DD')}
-                              {index + 1 !== item.dates.length && <span className="text-3xl">/</span>}
-                            </p>
-                          ))}
-                      </p>
-                      <div className="flex flex-col gap-0 ">
-                        <p>{item.data && dayjs(item.data).format('MMM').toUpperCase()}</p>
-                        <p className="text-[.6rem] first-letter:uppercase flex">
-                          {item.dates &&
-                            item.dates.length > 1 &&
-                            item.dates.map((date, index) => <p>{dayjs(date).format('ddd') + (index + 1 !== item.dates.length ? '/' : '')}</p>)}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    item.dates && (
-                      <>
-                        <p className="text-2xl">{dayjs(item.dates[0]).format('DD/MM')}</p>
-                        <span className=" mx-1">à</span>
-                        <p className="text-2xl">{dayjs(item.dates[item.dates.length - 1]).format('DD/MM')}</p>
-                      </>
-                    )
-                  )}
-                  {!item.dates && (
-                    <div className="flex items-center gap-1">
-                      <p className="font-bold text-3xl">{item.data && dayjs(item.data).format('DD')}</p>
-                      <div className="flex flex-col gap-0 ">
-                        <p>{item.data && dayjs(item.data).format('MMM').toUpperCase()}</p>
-                        <p className="text-[.6rem] first-letter:uppercase">{item.data && dayjs(item.data).format('dddd').replace('-feira', '')}</p>
-                      </div>
-                    </div>
-                  )}
-                  <div className="flex flex-col text-xs font-normal w-full pl-4">
-                    {item.valores.length <= 1 ? `Preço de ` : `Preços entre `}
-                    <h4 className="font-medium text-sm">
-                      {item.valores.length > 1 &&
-                        `
-              ${item.valores[0].toLocaleString('pt-BR', {
-                minimumFractionDigits: 2,
-                style: 'currency',
-                currency: 'BRL'
-              })} e ${item.valores[item.valores.length - 1].toLocaleString('pt-BR', {
-                minimumFractionDigits: 2,
-                style: 'currency',
-                currency: 'BRL'
-              })}`}
-                      {item.valores.length <= 1 &&
-                        ` ${item.valores[0].toLocaleString('pt-BR', {
-                          minimumFractionDigits: 2,
-                          style: 'currency',
-                          currency: 'BRL'
-                        })}`}
-                    </h4>
-                  </div>
-                  <KeyboardArrowRight onClick={() => handleSelectTicket(index)} className="!text-blue cursor-pointer" />
-                </li>
-              ))}
-          </ul>
-        </div>
-      )} */}
-
-      {ticketFormatted?.map((tick, ind) => (
-        <div className="flex flex-col gap-4 p-2">
-          <div className="flex items-center gap-1 text-textPrimary font-medium">
-            {tick.dates && tick.dates.length > 1 && (
-              <div className="flex items-center gap-1">
-                <p className="font-bold text-3xl flex items-center">
-                  {tick.dates && tick.dates.length == 1
-                    ? tick.dates.map((date, index) => (
-                        <>
-                          <p>
-                            {dayjs(date).format('DD')}
-                            {index + 1 !== tick.dates.length && <span className="text-3xl">/</span>}
-                          </p>
-                          <div className="flex flex-col gap-0 ">
-                            <p>{tick.data && dayjs(tick.data).format('MMM').toUpperCase()}</p>
-                            <p className="text-[.6rem] first-letter:uppercase flex">
-                              {tick.dates &&
-                                tick.dates.length > 1 &&
-                                tick.dates.map((date, index) => <p>{dayjs(date).format('ddd') + (index + 1 !== tick.dates.length ? '/' : '')}</p>)}
-                            </p>
-                          </div>
-                        </>
-                      ))
-                    : tick.dates && (
-                        <>
-                          <p className="text-2xl">{dayjs(tick.dates[0]).format('DD/MM')}</p>
-                          <span className="text-base mx-1">à</span>
-                          <p className="text-2xl">{dayjs(tick.dates[tick.dates.length - 1]).format('DD/MM')}</p>
-                        </>
-                      )}
-                </p>
-              </div>
-            )}
-            {!tick.dates && (
-              <div className="flex items-center gap-1 text-textPrimary font-medium">
-                <p className="font-bold text-3xl">{tick?.data && dayjs(tick?.data).format('DD')}</p>
-                <div className="flex flex-col gap-0 ">
-                  <p>{tick?.data && dayjs(tick?.data).format('MMM').toUpperCase()}</p>
-                  <p className="text-[.6rem] first-letter:uppercase">{tick?.data && dayjs(tick?.data).format('dddd').replace('-feira', '')}</p>
-                </div>
-              </div>
-            )}
-            <p
-              className="text-sm font-normal text-textPrimary flex gap-2 cursor-pointer"
-              onClick={() => {
-                handleClearTicket();
-                handleSelectTicket(null as any);
-              }}
-            >
-              <Image className="grayscale-[100%]" src={'/Calendar.svg'} alt="Logo" width={20} height={20} />
-              Ver outras datas
-            </p>
-          </div>
-          <div className="flex flex-col gap-5 text-textPrimary font-medium pb-4 border-b-2 border-gray">
-            <p className="text-xs font-medium text-softBlue">
-              Selecione as quantidades de cada ingresso desejado e clique no botão ‘Comprar ingressos’
-            </p>
+      <div className="flex flex-col gap-4 p-1">
+        <div className="flex flex-col gap-5 text-textPrimary font-medium pb-4">
+          <p className="text-xs font-medium text-softBlue">
+            Selecione as quantidades de cada ingresso desejado e clique no botão ‘Comprar ingressos’
+          </p>
+          {ticketFormatted?.map((tick, ind) => (
             <div className="font-medium text-sm">
               {tick.nome}
-              <ul className="flex flex-col gap-4 items-center mt-1 justify-center ">
+              <ul className="flex flex-col gap-4 items-center mt-1 justify-center border-2 border-[#946AFB] rounded-xl p-2">
                 {tick.tiposDeIngresso.map((item, indexArr) => (
                   <SingleTicketCard
                     tickName={tick.nome}
@@ -287,9 +182,9 @@ export function TicketsContainer({ currentEvent }: { currentEvent?: Event }) {
                 ))}
               </ul>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
       <div>
         {totalPrice > 0 && (
           <div className="flex items-center justify-between pb-5">

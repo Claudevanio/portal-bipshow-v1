@@ -13,7 +13,7 @@ export const GradientBorder = ({
 }) => (
   <div className={(className ? className : '') + 'rounded-xl w-full p-[2px] bg-gradient'} style={borderStyle}>
     <div
-      className={(className ? className : '') + 'flex flex-col justify-between h-full px-4 py-2 bg-background text-primary rounded-xl'}
+      className={(className ? className : '') + 'flex flex-col justify-between h-full px-2 py-2 bg-background text-primary rounded-xl'}
       style={innerStyle}
     >
       {children}
