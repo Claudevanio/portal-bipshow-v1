@@ -725,7 +725,7 @@ export const TicketPurchaseProvider: React.FC<{ children: React.ReactNode }> = (
                         documento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.documento ?? '',
                         tipoDocumento: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.tipoDocumento ?? '',
                         pais: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.pais ?? '',
-                        cpf: isDataPurchase.cpf ?? '',
+                        cpf: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.cpf ?? '',
                         email: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.email ?? '',
                         telefone: isTicketSelectedUser?.find((user, indexUser) => indexUser === index)?.telefone?.replace(/\D/g, '') ?? '',
                         dependente: isTicketSelectedUser?.find(user => user.idTipo === i.idTipo)?.filled ?? false,
